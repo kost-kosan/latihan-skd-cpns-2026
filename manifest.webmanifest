@@ -1,7 +1,7 @@
 {
-  "name": "Latihan SKD CPNS 2026",
-  "short_name": "Latihan SKD",
-  "description": "Latihan soal SKD CPNS 2026 (TWK, TIU, TKP) dengan pembahasan dan simulasi tryout.",
+  "name": "Siap Abdi",
+  "short_name": "Siap Abdi",
+  "description": "Latihan soal CPNS, TNI, Polri & BUMN dengan pembahasan dan simulasi. Jalur CPNS tersedia sekarang; TNI, Polri, dan BUMN segera hadir.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

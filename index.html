@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="data:,">
-<title>Bank Soal SKD CPNS 2026</title>
+<title>Siap Abdi — Latihan Soal CPNS, TNI, Polri &amp; BUMN</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0f766e">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -76,6 +76,14 @@ p{margin:0 0 10px}
 .big small{display:block;opacity:.92;font-size:.92rem;margin-top:2px}
 .big:active{transform:translate(3px,3px);box-shadow:1px 1px 0 rgba(0,0,0,.2)}
 .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.paths{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.path{border:2px solid var(--bd);border-radius:6px;background:var(--card);color:var(--ink);padding:14px;box-shadow:var(--sh-sm);text-align:left;font:inherit}
+.path b{font-family:"Space Grotesk",sans-serif;font-size:1.15rem;display:block}
+.path span{display:block;font-size:.85rem;color:var(--mut);margin:2px 0 8px;line-height:1.45}
+button.path{cursor:pointer;width:100%}
+button.path:active{transform:translate(2px,2px);box-shadow:none}
+button.path:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.path.soon{opacity:.72}
 .tile{min-height:96px;border-radius:6px;border:2px solid var(--bd);background:var(--card);color:var(--ink);font:inherit;cursor:pointer;box-shadow:var(--sh-sm);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:10px 4px}
 .tile:active{transform:translate(2px,2px);box-shadow:none}
 .tile b{font-family:"Space Grotesk",sans-serif;font-size:1.3rem;color:var(--teal)}
@@ -724,7 +732,14 @@ function bindTheme(){const b=document.getElementById("thm");if(!b)return;b.oncli
 function home(){
   const prem=isPremium(), fl=freeLeft(), fs=freeState(), h=hist();
   app.innerHTML=`
-  <header class="hd"><div class="logo">SKD</div><div class="grow"><h1>Latihan SKD CPNS 2026</h1><p class="mut" style="margin:0">${Q.length} soal \u00B7 ${TOPICS.length} topik \u00B7 TWK ${nQ("TWK")} \u00B7 TIU ${nQ("TIU")} \u00B7 TKP ${nQ("TKP")} \u00B7 ada pembahasan</p></div>${themeBtnHTML()}</header>
+  <header class="hd"><div class="logo">SA</div><div class="grow"><h1>Siap Abdi</h1><p class="mut" style="margin:0">Latihan Soal CPNS, TNI, Polri &amp; BUMN</p></div>${themeBtnHTML()}</header>
+  <h2 style="margin-top:6px">Pilih jalur</h2>
+  <div class="paths">
+    <button class="path" id="jalurcpns"><b>CPNS</b><span>SKD \u00B7 ${Q.length} soal \u00B7 ${TOPICS.length} topik \u00B7 TWK ${nQ("TWK")} \u00B7 TIU ${nQ("TIU")} \u00B7 TKP ${nQ("TKP")} \u00B7 ada pembahasan</span><span class="tag">AKTIF</span></button>
+    <div class="path soon" aria-disabled="true"><b>TNI</b><span>Latihan seleksi TNI belum tersedia.</span><span class="locktag">SEGERA HADIR</span></div>
+    <div class="path soon" aria-disabled="true"><b>Polri</b><span>Latihan seleksi Polri belum tersedia.</span><span class="locktag">SEGERA HADIR</span></div>
+    <div class="path soon" aria-disabled="true"><b>BUMN</b><span>Latihan seleksi BUMN belum tersedia.</span><span class="locktag">SEGERA HADIR</span></div>
+  </div>
   <div class="disc"><b>Penting:</b> Aplikasi latihan mandiri ini <b>bukan aplikasi resmi BKN dan tidak menjamin kelulusan</b>. Soal disusun sendiri mengacu kisi-kisi KepmenPANRB 321/2024. <b>Soal Figural belum tersedia di v1</b> — sedang disiapkan untuk v2.</div>
   ${prem?`<div class="card" style="border-color:var(--teal)"><span class="sticker">PREMIUM AKTIF</span><p style="margin:10px 0 0">Semua fitur terbuka: bank ${Q.length} soal, latihan tanpa batas, semua trik &amp; teknik, dan Simulasi Penuh 110 soal / 100 menit.</p></div>`
   :`<div class="card"><span class="sticker">GRATIS HARI INI</span><p style="margin:10px 0 4px">Sisa latihan gratis: <b>${fl} dari 10 soal</b> \u00B7 Simulasi Mini: <b>${fs.miniUsed?"sudah dipakai":"1x gratis"}</b> \u00B7 Topik gratis penuh: <b>${FREE_TOPIC}</b></p><p class="mut" style="margin:0">Premium ${HARGA} sekali bayar membuka semuanya, tanpa langganan.</p><button class="btn yel" id="goprem"><span class="grow" style="text-align:center">Buka Premium \u2014 ${HARGA}</span></button></div>`}
@@ -746,6 +761,7 @@ function home(){
   const $=id=>document.getElementById(id);
   bindTheme();
   if($("goprem"))$("goprem").onclick=()=>premiumPage();
+  $("jalurcpns").onclick=()=>{const el=$("q10");if(el)el.scrollIntoView({behavior:"smooth",block:"start"})};
   $("q10").onclick=()=>startLatihan({mode:"ALL",label:"Latihan acak"});
   app.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>startLatihan({mode:"SUB",k:b.dataset.k,label:"Latihan "+b.dataset.k}));
   $("simfull").onclick=()=>{if(!isPremium())return premiumPage("Simulasi Penuh 110 soal / 100 menit adalah fitur Premium.");startExam("full")};
@@ -856,7 +872,7 @@ function premiumPage(note){
   document.getElementById("wabuy").onclick=()=>{
     const box=document.getElementById("wamsg");
     if(!FEEDBACK){box.innerHTML=`<div class="msg err"><b>Pembelian via WhatsApp belum aktif.</b> Nomor WhatsApp bisnis MUGA STUDIO belum diisi, jadi tombol ini belum bisa menghubungkanmu ke admin. Bila kamu sudah membeli dan menerima kode dari admin, masukkan kodemu di bawah \u2014 aktivasi kode tetap berfungsi.</div>`;return}
-    const text="Halo MUGA STUDIO, saya mau beli Premium Latihan SKD CPNS 2026 "+HARGA+". Saya sudah coba latihan gratisnya.";
+    const text="Halo MUGA STUDIO, saya mau beli Premium Siap Abdi (jalur CPNS) "+HARGA+". Saya sudah coba latihan gratisnya.";
     window.open("https://wa.me/"+FEEDBACK+"?text="+encodeURIComponent(text),"_blank","noopener");
   };
   document.getElementById("act").onclick=()=>{
