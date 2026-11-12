@@ -15,21 +15,21 @@
 :root{
   --bg:#F4F1EA; --paper:#FFF8E7; --card:#FFFDF6; --ink:#1F2937; --mut:#5B6472;
   --teal:#0F766E; --teal-t:#DCEFEA; --yel:#FFD400; --red:#DC2626; --grn:#16A34A;
-  --okbg:#DFF3E4; --nobg:#FBE7E2; --bd:#1F2937;
+  --okbg:#DFF3E4; --nobg:#FBE7E2; --partbg:#FDEBC8; --bd:#1F2937;
   --sh:4px 4px 0 rgba(31,41,55,.16); --sh-sm:2px 2px 0 rgba(31,41,55,.16);
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --bg:#111827; --paper:#1F2937; --card:#1B2536; --ink:#E9E6DC; --mut:#9AA5B1;
-    --teal:#2DD4BF; --teal-t:#14332F; --okbg:#173D2A; --nobg:#472B27; --bd:#C7CDD6;
+    --bg:#111827; --paper:#1F2937; --card:#1B2536; --ink:#E9E6DC; --mut:#AAB4C0;
+    --teal:#2DD4BF; --teal-t:#14332F; --okbg:#173D2A; --nobg:#472B27; --partbg:#4A3A15; --bd:#C7CDD6;
     --sh:4px 4px 0 rgba(0,0,0,.45); --sh-sm:2px 2px 0 rgba(0,0,0,.45);
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#111827; --paper:#1F2937; --card:#1B2536; --ink:#E9E6DC; --mut:#9AA5B1;
-  --teal:#2DD4BF; --teal-t:#14332F; --okbg:#173D2A; --nobg:#472B27; --bd:#C7CDD6;
+  --bg:#111827; --paper:#1F2937; --card:#1B2536; --ink:#E9E6DC; --mut:#AAB4C0;
+  --teal:#2DD4BF; --teal-t:#14332F; --okbg:#173D2A; --nobg:#472B27; --partbg:#4A3A15; --bd:#C7CDD6;
   --sh:4px 4px 0 rgba(0,0,0,.45); --sh-sm:2px 2px 0 rgba(0,0,0,.45);
   color-scheme:dark;
 }
@@ -121,6 +121,8 @@ button.path:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
 .opt.ok .l{background:var(--grn);color:#fff;border-color:var(--grn)}
 .opt.no{background:var(--nobg);border-color:var(--red)}
 .opt.no .l{background:var(--red);color:#fff;border-color:var(--red)}
+.opt.part{background:var(--partbg);border-color:#D97706}
+.opt.part .l{background:#D97706;color:#fff;border-color:#D97706}
 .opt:disabled{cursor:default}
 .fbcard{border:2px solid var(--bd);border-radius:6px;background:var(--paper);padding:14px 16px;margin:12px 0;box-shadow:var(--sh-sm)}
 .fbcard h3{margin:0 0 6px;font-size:1rem}
@@ -129,6 +131,11 @@ button.path:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
 .nb.done{background:var(--teal);color:#fff}
 :root[data-theme="dark"] .nb.done{color:#06231F}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .nb.done{color:#06231F}}
+:root[data-theme="dark"] .logo,:root[data-theme="dark"] .opt.sel .l,:root[data-theme="dark"] .day.done .box{color:#06231F}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .logo,:root:not([data-theme="light"]) .opt.sel .l,:root:not([data-theme="light"]) .day.done .box{color:#06231F}}
+:root[data-theme="dark"] .pass.y{color:#4ADE80}
+:root[data-theme="dark"] .pass.n{color:#F87171}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pass.y{color:#4ADE80}:root:not([data-theme="light"]) .pass.n{color:#F87171}}
 .nb.flg{box-shadow:inset 0 0 0 3px var(--yel)}
 .nb.cur{outline:3px solid var(--ink);outline-offset:1px}
 .rowbtns{display:flex;gap:9px}
@@ -656,9 +663,13 @@ t("Kamu diminta lembur setiap hari selama sebulan tanpa kejelasan kompensasi. Si
 // Nomor WhatsApp bisnis (format 628xxxxxxxxxx). MASIH KOSONG — menunggu Direktur.
 // Selama kosong, tombol beli menampilkan pesan jujur bahwa pembelian via WA belum aktif.
 const FEEDBACK="";
-const HARGA="Rp20.000";
 const HARGA_ASLI="Rp85.000";
 const PROMO_SAMPAI="31 Desember 2026";
+/* Logika tanggal promo: harga peluncuran Rp20.000 hanya berlaku sampai 31 Des 2026 pukul 23.59
+   (waktu perangkat pengguna). Lewat tanggal itu harga otomatis menjadi harga normal Rp85.000
+   dan semua tampilan coret/promo hilang — tidak perlu update manual. */
+const PROMO_AKTIF=Date.now()<=new Date(2026,11,31,23,59,59).getTime();
+const HARGA=PROMO_AKTIF?"Rp20.000":HARGA_ASLI;
 const KISI={TWK:["Pancasila, UUD 1945, NKRI, Bhinneka Tunggal Ika","Nasionalisme, integritas, bela negara","Sejarah dan isu nasional","Bahasa Indonesia"],TIU:["Verbal: sinonim, antonim, analogi","Numerik: deret, persen, perbandingan, soal cerita","Logika: silogisme dan penalaran analitis","Figural (soal gambar): belum ada di aplikasi ini — ditunda ke v2"],TKP:["Pelayanan publik, jejaring kerja","Sosial budaya, teknologi informasi dan komunikasi","Profesionalisme, anti radikalisme"]};
 const NAMA={TWK:"Tes Wawasan Kebangsaan",TIU:"Tes Intelegensia Umum",TKP:"Tes Karakteristik Pribadi"};
 const PG={TWK:65,TIU:80,TKP:166};
@@ -692,7 +703,7 @@ const CAT_LETTERS=["A","B","C","D"];
 function sesiScores(){try{const v=localStorage.getItem("skd-sesi-scores");return v?JSON.parse(v):{}}catch(e){return{}}}
 function lastScore(key){const s=sesiScores();return (s&&typeof s[key]==="number")?s[key]:null}
 function saveLastScore(key,pct){try{const s=sesiScores();s[key]=pct;localStorage.setItem("skd-sesi-scores",JSON.stringify(s))}catch(e){}}
-function lastSuffix(key){const v=lastScore(key);return v===null?"":" \u00B7 Terakhir: "+v}
+function lastSuffix(key){const v=lastScore(key);return v===null?"":" \u00B7 Terakhir: "+v+"%"}
 /* ---- acak ber-seed untuk Simulasi CAT A-D (susunan berbeda per huruf) ---- */
 function seededShuf(a,seedStr){
   let h=2166136261;for(let i=0;i<seedStr.length;i++){h^=seedStr.charCodeAt(i);h=Math.imul(h,16777619)}
@@ -729,6 +740,7 @@ function deactivatePremium(){try{localStorage.removeItem("skd-prem-v1")}catch(e)
 const TRICKS=[
 {tp:"Pancasila dan nilai",t:"Pancasila — Cocokkan Nilai, Bukan Bunyi Sila",inti:"Baca kasusnya dulu, tanya \u201Cnilai apa yang dilanggar/diterapkan?\u201D, baru cocokkan ke sila lewat kata kunci — jangan menghafal bunyi sila saja.",langkah:["Baca kasus, garis bawahi kata kerja/keadaannya (menolong, bermusyawarah, adil, bersatu).","Cocokkan ke kata kunci sila: 1 Ketuhanan, 2 Kemanusiaan, 3 Persatuan, 4 Kerakyatan, 5 Keadilan.","Bila dua sila terasa cocok, tanya: ini soal perasaan pada satu orang (Sila 2) atau soal kebersamaan/keadilan untuk semua (Sila 3/5)?"],contoh:"\u201CWarga desa bergotong royong memperbaiki jembatan rusak tanpa dibayar.\u201D \u2192 Sila ke-3, Persatuan Indonesia (kerja bersama untuk kepentingan bersama).",jebakan:"Kasus menolong tetangga yang sakit (empati pada satu orang) \u2192 Sila ke-2, bukan ke-3. Bedakan empati personal vs persatuan bersama."},
 {tp:"UUD 1945 dan lembaga negara",t:"UUD 1945 — Pasal + 1 Kata Kunci",inti:"Hafal nomor pasal + 1 kata kunci (Pasal 27 = persamaan kedudukan, Pasal 29 = agama, Pasal 30 = pertahanan, Pasal 31 = pendidikan, Pasal 33 = perekonomian).",langkah:["Baca soal, tebak pasal dari kata kuncinya sebelum melihat opsi.","Cocokkan tebakanmu dengan opsi yang ada.","Kalau ragu antara 2 pasal, eliminasi opsi yang pasalnya jelas salah topik."],contoh:"\u201CHak warga negara atas pendidikan diatur dalam UUD 1945 Pasal \u2026\u201D \u2192 Pasal 31.",jebakan:"Pasal 27 vs Pasal 28 — Pasal 27 = persamaan kedudukan dan hak-kewajiban warga negara; Pasal 28 = kemerdekaan berserikat, berkumpul, dan berpendapat. Jangan tertukar."},
+{tp:"NKRI & Bhinneka Tunggal Ika",t:"NKRI & Bhinneka — Sutasoma, Garuda 17-8-19-45, dan Pasal Pengunci NKRI",inti:"Tiga jangkar topik ini: (1) semboyan Bhinneka Tunggal Ika berasal dari kitab Sutasoma karya Mpu Tantular, (2) bulu Garuda = tanggal Proklamasi 17-8-1945 (sayap 17, ekor 8, pangkal ekor 19, leher 45), (3) bentuk NKRI dikunci Pasal 37 ayat (5) — satu-satunya hal yang tidak dapat diubah dalam UUD 1945.",langkah:["Petakan kata kunci soal: semboyan/kitab \u2192 Sutasoma; lambang/bulu Garuda \u2192 urutan 17-8-19-45; negara kepulauan \u2192 Pasal 25A; bentuk negara tidak dapat diubah \u2192 Pasal 37 ayat (5).","Bedakan tiga istilah yang sering ditukar: desentralisasi = penyerahan urusan ke daerah otonom; dekonsentrasi = pelimpahan wewenang ke gubernur sebagai wakil pemerintah pusat; tugas pembantuan = penugasan dari pusat kepada daerah.","Untuk soal keberagaman, pilih opsi yang menjaga persatuan dalam perbedaan — bukan menyeragamkan semua daerah, bukan pula memisahkan."],contoh:"\u201CBentuk negara yang tidak dapat dilakukan perubahan menurut UUD 1945 adalah \u2026\u201D \u2192 bentuk Negara Kesatuan Republik Indonesia (Pasal 37 ayat (5)).",jebakan:"Semboyan Bhinneka Tunggal Ika sering ditukar dengan kitab Negarakertagama — Negarakertagama karya Mpu Prapanca berisi sejarah Majapahit; semboyannya ada di Sutasoma. Urutan bulu Garuda juga sering ditukar: ekor 8, pangkal ekor 19 — jangan tertukar."},
 {tp:"Sejarah nasional",t:"Sejarah / Nasionalisme — Taruh di Garis Waktu",inti:"Buat garis waktu: 1908, 1928, 1945 (1 Juni, 22 Juni, 17 Agt, 18 Agt), 1949, 1966, 1998. Soal sejarah paling sering menguji urutan.",langkah:["Tulis garis waktu singkat di kertas coretan sebelum menjawab soal sejarah.","Letakkan tiap peristiwa di garis itu, baru jawab urutan/sebab-akibatnya.","Jangan menghafal tahun lepas — hafal urutannya."],contoh:"Urutan peristiwa: (a) Sumpah Pemuda, (b) Proklamasi Kemerdekaan, (c) Konferensi Meja Bundar \u2192 1928 \u2192 1945 \u2192 1949.",jebakan:"1 Juni 1945 vs 22 Juni 1945 — 1 Juni = pidato Soekarno (lahirnya Pancasila), 22 Juni = Piagam Jakarta. Dua tanggal berdekatan, sering ditukar."},
 {tp:"Bela Negara",t:"Bela Negara — Cari Perbuatan, Bukan Perasaan",inti:"Bela negara di soal = perbuatan nyata warga (ikut menjaga, melapor, patuh hukum, gotong royong) — bukan sekadar \u201Ccinta tanah air\u201D sebagai perasaan.",langkah:["Baca tiap opsi, tanya: \u201CApa yang DILAKUKAN tokohnya?\u201D","Pilih opsi yang berisi aksi konkret dan sesuai hukum.","Buang opsi yang hanya berisi perasaan atau slogan."],contoh:"\u201CTetangga mengajak menolak membayar pajak.\u201D \u2192 Menolak ajakan itu dan menjelaskan bahwa pajak adalah kewajiban warga negara (aksi nyata).",jebakan:"Opsi \u201Csangat mencintai tanah air\u201D tanpa aksi apa pun — terdengar benar, tapi bukan jawaban bela negara dalam soal."},
 {tp:"Integritas",t:"Integritas — Tolak Sejak Awal, Walau Kecil",inti:"Pilih opsi yang menolak gratifikasi/korupsi walau kecil dan walau tidak ada yang melihat.",langkah:["Cari opsi penolakan yang tegas dan langsung.","Waspada opsi \u201Cterima dulu, lapor nanti\u201D — menerima tetap menerima.","Bila ada opsi melapor lewat jalur resmi, itu penguat (bukan pengganti penolakan)."],contoh:"\u201CRekan menawarkan 'uang rokok' agar berkasnya didahulukan.\u201D \u2192 Tolak dan laporkan sesuai prosedur.",jebakan:"\u201CTerima dulu lalu laporkan ke atasan\u201D — terdengar jujur karena melapor, tapi gratifikasinya sudah diterima. Salah."},
@@ -809,7 +821,7 @@ function home(){
   </div>
   <div class="disc"><b>Penting:</b> Aplikasi latihan mandiri ini <b>bukan aplikasi resmi BKN dan tidak menjamin kelulusan</b>. Soal disusun sendiri mengacu kisi-kisi KepmenPANRB 321/2024. <b>Soal Figural belum tersedia di v1</b> — sedang disiapkan untuk v2.</div>
   ${prem?`<div class="card" style="border-color:var(--teal)"><span class="sticker">PREMIUM AKTIF</span><p style="margin:10px 0 0">Semua fitur terbuka: bank ${Q.length} soal, latihan tanpa batas, latihan per sesi, semua trik &amp; teknik, dan Simulasi CAT A\u2013D 110 soal / 100 menit.</p></div>`
-  :`<div class="card"><span class="sticker">GRATIS HARI INI</span><p style="margin:10px 0 4px">Sisa latihan gratis: <b>${fl} dari 10 soal</b> \u00B7 Simulasi Mini: <b>${fs.miniUsed?"sudah dipakai":"1x gratis"}</b> \u00B7 Topik gratis penuh: <b>${FREE_TOPIC}</b></p><div style="margin-top:14px"><span class="sticker">HARGA PELUNCURAN</span><div class="priceline"><span class="old">${HARGA_ASLI}</span><span class="new">${HARGA}</span><span class="savebadge">HEMAT 76%</span></div><p style="margin:2px 0 0"><b>${HARGA} membuka semua Premium</b> \u2014 sekali bayar, tanpa langganan.</p><p class="mut" style="margin:4px 0 0">Promo sampai <b style="color:var(--ink)">${PROMO_SAMPAI}</b>. Setelah itu harga menjadi ${HARGA_ASLI}.</p></div><button class="btn yel" id="goprem"><span class="grow" style="text-align:center">Buka Semua Premium \u2014 ${HARGA}</span></button></div>`}
+  :`<div class="card"><span class="sticker">GRATIS HARI INI</span><p style="margin:10px 0 4px">Sisa latihan gratis: <b>${fl} dari 10 soal</b> \u00B7 Simulasi Mini: <b>${fs.miniUsed?"sudah dipakai":"1x gratis"}</b> \u00B7 Topik gratis penuh: <b>${FREE_TOPIC}</b></p>${PROMO_AKTIF?`<div style="margin-top:14px"><span class="sticker">HARGA PELUNCURAN</span><div class="priceline"><span class="old">${HARGA_ASLI}</span><span class="new">${HARGA}</span><span class="savebadge">HEMAT 76%</span></div><p style="margin:2px 0 0"><b>${HARGA} membuka semua Premium</b> \u2014 sekali bayar, tanpa langganan.</p><p class="mut" style="margin:4px 0 0">Promo sampai <b style="color:var(--ink)">${PROMO_SAMPAI}</b>. Setelah itu harga menjadi ${HARGA_ASLI}.</p></div>`:`<div style="margin-top:14px"><span class="sticker">HARGA PREMIUM</span><div class="priceline"><span class="new">${HARGA}</span></div><p style="margin:2px 0 0"><b>${HARGA} membuka semua Premium</b> \u2014 sekali bayar, tanpa langganan.</p></div>`}<button class="btn yel" id="goprem"><span class="grow" style="text-align:center">Buka Semua Premium \u2014 ${HARGA}</span></button></div>`}
   <button class="big" id="q10"><span>Mulai latihan</span><small>10 soal acak dari semua topik${prem?"":" (kuota gratis harian)"}</small></button>
   <h2>Pilih subtes \u2014 latihan 10 soal</h2>
   <div class="g3">${["TWK","TIU","TKP"].map(k=>`<button class="tile" data-k="${k}"><span class="dot" style="background:${SUBC[k]}"></span><b>${k}</b><span>${NAMA[k].replace("Tes ","")}<br>${nQ(k)} soal</span></button>`).join("")}</div>
@@ -927,7 +939,7 @@ function hafalPage(){
   ${prem?HAFAL.map(trickCardHTML).join(""):HAFAL.map(x=>lockedRowHTML(x.t,"")).join("")}
   <h2>Rencana hafalan 14 hari</h2>
   <p class="mut">Mengikuti spaced repetition +1 / +3 / +7. Waktu \u00B145\u201360 menit/hari. Hari 7 dan 13 adalah hari uji diri. ${prem?"Ketuk satu hari untuk menandainya selesai.":"Rencana lengkapnya terbuka di Premium."}</p>
-  ${prem?PLAN14.map((d,i)=>`<button class="day${done[i]?" done":""}" data-d="${i}"><span class="box">${done[i]?"\u2713":""}</span><span class="dt"><b>Hari ${i+1}</b> \u00B7 Baru: ${esc(d.baru)}<br><span class="mut small">Ulang: ${esc(d.ulang)} \u00B7 Latihan: ${esc(d.lat)}</span></span></button>`).join(""):PLAN14.map((d,i)=>lockedRowHTML("Hari "+(i+1)+" \u2014 "+d.baru,"Ulang: "+d.ulang)).join("")}
+  ${prem?PLAN14.map((d,i)=>`<button class="day${done[i]?" done":""}" data-d="${i}"><span class="box">${done[i]?"\u2713":""}</span><span class="dt"><b>Hari ${i+1}</b> \u00B7 Baru: ${esc(d.baru)}<br><span class="mut small">Ulang: ${esc(d.ulang)} \u00B7 Latihan: ${esc(d.lat)}</span></span></button>`).join(""):PLAN14.map((d,i)=>lockedRowHTML("Hari "+(i+1),"Rencana hafalan Premium")).join("")}
   <div class="disc"><b>Aturan rencana ini:</b> bila satu bab masih gagal di ulangan +7, jangan lanjut ke bab baru \u2014 ulangi siklus +1/+3/+7 untuk bab itu saja. Pahami \u201Cruh\u201D tiap pilar negara; yang dihafal adalah garis waktu besar, pasal kunci beserta isinya, dan kata kunci tiap sila.</div>
   ${prem?"":`<button class="btn yel" id="goprem"><span class="grow" style="text-align:center">Buka Cara Menghafal + rencana 14 hari \u2014 Premium ${HARGA}</span></button>`}`;
   document.getElementById("bk").onclick=home;
@@ -968,10 +980,10 @@ function premiumPage(note){
   <p>Aplikasi ini <b>tidak punya akun</b>: tidak ada nama pengguna, tidak ada kata sandi, dan tidak ada tombol masuk atau keluar seperti aplikasi lain. Cara kerjanya begini:</p>
   <ol style="margin:8px 0;padding-left:22px"><li style="margin:4px 0;line-height:1.6">Kamu membeli lewat WhatsApp, lalu menerima <b>kode aktivasi</b> dari admin.</li><li style="margin:4px 0;line-height:1.6">Kode itu dimasukkan <b>sekali</b> di perangkatmu, di kolom di bawah halaman ini.</li><li style="margin:4px 0;line-height:1.6">Premium langsung aktif dan <b>tersimpan di perangkat itu</b> \u2014 tetap aktif walau aplikasi ditutup dan dibuka lagi \u2014 sampai dinonaktifkan atau data situs di browser dihapus.</li></ol>
   <p style="margin-bottom:0">Satu kode untuk satu pembeli. Kalau perangkatmu sudah Premium, berarti perangkat itu sudah pernah memasukkan kode \u2014 kode baru yang dibuat untuk pembeli lain tidak perlu dimasukkan di perangkatmu.</p></div>
-  <div class="card"><span class="sticker">HARGA PELUNCURAN</span><div class="price-row" style="margin-top:12px"><span class="price-old">${HARGA_ASLI}</span><span class="price">${HARGA}</span><span class="savebadge">HEMAT 76% \u00B7 Rp65.000</span></div><p style="margin:8px 0 0"><b>${HARGA} membuka semua Premium di aplikasi ini.</b></p><p class="mut" style="margin:2px 0 0">Sekali bayar \u00B7 tanpa langganan \u00B7 tanpa kedaluwarsa</p><div class="promonote"><b>Promo sampai ${PROMO_SAMPAI}.</b> Setelah tanggal itu, harga Premium menjadi <b>${HARGA_ASLI}</b>.</div>
+  <div class="card">${PROMO_AKTIF?`<span class="sticker">HARGA PELUNCURAN</span><div class="price-row" style="margin-top:12px"><span class="price-old">${HARGA_ASLI}</span><span class="price">${HARGA}</span><span class="savebadge">HEMAT 76% \u00B7 Rp65.000</span></div>`:`<span class="sticker">HARGA PREMIUM</span><div class="price-row" style="margin-top:12px"><span class="price">${HARGA}</span></div>`}<p style="margin:8px 0 0"><b>${HARGA} membuka semua Premium di aplikasi ini.</b></p><p class="mut" style="margin:2px 0 0">Sekali bayar \u00B7 tanpa langganan \u00B7 tanpa kedaluwarsa</p>${PROMO_AKTIF?`<div class="promonote"><b>Promo sampai ${PROMO_SAMPAI}.</b> Setelah tanggal itu, harga Premium menjadi <b>${HARGA_ASLI}</b>.</div>`:""}
   <ul class="feat"><li>Bank penuh ${Q.length} soal terklasifikasi: TWK ${nQ("TWK")}, TIU ${nQ("TIU")}, TKP ${nQ("TKP")} (${TOPICS.length} topik)</li><li>Latihan acak, per subtes, dan per topik tanpa batas</li><li>Latihan per sesi per subtes (maksimal 50 soal per sesi, pilih lewat dropdown)</li><li>Simulasi CAT A\u2013D 110 soal / 100 menit + Simulasi Mini tanpa batas</li><li>Pembahasan lengkap semua soal</li><li>${TRICKS.length} kartu Trik Cepat + ${TEKNIK.length} Teknik Cepat + Cara Menghafal &amp; rencana 14 hari</li></ul>
   <div class="disc" style="margin-bottom:0"><b>Jujur:</b> soal Figural (gambar) belum tersedia di versi ini \u2014 sedang disiapkan untuk v2. Yang kamu beli adalah ${Q.length} soal di atas. Ini alat latihan, bukan soal resmi BKN, dan tidak menjamin kelulusan.</div></div>
-  <button class="btn yel" id="wabuy"><span class="grow" style="text-align:center">Buka Semua Premium via WhatsApp \u2014 ${HARGA}</span></button><p class="mut small" style="text-align:center;margin:-2px 0 0">Harga peluncuran ${HARGA} (dari ${HARGA_ASLI}) \u00B7 promo sampai ${PROMO_SAMPAI}</p>
+  <button class="btn yel" id="wabuy"><span class="grow" style="text-align:center">Buka Semua Premium via WhatsApp \u2014 ${HARGA}</span></button><p class="mut small" style="text-align:center;margin:-2px 0 0">${PROMO_AKTIF?("Harga peluncuran "+HARGA+" (dari "+HARGA_ASLI+") \u00B7 promo sampai "+PROMO_SAMPAI):("Harga Premium "+HARGA+" \u00B7 sekali bayar, tanpa langganan")}</p>
   <div id="wamsg"></div>
   <h2>Sudah punya kode?</h2>
   <div class="card"><label class="mut" for="code" style="font-weight:600">Kode aktivasi Premium (format XXXX-XXXX)</label>
@@ -981,8 +993,8 @@ function premiumPage(note){
   document.getElementById("bk").onclick=home;
   document.getElementById("wabuy").onclick=()=>{
     const box=document.getElementById("wamsg");
-    if(!FEEDBACK){box.innerHTML=`<div class="msg err"><b>Pembelian via WhatsApp belum aktif.</b> Nomor WhatsApp bisnis MUGA STUDIO belum diisi, jadi tombol ini belum bisa menghubungkanmu ke admin. Bila kamu sudah membeli dan menerima kode dari admin, masukkan kodemu di bawah \u2014 aktivasi kode tetap berfungsi.</div>`;return}
-    const text="Halo MUGA STUDIO, saya mau beli Premium Siap Abdi (jalur CPNS) harga peluncuran "+HARGA+" (harga normal "+HARGA_ASLI+", promo sampai "+PROMO_SAMPAI+"). "+HARGA+" untuk membuka semua Premium. Saya sudah coba latihan gratisnya.";
+    if(!FEEDBACK){box.innerHTML=`<div class="msg info"><b>Pembelian via WhatsApp belum aktif.</b> Nomor WhatsApp bisnis MUGA STUDIO belum diisi, jadi tombol ini belum bisa menghubungkanmu ke admin. Bila kamu sudah membeli dan menerima kode dari admin, masukkan kodemu di bawah \u2014 aktivasi kode tetap berfungsi.</div>`;return}
+    const text=PROMO_AKTIF?("Halo MUGA STUDIO, saya mau beli Premium Siap Abdi (jalur CPNS) harga peluncuran "+HARGA+" (harga normal "+HARGA_ASLI+", promo sampai "+PROMO_SAMPAI+"). "+HARGA+" untuk membuka semua Premium. Saya sudah coba latihan gratisnya."):("Halo MUGA STUDIO, saya mau beli Premium Siap Abdi (jalur CPNS) seharga "+HARGA+". "+HARGA+" untuk membuka semua Premium. Saya sudah coba latihan gratisnya.");
     window.open("https://wa.me/"+FEEDBACK+"?text="+encodeURIComponent(text),"_blank","noopener");
   };
   document.getElementById("act").onclick=()=>{
@@ -1002,7 +1014,7 @@ function startLatihan(cfg){
     if(!prem)return premiumPage("Latihan per sesi adalah fitur Premium.");
     const s=getSession(cfg.k,cfg.letter);
     if(!s)return home();
-    pool=s.qs.slice();
+    pool=shuf(s.qs.slice()); // urutan soal di dalam sesi diacak tiap mulai — tidak lagi urutan bank yang sama
   }
   else if(cfg.mode==="ALL")pool=mix();
   else if(cfg.mode==="SUB")pool=shuf(Q.filter(q=>q.k===cfg.k));
@@ -1024,7 +1036,7 @@ function showQ(){
   <p class="q">${esc(q.q)}</p>
   <div class="opts">${it.o.map((o,j)=>`<button class="opt" data-j="${j}"><span class="l">${String.fromCharCode(65+j)}</span><span>${esc(o.t)}</span></button>`).join("")}</div></div>
   <div id="fb"></div>`;
-  document.getElementById("qprog").style.width=(L.i/L.list.length*100)+"%";
+  document.getElementById("qprog").style.width=((L.i+1)/L.list.length*100)+"%";
   bindExit(()=>{L=null;home()});
   app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>pickLat(+b.dataset.j));
   scrollTop();
@@ -1034,7 +1046,7 @@ function pickLat(j){
   const it=L.list[L.i],q=it.q,best=Math.max(...it.o.map(o=>o.p));
   L.sc[q.k]+=it.o[j].p;L.mx[q.k]+=best;
   if(L.quota)useFree(1);
-  app.querySelectorAll(".opt").forEach((b,x)=>{b.disabled=true;if(it.o[x].p===best)b.classList.add("ok");else if(x===j)b.classList.add("no")});
+  app.querySelectorAll(".opt").forEach((b,x)=>{b.disabled=true;if(it.o[x].p===best)b.classList.add("ok");else if(x===j)b.classList.add(it.o[x].p>0?"part":"no")});
   const tr=TRICKS.find(x=>x.tp===q.tp);
   const trOpen=isPremium()||q.tp===FREE_TRICK_TOPIC;
   document.getElementById("fb").innerHTML=`<div class="fbcard"><h3>Pembahasan \u2014 poin kamu: ${it.o[j].p} dari ${best}</h3><p style="margin:0">${esc(q.e)}</p>
@@ -1071,6 +1083,27 @@ function finLat(){
 /* ================= SIMULASI (CAT) ================= */
 let C=null,tmr=null;
 const fmtT=s=>String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
+/* ---- progres simulasi disimpan di perangkat: reload / halaman tertutup tidak lagi
+   menghapus jawaban. Disimpan: urutan soal + urutan opsi (sebagai indeks ke bank),
+   jawaban, tanda ragu, posisi soal, dan batas waktu absolut. ---- */
+function saveExam(){
+  if(!C)return;
+  try{lsSet("skd-exam-v1",{kind:C.kind,label:C.label,scoreKey:C.scoreKey,catLetter:C.catLetter,end:C.end,cur:C.cur,ans:C.ans,flag:C.flag,
+    qs:C.qs.map(it=>({qi:Q.indexOf(it.q),ord:it.o.map(o=>it.q.o.indexOf(o))}))})}catch(e){}
+}
+function clearExamSave(){try{localStorage.removeItem("skd-exam-v1")}catch(e){}}
+function restoreExam(){
+  const d=lsGet("skd-exam-v1",null);
+  if(!d||!Array.isArray(d.qs)||!d.qs.length)return false;
+  try{
+    const qs=d.qs.map(x=>{const q=Q[x.qi];if(!q||!Array.isArray(x.ord))return null;return{q,o:x.ord.map(i=>q.o[i])}});
+    if(qs.some(x=>!x||x.o.some(o=>!o)))return false;
+    C={qs,ans:d.ans||{},flag:d.flag||{},cur:Math.min(Math.max(d.cur||0,0),qs.length-1),end:d.end,kind:d.kind,label:d.label,sure:false,scoreKey:d.scoreKey||null,catLetter:d.catLetter||null};
+    clearInterval(tmr);tmr=setInterval(tickExam,500);
+    if(Date.now()>=C.end){examFin();return true} // waktu habis saat halaman tertutup — nilai dari jawaban tersimpan
+    examShow();scrollTop();return true;
+  }catch(e){return false}
+}
 function startExam(kind,letter){
   const prem=isPremium();
   if(kind==="full"&&!prem)return premiumPage("Simulasi CAT A\u2013D (110 soal / 100 menit) adalah fitur Premium.");
@@ -1080,7 +1113,8 @@ function startExam(kind,letter){
   let qs,min,label,scoreKey=null,catLetter=null;
   if(kind==="full"){catLetter=(letter&&CAT_LETTERS.includes(letter))?letter:"A";scoreKey="CAT-"+catLetter;qs=[...pickSeeded("TWK",30,"CAT-"+catLetter),...pickSeeded("TIU",35,"CAT-"+catLetter),...pickSeeded("TKP",45,"CAT-"+catLetter)];min=100;label="Simulasi CAT "+catLetter}
   else{qs=[...pick("TWK",6),...pick("TIU",8),...pick("TKP",10)];min=22;label="Simulasi Mini"}
-  if(kind==="mini"&&!prem)markMiniUsed();
+  // Jatah Mini gratis TIDAK lagi hangus saat simulasi dimulai — baru tercatat terpakai
+  // bila simulasinya benar-benar diselesaikan (examFin). Keluar di tengah jalan = jatah utuh.
   C={qs:qs.map(q=>({q,o:shuf(q.o.slice())})),ans:{},flag:{},cur:0,end:Date.now()+min*60000,kind,label,sure:false,scoreKey,catLetter};
   clearInterval(tmr);tmr=setInterval(tickExam,500);examShow();scrollTop();
 }
@@ -1100,18 +1134,21 @@ function examShow(){
   <h2>Navigasi soal</h2><div class="nav">${C.qs.map((x,n)=>`<button class="nb${n===C.cur?" cur":""}${C.ans[n]!==undefined?" done":""}${C.flag[n]?" flg":""}" data-n="${n}" aria-label="Soal ${n+1}">${n+1}</button>`).join("")}</div>
   <p class="mut small">Blok teal = sudah dijawab \u00B7 garis kuning di dalam = ragu-ragu \u00B7 Jawaban kosong dan salah sama-sama 0, jadi jangan kosongkan jawaban (khusus TKP, tiap opsi bernilai 1\u20135).</p>
   <button class="btn pri" id="fin">${C.sure?"Yakin selesai? Ketuk sekali lagi":"Selesai ujian"}</button>`;
-  document.getElementById("qprog").style.width=(C.cur/C.qs.length*100)+"%";
-  bindExit(()=>{clearInterval(tmr);C=null;home()});
+  document.getElementById("qprog").style.width=((C.cur+1)/C.qs.length*100)+"%";
+  bindExit(()=>{clearInterval(tmr);clearExamSave();C=null;home()});
   app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{C.ans[C.cur]=+b.dataset.j;C.sure=false;examShow()});
   app.querySelectorAll(".nb").forEach(b=>b.onclick=()=>{C.cur=+b.dataset.n;C.sure=false;examShow();scrollTop()});
   document.getElementById("pv").onclick=()=>{if(C.cur>0){C.cur--;C.sure=false;examShow();scrollTop()}};
   document.getElementById("nx2").onclick=()=>{if(C.cur<C.qs.length-1){C.cur++;C.sure=false;examShow();scrollTop()}};
   document.getElementById("fl").onclick=()=>{C.flag[C.cur]=!C.flag[C.cur];C.sure=false;examShow()};
   document.getElementById("fin").onclick=()=>{if(C.sure)examFin();else{C.sure=true;examShow()}};
+  saveExam();
   tickExam();
 }
 function examFin(){
   clearInterval(tmr);
+  clearExamSave();
+  if(C&&C.kind==="mini"&&!isPremium())markMiniUsed(); // jatah Mini gratis tercatat hanya saat simulasi selesai
   const S={TWK:0,TIU:0,TKP:0};
   C.qs.forEach((it,n)=>{if(C.ans[n]!==undefined)S[it.q.k]+=it.o[C.ans[n]].p});
   const ks=["TWK","TIU","TKP"],tot=ks.reduce((a,k)=>a+S[k],0);
@@ -1137,7 +1174,7 @@ function examFin(){
 }
 /* ================= MULAI ================= */
 if(typeof Q==="undefined"||!Q.length){app.innerHTML="<p style=\"padding:20px\">Bank soal gagal dimuat.</p>"}
-else home();
+else if(!restoreExam())home();
 </script>
 
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})});}</script>
