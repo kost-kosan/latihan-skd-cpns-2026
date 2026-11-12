@@ -164,6 +164,17 @@ table.frac td,table.frac th{border:2px solid var(--bd);padding:6px 10px;text-ali
 .msg{border:2px solid var(--bd);border-radius:6px;padding:12px 14px;margin:12px 0;font-size:.95rem}
 .msg.ok{background:var(--okbg)} .msg.err{background:var(--nobg)} .msg.info{background:var(--paper)}
 ul.feat{margin:8px 0;padding-left:22px} ul.feat li{margin:5px 0;line-height:1.55}
+/* ---------- sesi & dropdown ---------- */
+.sessbox{border:2px solid var(--bd);border-radius:6px;background:var(--card);box-shadow:var(--sh-sm);padding:14px 16px;margin:10px 0}
+.sessbox label{display:block;font-weight:600;line-height:1.45;margin-bottom:8px}
+.sessrow{display:flex;gap:9px;align-items:stretch}
+.sesssel{flex:1;min-width:0;min-height:52px;border:2px solid var(--bd);border-radius:6px;background:var(--card);color:var(--ink);font:inherit;font-size:1rem;padding:10px 12px;box-shadow:var(--sh-sm)}
+.sesssel:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.sessgo{flex:none;width:auto;margin:0;justify-content:center;text-align:center;background:var(--teal);color:#fff;font-weight:700;padding:10px 16px}
+:root[data-theme="dark"] .sessgo{color:#06231F}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .sessgo{color:#06231F}}
+.sessmsg{margin-top:8px}
+@media (max-width:420px){.sessrow{flex-direction:column}.sessgo{width:100%}}
 @media (prefers-reduced-motion:reduce){.tm.low{animation:none}.bar i{transition:none}}
 </style>
 </head>
@@ -637,6 +648,36 @@ const nQ=k=>Q.filter(q=>q.k===k).length;
 const byTopic=t=>Q.filter(q=>q.tp===t);
 const TOPICS=[...new Set(Q.map(q=>q.tp))];
 const SUBC={TWK:"#DC2626",TIU:"#2563EB",TKP:"#D97706"};
+/* ---- Sesi latihan: partisi berurutan 50-an per subtes dari bank yang ada ---- */
+function getSessions(k){
+  const all=Q.filter(q=>q.k===k);
+  const out=[];let idx=0;
+  while(idx<all.length){
+    const slice=all.slice(idx,idx+50);
+    const letter=String.fromCharCode(65+out.length);
+    out.push({k,letter,key:k+"-"+letter,count:slice.length,qs:slice});
+    idx+=50;
+  }
+  return out;
+}
+function getSession(k,letter){
+  return getSessions(k).find(s=>s.letter===letter)||null;
+}
+const CAT_LETTERS=["A","B","C","D"];
+/* ---- skor terakhir per sesi / simulasi (di perangkat) ---- */
+function sesiScores(){try{const v=localStorage.getItem("skd-sesi-scores");return v?JSON.parse(v):{}}catch(e){return{}}}
+function lastScore(key){const s=sesiScores();return (s&&typeof s[key]==="number")?s[key]:null}
+function saveLastScore(key,pct){try{const s=sesiScores();s[key]=pct;localStorage.setItem("skd-sesi-scores",JSON.stringify(s))}catch(e){}}
+function lastSuffix(key){const v=lastScore(key);return v===null?"":" \u00B7 Terakhir: "+v}
+/* ---- acak ber-seed untuk Simulasi CAT A-D (susunan berbeda per huruf) ---- */
+function seededShuf(a,seedStr){
+  let h=2166136261;for(let i=0;i<seedStr.length;i++){h^=seedStr.charCodeAt(i);h=Math.imul(h,16777619)}
+  let s=h>>>0;
+  const rnd=()=>{s=(Math.imul(s,1664525)+1013904223)>>>0;return s/4294967296};
+  const arr=a.slice();
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));const tmp=arr[i];arr[i]=arr[j];arr[j]=tmp}
+  return arr;
+}
 /* ================= PENYIMPANAN LOKAL ================= */
 function lsGet(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
 function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
@@ -741,13 +782,16 @@ function home(){
     <div class="path soon" aria-disabled="true"><b>BUMN</b><span>Latihan seleksi BUMN belum tersedia.</span><span class="locktag">SEGERA HADIR</span></div>
   </div>
   <div class="disc"><b>Penting:</b> Aplikasi latihan mandiri ini <b>bukan aplikasi resmi BKN dan tidak menjamin kelulusan</b>. Soal disusun sendiri mengacu kisi-kisi KepmenPANRB 321/2024. <b>Soal Figural belum tersedia di v1</b> — sedang disiapkan untuk v2.</div>
-  ${prem?`<div class="card" style="border-color:var(--teal)"><span class="sticker">PREMIUM AKTIF</span><p style="margin:10px 0 0">Semua fitur terbuka: bank ${Q.length} soal, latihan tanpa batas, semua trik &amp; teknik, dan Simulasi Penuh 110 soal / 100 menit.</p></div>`
+  ${prem?`<div class="card" style="border-color:var(--teal)"><span class="sticker">PREMIUM AKTIF</span><p style="margin:10px 0 0">Semua fitur terbuka: bank ${Q.length} soal, latihan tanpa batas, latihan per sesi, semua trik &amp; teknik, dan Simulasi CAT A\u2013D 110 soal / 100 menit.</p></div>`
   :`<div class="card"><span class="sticker">GRATIS HARI INI</span><p style="margin:10px 0 4px">Sisa latihan gratis: <b>${fl} dari 10 soal</b> \u00B7 Simulasi Mini: <b>${fs.miniUsed?"sudah dipakai":"1x gratis"}</b> \u00B7 Topik gratis penuh: <b>${FREE_TOPIC}</b></p><p class="mut" style="margin:0">Premium ${HARGA} sekali bayar membuka semuanya, tanpa langganan.</p><button class="btn yel" id="goprem"><span class="grow" style="text-align:center">Buka Premium \u2014 ${HARGA}</span></button></div>`}
   <button class="big" id="q10"><span>Mulai latihan</span><small>10 soal acak dari semua topik${prem?"":" (kuota gratis harian)"}</small></button>
   <h2>Pilih subtes \u2014 latihan 10 soal</h2>
   <div class="g3">${["TWK","TIU","TKP"].map(k=>`<button class="tile" data-k="${k}"><span class="dot" style="background:${SUBC[k]}"></span><b>${k}</b><span>${NAMA[k].replace("Tes ","")}<br>${nQ(k)} soal</span></button>`).join("")}</div>
+  <h2>Latihan per sesi ${prem?"":"<span class=\"locktag\">PREMIUM</span>"}</h2>
+  <p class="mut small" style="margin:0 0 4px">Semua soal bank dibagi per sesi (maksimal 50 soal per sesi), tanpa pengulangan antar-sesi. Kerjakan satu sesi penuh dengan pembahasan per soal.</p>
+  ${["TWK","TIU","TKP"].map(k=>{const sess=getSessions(k);return `<div class="sessbox"><label for="sess-${k}"><b>${k}</b> \u2014 ${esc(NAMA[k])} \u00B7 ${nQ(k)} soal \u00B7 ${sess.length} sesi</label><div class="sessrow"><select class="sesssel" id="sess-${k}" aria-label="Pilih sesi ${k}"><option value="">Pilih sesi...</option>${sess.map(s=>`<option value="${s.letter}">Sesi ${s.letter} \u2014 ${s.count} soal${lastSuffix(s.key)}</option>`).join("")}</select><button class="btn sessgo" id="goSess-${k}">Mulai sesi</button></div><div class="sessmsg" id="sessmsg-${k}"></div></div>`}).join("")}
   <h2>Simulasi ujian</h2>
-  <button class="btn" id="simfull"><span class="grow"><b>Simulasi Penuh \u2014 110 soal / 100 menit</b><br><span class="mut small">TWK 30 \u00B7 TIU 35 \u00B7 TKP 45 \u00B7 skor &amp; passing grade per subtes</span></span>${prem?"<span class=\"arr\">\u203A</span>":"<span class=\"locktag\">PREMIUM</span>"}</button>
+  <div class="sessbox"><label for="catSel"><b>Simulasi CAT \u2014 110 soal / 100 menit</b><br><span class="mut small">TWK 30 \u00B7 TIU 35 \u00B7 TKP 45 \u00B7 passing grade TWK 65 \u00B7 TIU 80 \u00B7 TKP 166 \u00B7 skor &amp; passing grade per subtes</span> ${prem?"":"<span class=\"locktag\">PREMIUM</span>"}</label><div class="sessrow"><select class="sesssel" id="catSel" aria-label="Pilih simulasi CAT"><option value="">Pilih simulasi CAT...</option>${CAT_LETTERS.map(Lt=>`<option value="${Lt}">Simulasi CAT ${Lt} \u2014 110 soal / 100 menit${lastSuffix("CAT-"+Lt)}</option>`).join("")}</select><button class="btn sessgo" id="catGo">Mulai simulasi</button></div><div class="sessmsg" id="catmsg"></div><p class="mut small" style="margin:10px 0 0">Soal antar-simulasi dapat berulang karena diambil dari bank ${Q.length} soal yang sama.</p></div>
   <p class="mut small" style="margin:-4px 0 6px 2px">Label jujur: <b>Simulasi v1 tanpa Figural</b> (TIU dihitung dari topik verbal, numerik, dan logika).</p>
   <button class="btn" id="simmini"><span class="grow"><b>Simulasi Mini \u2014 24 soal / 22 menit</b><br><span class="mut small">TWK 6 \u00B7 TIU 8 \u00B7 TKP 10 \u00B7 ada penghitung waktu${prem?"":" \u00B7 gratis 1x"}</span></span><span class="arr">\u203A</span></button>
   <h2>Latihan terarah</h2>
@@ -764,7 +808,22 @@ function home(){
   $("jalurcpns").onclick=()=>{const el=$("q10");if(el)el.scrollIntoView({behavior:"smooth",block:"start"})};
   $("q10").onclick=()=>startLatihan({mode:"ALL",label:"Latihan acak"});
   app.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>startLatihan({mode:"SUB",k:b.dataset.k,label:"Latihan "+b.dataset.k}));
-  $("simfull").onclick=()=>{if(!isPremium())return premiumPage("Simulasi Penuh 110 soal / 100 menit adalah fitur Premium.");startExam("full")};
+  ["TWK","TIU","TKP"].forEach(k=>{
+    const btn=$("goSess-"+k);if(!btn)return;
+    btn.onclick=()=>{
+      const sel=$("sess-"+k);const letter=sel?sel.value:"";
+      if(!letter){const msg=$("sessmsg-"+k);if(msg)msg.innerHTML=`<div class="msg info" style="margin:0">Pilih sesi dulu dari daftar di atas.</div>`;if(sel)sel.focus();return}
+      if(!isPremium())return premiumPage("Latihan per sesi adalah fitur Premium. Paket gratis tetap: 10 soal acak/hari, topik "+FREE_TOPIC+" penuh, dan Simulasi Mini 1x.");
+      const s=getSession(k,letter);if(!s)return;
+      startLatihan({mode:"SESI",k:k,letter:letter,label:k+" Sesi "+letter,scoreKey:s.key});
+    };
+  });
+  $("catGo").onclick=()=>{
+    const sel=$("catSel");const letter=sel?sel.value:"";
+    if(!letter){const msg=$("catmsg");if(msg)msg.innerHTML=`<div class="msg info" style="margin:0">Pilih simulasi CAT dulu dari daftar di atas.</div>`;if(sel)sel.focus();return}
+    if(!isPremium())return premiumPage("Simulasi CAT A\u2013D (110 soal / 100 menit) adalah fitur Premium.");
+    startExam("full",letter);
+  };
   $("simmini").onclick=()=>startExam("mini");
   $("tp").onclick=topics;
   $("pg-trik").onclick=trikPage;
@@ -850,7 +909,7 @@ function premiumPage(note){
   if(isPremium()){
     app.innerHTML=`<button class="back" id="bk">\u2039 Kembali</button><h1>Premium aktif</h1>
     <div class="card" style="border-color:var(--teal)"><span class="sticker">PREMIUM</span><p style="margin:10px 0 0">Perangkat ini sudah Premium. Semua fitur terbuka:</p>
-    <ul class="feat"><li>Bank penuh ${Q.length} soal (${TOPICS.length} topik) + latihan tanpa batas</li><li>Simulasi Penuh 110 soal / 100 menit (Simulasi v1 tanpa Figural)</li><li>Semua ${TRICKS.length} kartu Trik Cepat, ${TEKNIK.length} Teknik Cepat, dan Cara Menghafal + rencana 14 hari</li></ul></div>
+    <ul class="feat"><li>Bank penuh ${Q.length} soal (${TOPICS.length} topik) + latihan tanpa batas</li><li>Latihan per sesi per subtes (maksimal 50 soal per sesi)</li><li>Simulasi CAT A\u2013D 110 soal / 100 menit (Simulasi v1 tanpa Figural)</li><li>Semua ${TRICKS.length} kartu Trik Cepat, ${TEKNIK.length} Teknik Cepat, dan Cara Menghafal + rencana 14 hari</li></ul></div>
     <button class="btn pri" id="go">Mulai latihan</button>`;
     document.getElementById("bk").onclick=home;
     document.getElementById("go").onclick=home;
@@ -859,7 +918,7 @@ function premiumPage(note){
   app.innerHTML=`<button class="back" id="bk">\u2039 Kembali</button><h1>Buka Premium</h1>
   ${note?`<div class="msg info">${esc(note)}</div>`:""}
   <div class="card"><div class="price">${HARGA}</div><p class="mut" style="margin:2px 0 8px">sekali bayar \u00B7 tanpa langganan \u00B7 tanpa kedaluwarsa</p>
-  <ul class="feat"><li>Bank penuh ${Q.length} soal terklasifikasi: TWK ${nQ("TWK")}, TIU ${nQ("TIU")}, TKP ${nQ("TKP")} (${TOPICS.length} topik)</li><li>Latihan acak, per subtes, dan per topik tanpa batas</li><li>Simulasi Penuh 110 soal / 100 menit + Simulasi Mini tanpa batas</li><li>Pembahasan lengkap semua soal</li><li>${TRICKS.length} kartu Trik Cepat + ${TEKNIK.length} Teknik Cepat + Cara Menghafal &amp; rencana 14 hari</li></ul>
+  <ul class="feat"><li>Bank penuh ${Q.length} soal terklasifikasi: TWK ${nQ("TWK")}, TIU ${nQ("TIU")}, TKP ${nQ("TKP")} (${TOPICS.length} topik)</li><li>Latihan acak, per subtes, dan per topik tanpa batas</li><li>Latihan per sesi per subtes (maksimal 50 soal per sesi, pilih lewat dropdown)</li><li>Simulasi CAT A\u2013D 110 soal / 100 menit + Simulasi Mini tanpa batas</li><li>Pembahasan lengkap semua soal</li><li>${TRICKS.length} kartu Trik Cepat + ${TEKNIK.length} Teknik Cepat + Cara Menghafal &amp; rencana 14 hari</li></ul>
   <div class="disc" style="margin-bottom:0"><b>Jujur:</b> soal Figural (gambar) belum tersedia di versi ini \u2014 sedang disiapkan untuk v2. Yang kamu beli adalah ${Q.length} soal di atas. Ini alat latihan, bukan soal resmi BKN, dan tidak menjamin kelulusan.</div></div>
   <button class="btn yel" id="wabuy"><span class="grow" style="text-align:center">Buka Premium via WhatsApp</span></button>
   <div id="wamsg"></div>
@@ -888,13 +947,19 @@ let L=null;
 function startLatihan(cfg){
   const prem=isPremium();
   let pool;
-  if(cfg.mode==="ALL")pool=mix();
+  if(cfg.mode==="SESI"){
+    if(!prem)return premiumPage("Latihan per sesi adalah fitur Premium.");
+    const s=getSession(cfg.k,cfg.letter);
+    if(!s)return home();
+    pool=s.qs.slice();
+  }
+  else if(cfg.mode==="ALL")pool=mix();
   else if(cfg.mode==="SUB")pool=shuf(Q.filter(q=>q.k===cfg.k));
   else pool=shuf(byTopic(cfg.topic));
   const quota=!prem&&(cfg.mode==="ALL"||cfg.mode==="SUB");
   if(quota&&freeLeft()<=0)return premiumPage("Kuota latihan gratis hari ini (10 soal) sudah habis dan akan reset besok. Premium membuka latihan tanpa batas.");
-  const n=Math.min(10,pool.length);
-  L={list:pool.slice(0,n).map(q=>({q,o:shuf(q.o.slice())})),i:0,sc:{TWK:0,TIU:0,TKP:0},mx:{TWK:0,TIU:0,TKP:0},ans:null,label:cfg.label,quota,topic:cfg.topic||null,earlyEnd:false};
+  const n=cfg.mode==="SESI"?pool.length:Math.min(10,pool.length);
+  L={list:pool.slice(0,n).map(q=>({q,o:shuf(q.o.slice())})),i:0,sc:{TWK:0,TIU:0,TKP:0},mx:{TWK:0,TIU:0,TKP:0},ans:null,label:cfg.label,quota,topic:cfg.topic||null,earlyEnd:false,scoreKey:cfg.scoreKey||null};
   showQ();scrollTop();
 }
 function qbarHTML(mid,rightHTML){
@@ -937,6 +1002,7 @@ function ringSvg(pct){return `<svg viewBox="0 0 120 120" width="150" height="150
 function finLat(){
   const ks=["TWK","TIU","TKP"].filter(k=>L.mx[k]>0),tot=ks.reduce((a,k)=>a+L.sc[k],0),tm=ks.reduce((a,k)=>a+L.mx[k],0);
   const pct=tm?Math.round(tot/tm*100):0;addHist(L.label,pct);
+  if(L.scoreKey)saveLastScore(L.scoreKey,pct);
   const msg=pct>=80?"Hasil sangat baik. Pertahankan ritme latihanmu.":pct>=60?"Cukup baik. Pelajari ulang bagian yang masih salah lewat pembahasannya.":"Masih perlu banyak latihan. Ulangi materi dasarnya dulu, lalu coba lagi.";
   app.innerHTML=`<h1>Hasil latihan</h1>
   ${L.earlyEnd?`<div class="msg info">Sesi berhenti di sini karena kuota latihan gratis hari ini sudah habis (reset besok). Skor di bawah adalah hasil soal yang sempat kamu kerjakan.</div>`:""}
@@ -954,16 +1020,17 @@ function finLat(){
 /* ================= SIMULASI (CAT) ================= */
 let C=null,tmr=null;
 const fmtT=s=>String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
-function startExam(kind){
+function startExam(kind,letter){
   const prem=isPremium();
-  if(kind==="full"&&!prem)return premiumPage("Simulasi Penuh 110 soal / 100 menit adalah fitur Premium.");
+  if(kind==="full"&&!prem)return premiumPage("Simulasi CAT A\u2013D (110 soal / 100 menit) adalah fitur Premium.");
   if(kind==="mini"&&!prem&&freeState().miniUsed)return premiumPage("Simulasi Mini gratis sudah dipakai 1x. Premium membuka Simulasi Mini tanpa batas dan Simulasi Penuh 110 soal.");
   const pick=(k,n)=>shuf(Q.filter(q=>q.k===k)).slice(0,n);
-  let qs,min,label;
-  if(kind==="full"){qs=[...pick("TWK",30),...pick("TIU",35),...pick("TKP",45)];min=100;label="Simulasi Penuh"}
+  const pickSeeded=(k,n,seed)=>seededShuf(Q.filter(q=>q.k===k),seed+"-"+k).slice(0,n);
+  let qs,min,label,scoreKey=null,catLetter=null;
+  if(kind==="full"){catLetter=(letter&&CAT_LETTERS.includes(letter))?letter:"A";scoreKey="CAT-"+catLetter;qs=[...pickSeeded("TWK",30,"CAT-"+catLetter),...pickSeeded("TIU",35,"CAT-"+catLetter),...pickSeeded("TKP",45,"CAT-"+catLetter)];min=100;label="Simulasi CAT "+catLetter}
   else{qs=[...pick("TWK",6),...pick("TIU",8),...pick("TKP",10)];min=22;label="Simulasi Mini"}
   if(kind==="mini"&&!prem)markMiniUsed();
-  C={qs:qs.map(q=>({q,o:shuf(q.o.slice())})),ans:{},flag:{},cur:0,end:Date.now()+min*60000,kind,label,sure:false};
+  C={qs:qs.map(q=>({q,o:shuf(q.o.slice())})),ans:{},flag:{},cur:0,end:Date.now()+min*60000,kind,label,sure:false,scoreKey,catLetter};
   clearInterval(tmr);tmr=setInterval(tickExam,500);examShow();scrollTop();
 }
 function tickExam(){
@@ -1000,6 +1067,7 @@ function examFin(){
   const full=C.kind==="full";
   const mxs=full?MAXS:{TWK:30,TIU:40,TKP:50},mtot=ks.reduce((a,k)=>a+mxs[k],0);
   const pct=Math.round(tot/mtot*100);addHist(C.label,pct);
+  if(C.scoreKey)saveLastScore(C.scoreKey,pct);
   const na=C.qs.filter((x,n)=>C.ans[n]===undefined).length;
   const allPass=full&&ks.every(k=>S[k]>=PG[k]);
   app.innerHTML=`<h1>Hasil ${esc(C.label)}</h1>
