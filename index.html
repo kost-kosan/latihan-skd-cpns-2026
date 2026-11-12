@@ -234,6 +234,12 @@ ul.feat li .ic{color:var(--grn);width:22px;height:22px;margin-top:2px}
 .topdd ol,.topdd ul{margin:8px 0;padding-left:22px}
 .topdd li{margin:4px 0;line-height:1.6}
 @media (max-width:420px){.sessrow{flex-direction:column}.sessgo{width:100%}}
+/* ---------- soal figural (gambar SVG) ---------- */
+.figrow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:6px 0 2px}
+.figcell{display:inline-flex;border:2px solid var(--bd);border-radius:4px;background:var(--card);padding:2px;line-height:0}
+.figsep{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:1.05rem}
+.figq{align-items:center;justify-content:center;font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:1.5rem;border-style:dashed;color:var(--mut);line-height:1}
+.opt .figwrap{flex:1;display:flex;justify-content:center}
 /* ---------- ikon SVG inline ----------
    Gaya outline 24px stroke 2 — gaya Heroicons (github.com/tailwindlabs/heroicons, MIT)
    dan Tabler Icons (github.com/tabler/tabler-icons, MIT); path digambar pada grid 24
@@ -1040,6 +1046,31 @@ t("Kenalan dari komunitas permainan daring perlahan mengajakmu pindah ke grup te
 t("Seorang rekan memakai atribut kelompok yang dikenal menyebarkan paham ekstrem di lingkungan kantor. Sikapmu ...",[["Membiarkannya karena menganggap atribut itu urusan gaya berpakaian pribadi",2],["Menegur rekan itu secara pribadi dengan sopan dan mengingatkannya tentang aturan berpakaian di kantor",4],["Ikut memakai atribut serupa agar diterima rekan itu",1],["Membicarakan atribut itu dengan rekan lain tanpa menegur langsung",3],["Menegur rekan itu secara pribadi dengan sopan, menjelaskan bahwa atribut itu bertentangan dengan nilai dan aturan kantor, dan melaporkannya bila ia tetap memakainya",5]],"Skor 5 menegur dengan sopan, menjelaskan pertentangannya dengan nilai dan aturan kantor, dan melapor bila berlanjut; skor 4 menegur tetapi tanpa tindak lanjut; skor 3 hanya membicarakannya dengan rekan lain; skor 2 membiarkan simbol ekstrem di lingkungan kantor; skor 1 ikut memakai atribut itu.","Anti radikalisme")
 );
 
+// PILOT FIGURAL (E-SKD-17, Build P16) — 15 soal TIU bergambar SVG: analogi, ketidaksamaan, serial.
+// f(model, batang, opsi, kunci, bahas, topik) membangun objek soal TIU seperti m(), ditambah data
+// gambar: batang = daftar gambar soal (tiap gambar = daftar deskriptor "BENTUK:ISI<ROTASI>"),
+// dan tiap opsi membawa daftar deskriptornya sendiri di properti fig. Deskriptor dirender menjadi
+// SVG oleh renderFigural() di berkas aplikasi. Kunci = indeks opsi benar (poin 5), sama seperti m().
+const FIG_TANYA={analogi:"Perhatikan pola gambar berikut: gambar pertama berubah menjadi gambar kedua dengan satu aturan. Gambar apa yang tepat mengisi tanda tanya?",serial:"Perhatikan urutan gambar berikut. Gambar apa yang tepat untuk melanjutkan urutan itu?",beda:"Manakah yang tidak sekelompok dengan 4 gambar lainnya?"};
+const f=(model,batang,opsi,kunci,bahas,topik)=>({k:"TIU",fig:{model:model,batang:batang},q:FIG_TANYA[model],e:bahas,tp:topik,o:opsi.map((g,i)=>({t:"",fig:g,p:i===kunci?5:0}))});
+Q.push(
+f('analogi', [['O:B'], ['O:W'], ['Q:B']], [['Q:B'], ['Q:A'], ['Q:W'], ['O:W'], ['T:W']], 2, 'Aturan: isi dibalik, hitam menjadi putih, bentuk tetap. C persegi hitam menjadi persegi putih. Opsi lain: tidak berubah, isi abu-abu, bentuk lingkaran (menyalin B), bentuk segitiga.', 'Figural analogi'),
+f('analogi', [['T:B'], ['T:B90'], ['T:W180']], [['T:W90'], ['T:B270'], ['T:W180'], ['T:W270'], ['T:W']], 3, 'Aturan: segitiga diputar 90 derajat, isi tetap. C segitiga putih 180 derajat menjadi 270 derajat. Opsi lain: putaran ke 90 derajat, isi hitam, tidak berubah, putaran ke 0 derajat.', 'Figural analogi'),
+f('analogi', [['O:B'], ['Q:B'], ['O:W']], [['O:W'], ['Q:B'], ['T:W'], ['Q:A'], ['Q:W']], 4, 'Aturan: bentuk berubah lingkaran menjadi persegi, isi tetap. C lingkaran putih menjadi persegi putih. Opsi lain: tidak berubah, isi hitam, bentuk segitiga, isi abu-abu.', 'Figural analogi'),
+f('analogi', [['O:W', 'P:B'], ['O:W', 'P:W'], ['Q:W', 'P:B']], [['Q:W', 'P:B'], ['Q:W', 'P:W'], ['Q:B', 'P:W'], ['O:W', 'P:W'], ['Q:W', 'P:A']], 1, 'Aturan: hanya titik di dalam berubah hitam menjadi putih, bentuk luar tetap. C kotak putih berisi titik hitam menjadi kotak putih berisi titik putih. Opsi lain: tidak berubah, luar ikut hitam, luar jadi lingkaran (menyalin B), titik abu-abu.', 'Figural analogi'),
+f('analogi', [['O:B', 'Q:W'], ['Q:W', 'O:B'], ['D:W', 'T:B']], [['T:B', 'D:W'], ['D:W', 'T:B'], ['T:W', 'D:B'], ['D:B', 'T:W'], ['T:B', 'Q:W']], 0, 'Aturan: dua elemen bertukar luar-dalam, bentuk dan isi masing-masing tetap. C menjadi segitiga hitam di luar dan belah ketupat putih di dalam. Opsi lain: tidak ditukar, ditukar tapi isi dibalik, isi dibalik tanpa ditukar, dalam jadi persegi.', 'Figural analogi'),
+f('beda', [], [['O:B', 'Q:W'], ['Q:B', 'O:W'], ['O:W', 'Q:B'], ['Q:W', 'O:B'], ['O:W', 'Q:W']], 4, 'Aturan: empat gambar punya satu bentuk berwarna hitam. Hanya opsi kelima yang tidak punya bentuk hitam (semuanya putih), jadi itu yang berbeda.', 'Figural ketidaksamaan'),
+f('beda', [], [['O:W', 'Q:B'], ['O:B', 'O:W'], ['O:W', 'Q:W'], ['T:W', 'Q:B'], ['T:W', 'Q:W']], 1, 'Aturan: empat gambar punya bentuk luar berwarna putih. Hanya opsi kedua yang bentuk luarnya hitam, jadi itu yang berbeda.', 'Figural ketidaksamaan'),
+f('beda', [], [['T:B'], ['T:W90'], ['O:B'], ['T:B90'], ['T:W']], 2, 'Aturan: empat gambar mengandung segitiga. Hanya opsi ketiga yang tidak punya segitiga (hanya lingkaran), jadi itu yang berbeda.', 'Figural ketidaksamaan'),
+f('beda', [], [['Q:B', 'O:W', 'Q:B'], ['O:B', 'Q:W'], ['Q:W', 'O:B'], ['O:W', 'Q:B'], ['Q:B', 'O:W']], 0, 'Aturan: empat gambar terdiri dari 2 bentuk (luar dan dalam). Hanya opsi pertama yang terdiri dari 3 bentuk berbaris, jadi itu yang berbeda.', 'Figural ketidaksamaan'),
+f('beda', [], [['T:B90', 'O:W'], ['O:W', 'T:B90'], ['T:W90', 'O:B'], ['T:B', 'O:W'], ['O:B', 'T:W90']], 3, 'Aturan: empat gambar punya segitiga yang diputar 90 derajat (menghadap ke samping). Hanya opsi keempat yang segitiganya tegak tidak diputar, jadi itu yang berbeda.', 'Figural ketidaksamaan'),
+f('serial', [['T:W90'], ['T:W180'], ['T:W270'], ['T:W']], [['T:W'], ['T:W90'], ['T:W180'], ['T:W270'], ['Q:W']], 1, 'Segitiga putih berputar 90 derajat tiap langkah: 90, 180, 270, lalu kembali 0, jadi lanjut 90. Yang lain: putaran 0, 180, dan 270 salah, dan persegi bentuknya salah.', 'Figural serial'),
+f('serial', [['O:B'], ['O:A'], ['O:W'], ['O:B']], [['O:W'], ['Q:A'], ['O:B'], ['O:A'], ['T:A']], 3, 'Lingkaran tetap, isinya bersiklus hitam, abu-abu, putih, lalu hitam lagi, jadi lanjut abu-abu. Yang lain: isi hitam dan putih salah langkah, persegi dan segitiga bentuknya salah.', 'Figural serial'),
+f('serial', [['O:B'], ['Q:B'], ['T:B'], ['D:B']], [['O:B'], ['Q:B'], ['D:B'], ['T:B'], ['O:W']], 0, 'Bentuk bersiklus lingkaran, persegi, segitiga, belah ketupat, isi tetap hitam, jadi kembali lingkaran hitam. Yang lain: bentuk salah langkah, dan lingkaran putih isinya salah.', 'Figural serial'),
+f('serial', [['O:W'], ['O:W','O:W'], ['O:W','O:W','O:W'], ['O:W','O:W','O:W','O:W']], [['O:W','O:W'], ['O:W','O:W','O:W','O:W'], ['O:W','O:W','O:W','O:W','O:W','O:W'], ['O:W','O:W','O:W'], ['O:W','O:W','O:W','O:W','O:W']], 4, 'Bentuk dan isi tetap lingkaran putih, jumlahnya tambah 1 tiap langkah: 1, 2, 3, 4, jadi 5. Yang lain jumlahnya salah: 2, 4, 6, dan 3.', 'Figural serial'),
+f('serial', [['O:W','Q:B'], ['Q:W','O:B'], ['O:W','Q:B'], ['Q:W','O:B']], [['Q:W','O:B'], ['O:W','Q:W'], ['O:W','Q:B'], ['O:A','Q:B'], ['O:W','O:B']], 2, 'Luar-dalam bertukar tiap langkah: lingkaran luar-kotak dalam, lalu kotak luar-lingkaran dalam, berulang, jadi kembali ke yang pertama. Yang lain: fase salah, isi luar atau dalam salah, bentuk dalam salah.', 'Figural serial')
+);
+
 </script>
 <script>
 "use strict";
@@ -1054,8 +1085,8 @@ const PROMO_SAMPAI="31 Desember 2026";
    dan semua tampilan coret/promo hilang — tidak perlu update manual. */
 const PROMO_AKTIF=Date.now()<=new Date(2026,11,31,23,59,59).getTime();
 const HARGA=PROMO_AKTIF?"Rp20.000":HARGA_ASLI;
-const BUILD_STAMP="Build P15 · Bank 694 soal + 60 trik per model · 12 Nov 2026";
-const KISI={TWK:["Pancasila, UUD 1945, NKRI, Bhinneka Tunggal Ika","Nasionalisme, integritas, bela negara","Bahasa negara (Bahasa Indonesia)","Sejarah nasional adalah konten di dalam 5 aspek di atas (interpretasi) — bukan aspek ke-6"],TIU:["Verbal: analogi (termasuk latihan kosakata sinonim/antonim sebagai sub-jenis analogi — interpretasi, bukan kategori resmi Kepmen)","Verbal: silogisme (menarik kesimpulan dari dua pernyataan)","Verbal: penalaran analitis","Numerik: berhitung, deret angka, perbandingan kuantitatif, soal cerita","Figural (soal gambar): belum ada di aplikasi ini — ditunda ke v2"],TKP:["Pelayanan publik, jejaring kerja","Sosial budaya, teknologi informasi dan komunikasi","Profesionalisme, anti radikalisme"]};
+const BUILD_STAMP="Build P16 · Bank 709 soal + 60 trik per model · 12 Nov 2026";
+const KISI={TWK:["Pancasila, UUD 1945, NKRI, Bhinneka Tunggal Ika","Nasionalisme, integritas, bela negara","Bahasa negara (Bahasa Indonesia)","Sejarah nasional adalah konten di dalam 5 aspek di atas (interpretasi) — bukan aspek ke-6"],TIU:["Verbal: analogi (termasuk latihan kosakata sinonim/antonim sebagai sub-jenis analogi — interpretasi, bukan kategori resmi Kepmen)","Verbal: silogisme (menarik kesimpulan dari dua pernyataan)","Verbal: penalaran analitis","Numerik: berhitung, deret angka, perbandingan kuantitatif, soal cerita","Figural (soal gambar): pilot 15 soal tersedia di latihan TIU (analogi, ketidaksamaan, serial); Simulasi CAT belum memuat soal figural"],TKP:["Pelayanan publik, jejaring kerja","Sosial budaya, teknologi informasi dan komunikasi","Profesionalisme, anti radikalisme"]};
 const NAMA={TWK:"Tes Wawasan Kebangsaan",TIU:"Tes Intelegensia Umum",TKP:"Tes Karakteristik Pribadi"};
 const PG={TWK:65,TIU:80,TKP:166};
 // Label jujur passing grade (audit kisi-kisi 2026-11-12): angka PG di atas adalah ambang
@@ -1072,6 +1103,57 @@ const shuf=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1]);
 const nQ=k=>Q.filter(q=>q.k===k).length;
 const byTopic=t=>Q.filter(q=>q.tp===t);
 const TOPICS=[...new Set(Q.map(q=>q.tp))];
+/* ================= FIGURAL: RENDERER SVG =================
+   renderFigural(gambar, ukuran): fungsi murni — daftar deskriptor menjadi string SVG inline.
+   Deskriptor "BENTUK:ISI<ROTASI>": bentuk O=lingkaran, Q=persegi, T=segitiga (menghadap atas),
+   D=belah ketupat, G=garis, P=titik; isi B=hitam (fill tinta), W=putih (fill NONE — hanya garis
+   luar, bagian dalam transparan), A=abu-abu (fill token mut); rotasi 90/180/270 searah jarum jam.
+   Tata letak tetap: 1 elemen = besar di tengah; 2 elemen = pertama luar besar, kedua dalam kecil
+   di tengah; 3+ elemen = baris horizontal sama besar dari kiri ke kanan. Tanpa <text>, tanpa
+   referensi eksternal; warna hanya dari token aplikasi (--ink / --mut). */
+const FIG_TOPICS=["Figural analogi","Figural ketidaksamaan","Figural serial"];
+const FIG_SHAPE={O:"lingkaran",Q:"persegi",T:"segitiga",D:"belah ketupat",G:"garis",P:"titik"};
+const FIG_FILL={B:"hitam",W:"putih",A:"abu-abu"};
+function figParse(d){const mm=/^([OQTDGP]):([BWA])(90|180|270)?$/.exec(d);return mm?{s:mm[1],f:mm[2],r:mm[3]?+mm[3]:0}:null}
+function figLabelGambar(g){
+  const parts=g.map(d=>{const p=figParse(d);return p?FIG_SHAPE[p.s]+" "+FIG_FILL[p.f]+(p.r?" diputar "+p.r+" derajat":""):d});
+  if(parts.length===2)return parts[0]+" di luar, "+parts[1]+" di dalam";
+  return parts.join(", ");
+}
+function figElem(d,cx,cy,size,inner){
+  const p=figParse(d);if(!p)return "";
+  const ink="var(--ink)",gry="var(--mut)";
+  const fill=p.f==="B"?ink:(p.f==="A"?gry:"none");
+  const sw=Math.max(2.2,Math.min(4,4*size/84)).toFixed(1);
+  const st="fill:"+fill+";stroke:"+ink+";stroke-width:"+sw;
+  const h=size/2;let el="";
+  if(p.s==="O")el='<circle cx="'+cx+'" cy="'+cy+'" r="'+h+'" style="'+st+'"/>';
+  else if(p.s==="Q")el='<rect x="'+(cx-h)+'" y="'+(cy-h)+'" width="'+size+'" height="'+size+'" style="'+st+'"/>';
+  else if(p.s==="T")el='<polygon points="'+cx+","+(cy-h)+" "+(cx+h)+","+(cy+h)+" "+(cx-h)+","+(cy+h)+'" style="'+st+'"/>';
+  else if(p.s==="D")el='<polygon points="'+cx+","+(cy-h)+" "+(cx+h)+","+cy+" "+cx+","+(cy+h)+" "+(cx-h)+","+cy+'" style="'+st+'"/>';
+  else if(p.s==="G")el='<line x1="'+(cx-h)+'" y1="'+cy+'" x2="'+(cx+h)+'" y2="'+cy+'" stroke-linecap="round" style="stroke:'+(p.f==="A"?gry:ink)+";stroke-width:"+(sw*2)+'"/>';
+  else if(p.s==="P")el='<circle cx="'+cx+'" cy="'+cy+'" r="'+(inner?10:12)+'" style="'+st+'"/>';
+  if(p.r)el='<g transform="rotate('+p.r+" "+cx+" "+cy+')">'+el+"</g>";
+  return el;
+}
+function renderFigural(gambar,ukuran){
+  const n=gambar.length;let body="";
+  if(n===1)body=figElem(gambar[0],50,50,80,false);
+  else if(n===2)body=figElem(gambar[0],50,50,84,false)+figElem(gambar[1],50,50,42,true);
+  else{const w=100/n,sz=Math.round(Math.min(w*0.88,76)*10)/10;for(let i=0;i<n;i++)body+=figElem(gambar[i],Math.round(w*(i+0.5)*10)/10,50,sz,false)}
+  return '<svg viewBox="0 0 100 100" width="'+ukuran+'" height="'+ukuran+'" role="img" aria-label="'+esc(figLabelGambar(gambar))+'" style="display:block;flex:none">'+body+"</svg>";
+}
+function figStemHTML(q,size){
+  if(!q.fig)return "";
+  const b=q.fig.batang;
+  const cell=g=>'<span class="figcell">'+renderFigural(g,size)+"</span>";
+  const qm='<span class="figcell figq" style="width:'+size+'px;height:'+size+'px" aria-label="tanda tanya">?</span>';
+  if(q.fig.model==="analogi")return '<div class="figrow" role="group" aria-label="Pola analogi gambar">'+cell(b[0])+'<span class="figsep">:</span>'+cell(b[1])+'<span class="figsep">::</span>'+cell(b[2])+'<span class="figsep">:</span>'+qm+"</div>";
+  if(q.fig.model==="serial")return '<div class="figrow" role="group" aria-label="Urutan gambar">'+b.map(cell).join("")+'<span class="figsep">\u2192</span>'+qm+"</div>";
+  return "";
+}
+function optText(o){return o.fig?figLabelGambar(o.fig):o.t}
+function optInner(o){return o.fig?renderFigural(o.fig,86):esc(o.t)}
 const SUBC={TWK:"#DC2626",TIU:"#2563EB",TKP:"#D97706"};
 /* ---- Sesi latihan: partisi berurutan 50-an per subtes dari bank yang ada ---- */
 function getSessions(k){
@@ -1165,6 +1247,11 @@ const TRICKS=[
 {tp:"Anti radikalisme",t:"Anti-Radikalisme — Tolak dengan Damai + Lapor Jalur Resmi",inti:"Pilih opsi yang menolak paham kekerasan/ekstrem dengan cara damai + lapor lewat jalur resmi. Hindari opsi yang membalas dengan kekerasan atau yang diam saja karena \u201Cbukan urusan saya\u201D.",langkah:["Cari opsi penolakan yang tegas tapi damai (bukan konfrontasi).","Cek: apakah ada tindakan lanjut (melapor, mengedukasi)?","Buang opsi \u201Cdiam saja\u201D dan opsi \u201Cmembalas dengan kekerasan\u201D."],contoh:"\u201CRekan mengajak bergabung ke kelompok yang menolak Pancasila.\u201D \u2192 Menolak dengan tegas dan santun, lalu melaporkan ke atasan melalui jalur resmi.",jebakan:"\u201CMenolak tapi tidak melapor\u201D — kurang dari skor tertinggi karena tidak ada tindakan lanjut. Atau \u201Cikut berdebat keras agar dia kalah\u201D — membalas dengan konfrontasi, bukan cara damai."}
 ];
 /* ---- TRIK PER MODEL (60 kartu, ekspansi 2026-11-12) — melengkapi TRICKS 1-per-topik di atas ---- */
+TRICKS.push(
+{tp:"Figural analogi",t:"Analogi Gambar — Cari Satu Perubahan, Lalu Terapkan ke Gambar Ketiga",inti:"Bandingkan A dan B untuk menemukan SATU hal yang berubah, abaikan yang tidak berubah, lalu terapkan perubahan yang sama persis ke C.",langkah:["Bandingkan A dan B: cari satu hal yang berubah — bentuk, isi (hitam/putih/abu-abu), putaran, atau posisi elemen.","Abaikan semua yang tidak berubah; itu bukan aturannya.","Terapkan perubahan yang sama persis ke C untuk mendapatkan prediksi jawabanmu.","Periksa tiap opsi: semua bagiannya harus cocok dengan prediksi, bukan hanya sebagian."],contoh:"A lingkaran hitam berubah menjadi B lingkaran putih (isi dibalik, bentuk tetap). C persegi hitam → persegi putih.",jebakan:"Menyalin B mentah-mentah; membaca putaran sebagai angka mutlak, bukan perubahan relatif dari A ke B; mengubah elemen yang salah pada gambar dua bentuk (yang berubah elemen dalamnya, yang diubah malah luarnya)."},
+{tp:"Figural ketidaksamaan",t:"Cari yang Beda — Uji Satu Sifat dalam Satu Waktu",inti:"Periksa satu dimensi dalam satu waktu (bentuk, isi, jumlah, putaran, posisi) dan cari sifat yang dimiliki tepat 4 gambar — gambar kelima yang tidak memilikinya adalah jawabannya.",langkah:["Pilih satu dimensi dulu, misalnya isi: periksa kelima gambar satu per satu.","Cari sifat yang dimiliki tepat 4 gambar; catat gambar mana yang tidak memilikinya.","Periksa balik keempat gambar lain untuk memastikan sifat itu benar-benar ada di semuanya.","Bila satu dimensi tidak menghasilkan pola 4 lawan 1, pindah ke dimensi berikutnya."],contoh:"Empat gambar punya satu bentuk berwarna hitam; hanya satu gambar yang semua bentuknya putih → gambar itulah yang berbeda.",jebakan:"Sifat yang hanya dimiliki 3 gambar (pola 3 lawan 2 bukan jawaban); sifat \u201Cbeda\u201D yang ternyata juga berlaku untuk gambar lain; menghitung tata letak (luar/dalam, baris) sebagai sifat gambar."},
+{tp:"Figural serial",t:"Lanjutkan Urutan — Tulis Perubahannya Langkah demi Langkah",inti:"Tulis perubahan dari satu gambar ke gambar berikutnya; bila perubahannya sama, lanjutkan satu langkah; bila berulang, tentukan giliran berikutnya, lalu cocokkan prediksi dengan opsi.",langkah:["Tulis perubahan tiap langkah dalam satu baris (mis. putaran: 90, 180, 270, 0).","Bila perubahan tiap langkah sama, terapkan satu langkah lagi dari suku terakhir.","Bila polanya berulang (siklus), hitung giliran berikutnya dalam siklus itu.","Cocokkan prediksimu dengan opsi — jangan memilih opsi hanya karena mirip suku terakhir."],contoh:"Segitiga berputar +90 tiap langkah: 90, 180, 270, lalu kembali ke 0 (bukan 360), jadi suku berikutnya 90.",jebakan:"Mengulang suku terakhir; membaca siklus terlalu pendek (mengira pola selesai padahal masih berputar); lupa bahwa putaran +90 setelah 270 kembali ke 0."}
+);
 const TRIK_MODEL=[
 {tp:"Pancasila dan nilai",t:"Pancasila dan nilai — Pencocokan Nilai dengan Sila",inti:"Baca kasusnya dulu, tentukan nilai yang diterapkan (bukan bunyi silanya), baru cocokkan ke sila lewat kata kunci.",langkah:["Garis bawahi kata kerja atau keadaan dalam kasus (menolong, bermusyawarah, bersatu, adil).","Cocokkan ke kata kunci sila: 1 Ketuhanan, 2 Kemanusiaan, 3 Persatuan, 4 Kerakyatan, 5 Keadilan.","Bila dua sila terasa cocok, tanya: ini soal satu orang (Sila 2) atau soal kebersamaan untuk semua (Sila 3/5)?"],contoh:"\"Warga menolak pesan provokasi antardaerah dan mengajak menjaga persatuan.\" → Sila ke-3 (menjaga persatuan bersama).",jebakan:"Kasus menolong satu tetangga yang sakit → Sila ke-2 (empati personal), bukan ke-3. Bedakan empati pada satu orang dengan persatuan bersama."},
 {tp:"Pancasila dan nilai",t:"Pancasila dan nilai — Penerapan dalam Kasus Sehari-hari",inti:"Soal kasus menguji perbuatan, bukan hafalan bunyi sila — cari apa yang dilakukan tokohnya, lalu tanya nilai apa yang diwujudkan perbuatan itu.",langkah:["Baca tiap opsi, tanya: \"Apa yang DILAKUKAN tokohnya?\"","Buang opsi yang hanya berisi perasaan atau slogan tanpa perbuatan.","Pilih perbuatan yang paling sesuai dengan nilai satu sila tertentu."],contoh:"\"Pemilik usaha memberi upah layak tanpa membeda-bedakan pekerja.\" → Sila ke-5 (keadilan bagi semua).",jebakan:"Opsi yang terdengar mulia tetapi perbuatannya tidak sesuai dengan sila yang ditanya — misalnya \"rajin beribadah\" untuk soal tentang keadilan upah."},
@@ -1398,7 +1485,7 @@ function info(){
   app.innerHTML=`<button class="back" id="bk">\u2039 Kembali</button><h1>Kisi-kisi dan tentang</h1>
   ${Object.keys(KISI).map(k=>`<details class="card"><summary><b>${k}</b> &nbsp;${NAMA[k]}</summary><ul class="feat">${KISI[k].map(x=>`<li>${esc(x)}</li>`).join("")}</ul></details>`).join("")}
   <div class="card"><h3 style="margin:0 0 6px">Struktur SKD (acuan KepmenPANRB 321/2024, Diktum KEDUA)</h3><p style="margin:0">110 soal dalam 100 menit: TWK 30, TIU 35, TKP 45. Skor: TWK/TIU benar +5, salah 0 (maks 150/175); TKP tiap opsi bernilai 1\u20135 (maks 225). Passing grade: TWK 65, TIU 80, TKP 166 \u2014 lolos hanya bila <b>ketiga subtes</b> melewati ambangnya. Angka passing grade ini adalah <b>acuan persiapan dari seleksi 2024</b> berdasarkan KepmenPANRB 321/2024 TA 2024, bukan penetapan untuk seleksi berikutnya. Pastikan angka terbaru ke pengumuman resmi SSCASN dan BKN.</p><p style="margin:8px 0 0">Catatan jujur soal skor TKP: pembobotan nilai 1\u20135 per opsi di aplikasi ini adalah <b>rubrik internal bank soal</b>, karena BKN tidak menerbitkan bobot per opsi \u2014 jadi skor TKP latihanmu adalah perkiraan belajar, bukan kunci resmi.</p></div>
-  <div class="disc"><b>Jujur soal cakupan:</b> v1 berisi ${Q.length} soal teks (TWK ${nQ("TWK")}, TIU ${nQ("TIU")}, TKP ${nQ("TKP")}) dalam ${TOPICS.length} topik. <b>Soal Figural (gambar) belum tersedia di v1</b> dan simulasi dilabeli \u201CSimulasi v1 tanpa Figural\u201D. Figural direncanakan untuk v2.</div>
+  <div class="disc"><b>Jujur soal cakupan:</b> v1 berisi ${Q.length} soal (TWK ${nQ("TWK")}, TIU ${nQ("TIU")}, TKP ${nQ("TKP")}) dalam ${TOPICS.length} topik. <b>Soal Figural (gambar) kini tersedia sebagai pilot 15 soal di latihan TIU</b> (analogi, ketidaksamaan, serial), tetapi Simulasi CAT tetap tanpa Figural dan dilabeli \u201CSimulasi v1 tanpa Figural\u201D.</div>
   <div class="disc">Aplikasi latihan mandiri, <b>bukan aplikasi resmi BKN atau KemenPANRB, dan tidak menjamin kelulusan</b>. Soal dibuat sendiri dan belum tentu sama dengan soal asli. Tidak ada login dan tidak ada data pribadi yang dikirim ke server; kuota gratis, status premium, dan riwayat hanya disimpan di perangkat ini.</div>
   <button class="btn" id="inst"><span class="grow"><b>Pasang aplikasi di layar utama (opsional)</b><br><span class="mut small">Panduan langkah demi langkah untuk Android dan iPhone — tanpa memasang pun, aplikasi tetap bisa dibuka lewat link seperti biasa</span></span><span class="arr">›</span></button>`;
   document.getElementById("bk").onclick=home;document.getElementById("inst").onclick=installPage;scrollTop();
@@ -1611,8 +1698,8 @@ function showQ(){
   const it=L.list[L.i],q=it.q;L.ans=null;
   app.innerHTML=`${qbarHTML("Soal "+(L.i+1)+" / "+L.list.length)}
   <div class="qcard"><div class="qmeta"><span class="tag">${q.k}</span><span class="tag">${esc(q.tp)}</span></div>
-  <p class="q">${esc(q.q)}</p>
-  <div class="opts">${it.o.map((o,j)=>`<button class="opt" data-j="${j}"><span class="l">${String.fromCharCode(65+j)}</span><span>${esc(o.t)}</span></button>`).join("")}</div></div>
+  <p class="q">${esc(q.q)}</p>${figStemHTML(q,64)}
+  <div class="opts">${it.o.map((o,j)=>`<button class="opt" data-j="${j}"><span class="l">${String.fromCharCode(65+j)}</span>${o.fig?`<span class="figwrap">${renderFigural(o.fig,86)}</span>`:`<span>${esc(o.t)}</span>`}</button>`).join("")}</div></div>
   <div id="fb"></div>`;
   document.getElementById("qprog").style.width=((L.i+1)/L.list.length*100)+"%";
   bindExit(()=>{L=null;home()});
@@ -1688,7 +1775,10 @@ function startExam(kind,letter){
   if(kind==="full"&&!prem)return premiumPage("Simulasi CAT A\u2013D (110 soal / 100 menit) adalah fitur Premium.");
   if(kind==="mini"&&!prem&&freeState().miniUsed)return premiumPage(jatahMiniNote());
   const pick=(k,n)=>shuf(Q.filter(q=>q.k===k)).slice(0,n);
-  const pickSeeded=(k,n,seed)=>seededShuf(Q.filter(q=>q.k===k),seed+"-"+k).slice(0,n);
+  // CAT penuh: penarikan TIU WAJIB mengecualikan 3 topik figural secara eksplisit —
+  // label "Simulasi v1 tanpa Figural" tetap berlaku. Simulasi Mini memakai pick() biasa
+  // (undian normal), jadi soal figural boleh muncul di Mini.
+  const pickSeeded=(k,n,seed)=>seededShuf(Q.filter(q=>q.k===k&&!(k==="TIU"&&FIG_TOPICS.indexOf(q.tp)>=0)),seed+"-"+k).slice(0,n);
   let qs,min,label,scoreKey=null,catLetter=null;
   if(kind==="full"){catLetter=(letter&&CAT_LETTERS.includes(letter))?letter:"A";scoreKey="CAT-"+catLetter;qs=[...pickSeeded("TWK",30,"CAT-"+catLetter),...pickSeeded("TIU",35,"CAT-"+catLetter),...pickSeeded("TKP",45,"CAT-"+catLetter)];min=100;label="Simulasi CAT "+catLetter}
   else{qs=[...pick("TWK",6),...pick("TIU",8),...pick("TKP",10)];min=22;label="Simulasi Mini"}
@@ -1707,8 +1797,8 @@ function examShow(){
   const it=C.qs[C.cur],q=it.q;
   app.innerHTML=`${qbarHTML("Soal "+(C.cur+1)+" / "+C.qs.length,`<span class="tmwrap">${ic("clock")}<span class="tm" id="tm">--:--</span></span>`)}
   <div class="qcard"><div class="qmeta"><span class="tag">${q.k}</span><span class="tag">${esc(q.tp)}</span><span class="mut small">${esc(C.label)}${C.kind==="full"?" \u00B7 Simulasi v1 tanpa Figural":""}</span></div>
-  <p class="q">${esc(q.q)}</p>
-  <div class="opts">${it.o.map((o,j)=>`<button class="opt${C.ans[C.cur]===j?" sel":""}" data-j="${j}"><span class="l">${String.fromCharCode(65+j)}</span><span>${esc(o.t)}</span></button>`).join("")}</div></div>
+  <p class="q">${esc(q.q)}</p>${figStemHTML(q,64)}
+  <div class="opts">${it.o.map((o,j)=>`<button class="opt${C.ans[C.cur]===j?" sel":""}" data-j="${j}"><span class="l">${String.fromCharCode(65+j)}</span>${o.fig?`<span class="figwrap">${renderFigural(o.fig,86)}</span>`:`<span>${esc(o.t)}</span>`}</button>`).join("")}</div></div>
   <div class="rowbtns"><button class="btn" id="pv">\u2039 Sebelumnya</button><button class="btn" id="fl">${C.flag[C.cur]?"Batal ragu":"Ragu-ragu"}</button><button class="btn" id="nx2">Berikutnya \u203A</button></div>
   <h2>Navigasi soal</h2><div class="nav" role="group" aria-label="Nomor soal">${C.qs.map((x,n)=>`<button class="nb${n===C.cur?" cur":""}${C.ans[n]!==undefined?" done":""}${C.flag[n]?" flg":""}" data-n="${n}" aria-label="Soal ${n+1}">${n+1}</button>`).join("")}</div>
   <p class="mut small">Blok teal = sudah dijawab \u00B7 garis kuning di dalam = ragu-ragu \u00B7 Jawaban kosong dan salah sama-sama 0, jadi jangan kosongkan jawaban (khusus TKP, tiap opsi bernilai 1\u20135).</p>
@@ -1751,7 +1841,7 @@ function examFin(){
   <p class="mut" style="margin:8px 0 0">Ini simulasi mini: jumlah soalnya hanya 24, jauh lebih sedikit dari ujian asli (110 soal), jadi nilai lulus resmi tidak diterapkan mentah-mentah di sini — patokan di atas dihitung sebanding untuk bahan belajar. Di ujian asli, kamu lolos hanya bila lolos di <b>ketiga subtes sekaligus</b>: satu subtes saja di bawah nilai lulus sudah membuat tidak lolos, walaupun total nilaimu tinggi. Penilaian nilai lulus yang sebenarnya ada di Simulasi Penuh 110 soal. Semua angka passing grade di aplikasi ini adalah <b>${PG_ACUAN}</b>.</p></div>`}
   <div class="disc">Hasil simulasi ini <b>bukan prediksi nilai SKD sebenarnya</b>. Aplikasi latihan mandiri \u2014 bukan aplikasi resmi BKN dan tidak menjamin kelulusan.</div>
   <h2>Pembahasan</h2>
-  ${C.qs.map((it,n)=>{const q=it.q,a=C.ans[n],best=Math.max(...it.o.map(o=>o.p)),bi=it.o.findIndex(o=>o.p===best);return `<details class="card"><summary><b>${n+1}. [${q.k}]</b> ${esc(q.q)}</summary><p style="margin-top:8px">Jawabanmu: ${a===undefined?"<i>tidak dijawab</i>":esc(it.o[a].t)+" ("+it.o[a].p+" poin)"}</p><p>Jawaban terbaik: ${esc(it.o[bi].t)} (${best} poin)</p><p class="mut">${esc(q.e)}</p></details>`}).join("")}
+  ${C.qs.map((it,n)=>{const q=it.q,a=C.ans[n],best=Math.max(...it.o.map(o=>o.p)),bi=it.o.findIndex(o=>o.p===best);return `<details class="card"><summary><b>${n+1}. [${q.k}]</b> ${esc(q.q)}</summary>${figStemHTML(q,54)}<p style="margin-top:8px">Jawabanmu: ${a===undefined?"<i>tidak dijawab</i>":esc(optText(it.o[a]))+" ("+it.o[a].p+" poin)"}</p><p>Jawaban terbaik: ${esc(optText(it.o[bi]))} (${best} poin)</p><p class="mut">${esc(q.e)}</p></details>`}).join("")}
   <button class="btn pri" id="ag">Kembali ke beranda</button>`;
   /* Skeleton + spinner singkat selama nilai dihitung (momen tunggu di layar hasil CAT). */
   const lbl=C.label;
