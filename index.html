@@ -182,6 +182,20 @@ ul.feat{margin:8px 0;padding-left:22px} ul.feat li{margin:5px 0;line-height:1.55
 :root[data-theme="dark"] .sessgo{color:#06231F}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .sessgo{color:#06231F}}
 .sessmsg{margin-top:8px}
+/* ---------- belajar cepat: dropdown subtes & topik ---------- */
+.subdd{border:2px solid var(--bd);border-radius:6px;background:var(--card);box-shadow:var(--sh);padding:16px;margin:12px 0}
+.subdd>summary{cursor:pointer;list-style:none;font-family:"Space Grotesk",sans-serif;font-size:1.02rem;min-height:32px}
+.subdd>summary::-webkit-details-marker{display:none}
+.subdd>summary::after{content:"+";float:right;color:var(--mut);font-weight:700}
+.subdd[open]>summary::after{content:"\2212"}
+.topdd{border:2px solid var(--bd);border-radius:6px;background:var(--card);box-shadow:var(--sh-sm);padding:12px 14px;margin:10px 0}
+.topdd>summary{cursor:pointer;font-weight:700;list-style:none;min-height:32px;font-family:"Space Grotesk",sans-serif}
+.topdd>summary::-webkit-details-marker{display:none}
+.topdd>summary::after{content:"+";float:right;color:var(--mut);font-weight:700}
+.topdd[open]>summary::after{content:"\2212"}
+.topdd .inti{font-weight:600;margin-top:8px}
+.topdd ol,.topdd ul{margin:8px 0;padding-left:22px}
+.topdd li{margin:4px 0;line-height:1.6}
 @media (max-width:420px){.sessrow{flex-direction:column}.sessgo{width:100%}}
 @media (prefers-reduced-motion:reduce){.tm.low{animation:none}.bar i{transition:none}}
 </style>
@@ -710,6 +724,7 @@ function codeChecksumOK(code){
 }
 function isPremium(){const p=lsGet("skd-prem-v1",null);return !!(p&&p.code&&codeChecksumOK(p.code))}
 function activatePremium(code){lsSet("skd-prem-v1",{code:String(code).toUpperCase().replace(/[^A-Z0-9]/g,""),at:Date.now()})}
+function deactivatePremium(){try{localStorage.removeItem("skd-prem-v1")}catch(e){}}
 /* ================= DATA TRIK & TEKNIK ================= */
 const TRICKS=[
 {tp:"Pancasila dan nilai",t:"Pancasila — Cocokkan Nilai, Bukan Bunyi Sila",inti:"Baca kasusnya dulu, tanya \u201Cnilai apa yang dilanggar/diterapkan?\u201D, baru cocokkan ke sila lewat kata kunci — jangan menghafal bunyi sila saja.",langkah:["Baca kasus, garis bawahi kata kerja/keadaannya (menolong, bermusyawarah, adil, bersatu).","Cocokkan ke kata kunci sila: 1 Ketuhanan, 2 Kemanusiaan, 3 Persatuan, 4 Kerakyatan, 5 Keadilan.","Bila dua sila terasa cocok, tanya: ini soal perasaan pada satu orang (Sila 2) atau soal kebersamaan/keadilan untuk semua (Sila 3/5)?"],contoh:"\u201CWarga desa bergotong royong memperbaiki jembatan rusak tanpa dibayar.\u201D \u2192 Sila ke-3, Persatuan Indonesia (kerja bersama untuk kepentingan bersama).",jebakan:"Kasus menolong tetangga yang sakit (empati pada satu orang) \u2192 Sila ke-2, bukan ke-3. Bedakan empati personal vs persatuan bersama."},
@@ -745,6 +760,7 @@ const TEKNIK=[
 {t:"Kata Kunci TWK — Petakan Kasus ke Topik dalam 5 Detik",inti:"Hafal pemetaan kata kunci ini — sebagian besar soal TWK bisa dipetakan ke topiknya sebelum membaca opsi.",langkah:["Baca kasus, cari kata kuncinya.","Petakan: kejujuran / penolakan korupsi atau gratifikasi \u2192 Integritas.","Gotong royong, guyub, gelora persatuan (\u201CTiga G\u201D) \u2192 Sila ke-3, Persatuan Indonesia.","Bedakan Sila ke-2 (empati personal pada satu orang) vs Sila ke-5 (kesejahteraan bersama, keadilan untuk semua)."],contoh:"\u201CPejabat menolak hadiah dari rekanan proyek.\u201D \u2192 kata kunci \u201Cmenolak hadiah\u201D \u2192 Integritas.",jebakan:"\u201CMembantu tetangga yang kelaparan\u201D — empati personal \u2192 Sila ke-2, bukan ke-5. Sila ke-5 dipakai untuk kasus keadilan/kesejahteraan bersama (mis. pembagian bantuan yang merata, upah yang adil)."},
 {t:"TKP — Pilih Jawaban Paling Proaktif, Solutif, Kolaboratif",inti:"Di soal TKP, skor 5 hampir selalu opsi yang bertindak duluan (proaktif), menyelesaikan masalah (solutif), dan melibatkan orang lain (kolaboratif). Hindari jawaban pasif atau menunggu perintah.",langkah:["Cari opsi yang BERTINDAK (bukan hanya menjelaskan atau menunggu).","Cek: apakah opsi itu menyelesaikan masalah dan melibatkan orang lain?","Buang opsi \u201Cmenunggu\u201D, \u201Cmembiarkan\u201D, \u201Cmenyerahkan sepenuhnya ke orang lain\u201D."],contoh:"\u201CRekan baru kesulitan memakai aplikasi kantor.\u201D \u2192 \u201CMeluangkan beberapa menit menjelaskan inti, lalu membagikan panduan tertulis\u201D (proaktif + solutif + memandirikan) — bukan \u201Cmengerjakan tugas rekan itu sendiri\u201D (tidak kolaboratif).",jebakan:"Opsi yang terdengar baik tapi pasif — \u201Cakan membantu bila diminta\u201D — menunggu diminta bukan proaktif. Skor 5 selalu bergerak duluan."}
 ];
+const TEKNIK_SUB=["ALL","ALL","ALL","ALL","ALL","TIU","TIU","TIU","TIU","TWK","TKP"]; // subtes untuk tiap TEKNIK (urutan sama dengan TEKNIK); ALL = semua subtes
 const HAFAL=[
 {t:"Mnemonik / Jembatan Keledai — Akronim dan Kalimat Kunci",inti:"Ubah daftar yang harus dihafal menjadi 1 kata atau 1 kalimat yang mudah diingat — otak mengingat cerita lebih mudah daripada daftar.",langkah:["Ambil huruf awal tiap butir, rangkai jadi kata/kalimat.","Ucapkan kalimat itu 3 kali sambil menunjuk butir aslinya.","Uji diri: tulis butirnya dari kalimat kuncinya saja, tanpa melihat catatan."],contoh:"5 sila Pancasila: \u201CKakekku Pergi Ke Kebun\u201D \u2192 KakeTUHANan – KEmanusiaan – PERsatuan – KErakyatan – KEadilan. Pasal UUD kunci: \u201CWarga yang SAMA kedudukannya (27), berAGAMA (29), ikut BELA negara (30), SEKOLAH (31), EKONOMI bersama (33), berbahasa Indonesia (36).\u201D Tanggal 1945: \u201CLahir – Piagam – Merdeka – Sah\u201D \u2192 1 Juni lahirnya Pancasila – 22 Juni Piagam Jakarta – 17 Agustus Proklamasi – 18 Agustus UUD disahkan.",jebakan:"Mnemonik yang terlalu panjang sama sulitnya dengan daftar aslinya — 1 kalimat maksimal 7 kata. Bila kalimat kuncimu lebih panjang dari yang dihafal, buat ulang yang lebih pendek."},
 {t:"Spaced Repetition — Ulang 1 Hari \u2192 3 Hari \u2192 7 Hari",inti:"Ulang materi dengan jarak yang makin jauh: besok (1 hari), 3 hari lagi, 7 hari lagi. Cara ini mengalahkan lupa jauh lebih efektif daripada mengulang 10 kali dalam sehari.",langkah:["Hari belajar = Hari 0. Tulis tanggal ulangnya di catatan: +1, +3, +7.","Tiap sesi ulang maksimal 15 menit per bab — cukup baca cepat + uji diri 5 soal.","Bila satu bab masih gagal di ulangan +7, ulangi siklusnya dari awal untuk bab itu saja."],contoh:"Pancasila dipelajari Senin \u2192 ulang Selasa (+1) \u2192 ulang Kamis (+3) \u2192 ulang Senin depan (+7). Empat sentuhan singkat mengalahkan satu sesi maraton 2 jam.",jebakan:"Mengulang materi yang sudah hafal dan mengabaikan yang belum — sesi ulang harus diawali dengan uji diri, bukan membaca ulang dari awal."},
@@ -807,8 +823,7 @@ function home(){
   <h2>Latihan terarah</h2>
   <button class="btn" id="tp"><span class="grow"><b>Latihan per topik</b><br><span class="mut small">${TOPICS.length} topik \u00B7 10 soal per sesi \u00B7 ${FREE_TOPIC} gratis penuh</span></span><span class="arr">\u203A</span></button>
   <h2>Belajar cepat</h2>
-  <button class="btn" id="pg-trik"><span class="grow"><b>Trik Cepat per Topik</b><br><span class="mut small">${TRICKS.length} kartu trik \u00B7 contoh gratis: ${FREE_TRICK_TOPIC}</span></span><span class="arr">\u203A</span></button>
-  <button class="btn" id="pg-tek"><span class="grow"><b>Teknik Cepat Mengerjakan Soal</b><br><span class="mut small">${TEKNIK.length} teknik untuk dipakai saat simulasi &amp; ujian</span></span>${prem?"<span class=\"arr\">\u203A</span>":"<span class=\"locktag\">PREMIUM</span>"}</button>
+  <button class="btn" id="pg-trik"><span class="grow"><b>Belajar Cepat \u2014 Trik per Subtes &amp; Topik</b><br><span class="mut small">Dropdown TWK \u00B7 TIU \u00B7 TKP: trik langkah demi langkah per model soal \u00B7 contoh gratis: ${FREE_TRICK_TOPIC}</span></span><span class="arr">\u203A</span></button>
   <button class="btn" id="pg-hafal"><span class="grow"><b>Cara Menghafal Materi</b><br><span class="mut small">${HAFAL.length} teknik hafalan + rencana 14 hari</span></span>${prem?"<span class=\"arr\">\u203A</span>":"<span class=\"locktag\">PREMIUM</span>"}</button>
   ${h.length?`<h2>Riwayat terakhir</h2><div class="card">${h.slice(0,3).map(x=>`<div class="row2"><span>${esc(x.l)} <span class="mut small">${esc(x.d)}</span></span><b>${x.p}%</b></div>`).join("")}</div>`:""}
   <div class="foot"><button class="lnk" id="inf">Kisi-kisi dan tentang</button><button class="lnk" id="prem2">${prem?"Status Premium":"Premium " + HARGA}</button></div>`;
@@ -837,7 +852,6 @@ function home(){
   $("simmini").onclick=()=>startExam("mini");
   $("tp").onclick=topics;
   $("pg-trik").onclick=trikPage;
-  $("pg-tek").onclick=teknikPage;
   $("pg-hafal").onclick=hafalPage;
   $("inf").onclick=info;
   $("prem2").onclick=()=>premiumPage();
@@ -857,44 +871,52 @@ function topics(){
   const prem=isPremium();
   const g=k=>{const ts=TOPICS.filter(t=>Q.some(q=>q.k===k&&q.tp===t));return `<h2>${k} \u2014 ${NAMA[k]}</h2><div class="chips2">${ts.map(t=>{const free=t===FREE_TOPIC;return `<button class="chip${free?" free":""}" data-t="${esc(t)}">${esc(t)} <small>${byTopic(t).length} soal</small>${free?` <span class="sticker">GRATIS</span>`:prem?"":` <span class="locktag">PREMIUM</span>`}</button>`}).join("")}</div>`};
   app.innerHTML=`<button class="back" id="bk">\u2039 Kembali</button><h1>Latihan per topik</h1><p class="mut">Pilih satu topik. Soal diacak \u2014 termasuk urutan pilihannya \u2014 10 per sesi, lengkap dengan pembahasan.</p>${["TWK","TIU","TKP"].map(g).join("")}
-  <div class="disc" style="margin-top:18px">Tiap topik juga punya kartu <b>Trik Cepat</b>-nya sendiri. Lihat di halaman <b>Trik Cepat per Topik</b> dari beranda.</div>`;
+  <div class="disc" style="margin-top:18px">Tiap topik juga punya triknya sendiri di halaman <b>Belajar Cepat</b> dari beranda \u2014 tersusun per subtes, lalu per topik.</div>`;
   document.getElementById("bk").onclick=home;
   app.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{const t=b.dataset.t;if(t!==FREE_TOPIC&&!isPremium())return premiumPage("Topik \u201C"+t+"\u201D adalah fitur Premium. Topik gratis penuh: "+FREE_TOPIC+".");startLatihan({mode:"TOPIC",topic:t,label:"Topik: "+t})});
   scrollTop();
 }
 /* ================= KARTU TRIK / TEKNIK ================= */
-function trickCardHTML(x){
-  return `<div class="trickcard"><span class="sticker">TRIK CEPAT</span><h3>${esc(x.t)}</h3>
-  <p class="inti">${esc(x.inti)}</p>
-  <p style="margin:10px 0 2px"><b>Langkah:</b></p><ol>${x.langkah.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>
+function trickBodyHTML(x){
+  return `<p class="inti">${esc(x.inti)}</p>
+  <p style="margin:10px 0 2px"><b>Langkah mengerjakan:</b></p><ol>${x.langkah.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>
   ${x.tabel?`<table class="frac">${x.tabel.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</table>`:""}
   <div class="exbox"><b>Contoh:</b> ${esc(x.contoh)}</div>
-  ${x.jebakan?`<div class="trapbox"><b>Jebakan:</b> ${esc(x.jebakan)}</div>`:""}</div>`;
+  ${x.jebakan?`<div class="trapbox"><b>Jebakan:</b> ${esc(x.jebakan)}</div>`:""}`;
+}
+function trickCardHTML(x){
+  return `<div class="trickcard"><span class="sticker">TRIK CEPAT</span><h3>${esc(x.t)}</h3>${trickBodyHTML(x)}</div>`;
 }
 function lockedRowHTML(title,sub){
   return `<button class="btn" data-lock="1"><span class="grow"><b>${esc(title)}</b>${sub?`<br><span class="mut small">${esc(sub)}</span>`:""}</span><span class="locktag">PREMIUM</span></button>`;
 }
 function trikPage(){
   const prem=isPremium();
-  app.innerHTML=`<button class="back" id="bk">\u2039 Kembali</button><h1>Trik Cepat per Topik</h1>
-  <p class="mut">${TRICKS.length} kartu trik, satu untuk tiap topik. Ini teknik menjawab \u2014 bukan bocoran soal \u2014 dan tidak menjamin kelulusan. Kartu <b>${FREE_TRICK_TOPIC}</b> gratis sebagai contoh.</p>
-  <div id="free">${trickCardHTML(TRICKS.find(x=>x.tp===FREE_TRICK_TOPIC))}</div>
-  ${prem?TRICKS.filter(x=>x.tp!==FREE_TRICK_TOPIC).map(trickCardHTML).join(""):TRICKS.filter(x=>x.tp!==FREE_TRICK_TOPIC).map(x=>lockedRowHTML(x.t,"Topik: "+x.tp)).join("")}
-  ${prem?"":`<button class="btn yel" id="goprem"><span class="grow" style="text-align:center">Buka semua ${TRICKS.length} trik \u2014 Premium ${HARGA}</span></button>`}`;
+  const topicK={};Q.forEach(q=>{if(!(q.tp in topicK))topicK[q.tp]=q.k});
+  const drop=(x,sub)=>{const free=x.tp===FREE_TRICK_TOPIC;
+    if(prem||free)return `<details class="topdd"${free?" open":""}><summary>${esc(x.t)}</summary>${trickBodyHTML(x)}</details>`;
+    return lockedRowHTML(x.t,sub)};
+  const subGroup=k=>{
+    const trs=TRICKS.filter(x=>topicK[x.tp]===k);
+    const tes=TEKNIK.filter((x,i)=>TEKNIK_SUB[i]===k);
+    return `<details class="subdd"${k==="TIU"?" open":""}><summary><b>${k}</b> &nbsp;${esc(NAMA[k])} &nbsp;<span class="mut small">${trs.length} topik</span></summary>
+    <p class="mut small" style="margin:10px 0 2px">Ketuk satu topik untuk membuka triknya: cara mengerjakan model soal itu, langkah demi langkah, supaya menjawab lebih cepat.</p>
+    ${trs.map(x=>drop(x,"Topik "+k+": "+x.tp)).join("")}
+    ${tes.length?`<p style="margin:14px 0 2px"><b>Teknik khusus ${k}</b> <span class="mut small">\u2014 cara cepat untuk model soal ${k}</span></p>${tes.map(x=>drop(x,"Teknik cepat "+k)).join("")}`:""}
+    ${k==="TWK"?`<button class="btn" id="gohafal"><span class="grow"><b>Cara Menghafal Materi TWK</b><br><span class="mut small">${HAFAL.length} teknik hafalan + rencana 14 hari</span></span><span class="arr">\u203A</span></button>`:""}
+    </details>`};
+  const umum=TEKNIK.filter((x,i)=>TEKNIK_SUB[i]==="ALL");
+  app.innerHTML=`<button class="back" id="bk">\u2039 Kembali</button><h1>Belajar Cepat</h1>
+  <p class="mut">Trik tersusun per subtes dan per topik: buka subtesnya, ketuk topiknya, lalu ikuti langkah mengerjakan model soal itu satu per satu. Ini teknik menjawab \u2014 bukan bocoran soal \u2014 dan tidak menjamin kelulusan. Contoh gratis: topik <b>${FREE_TRICK_TOPIC}</b> di subtes TIU.</p>
+  <details class="subdd"><summary><b>Semua subtes</b> &nbsp;Teknik saat ujian &nbsp;<span class="mut small">${umum.length} teknik</span></summary>
+  <p class="mut small" style="margin:10px 0 2px">Teknik umum untuk dipakai saat simulasi dan ujian di semua subtes. Latih di Simulasi Penuh sampai jadi kebiasaan.</p>
+  ${umum.map(x=>drop(x,"Teknik cepat \u2014 semua subtes")).join("")}</details>
+  ${["TWK","TIU","TKP"].map(subGroup).join("")}
+  ${prem?"":`<button class="btn yel" id="goprem"><span class="grow" style="text-align:center">Buka semua trik &amp; teknik \u2014 Premium ${HARGA}</span></button>`}`;
   document.getElementById("bk").onclick=home;
-  app.querySelectorAll("[data-lock]").forEach(b=>b.onclick=()=>premiumPage("Semua kartu Trik Cepat adalah fitur Premium. Contoh gratis: "+FREE_TRICK_TOPIC+"."));
+  app.querySelectorAll("[data-lock]").forEach(b=>b.onclick=()=>premiumPage("Semua trik dan teknik Belajar Cepat adalah fitur Premium. Contoh gratis: "+FREE_TRICK_TOPIC+"."));
   const gp=document.getElementById("goprem");if(gp)gp.onclick=()=>premiumPage();
-  scrollTop();
-}
-function teknikPage(){
-  const prem=isPremium();
-  app.innerHTML=`<button class="back" id="bk">\u2039 Kembali</button><h1>Teknik Cepat Mengerjakan Soal</h1>
-  <p class="mut">${TEKNIK.length} teknik lintas topik untuk dipakai saat simulasi dan ujian \u2014 bukan saat belajar. Latih di Simulasi Penuh sampai jadi kebiasaan.</p>
-  ${prem?TEKNIK.map(trickCardHTML).join(""):TEKNIK.map(x=>lockedRowHTML(x.t,"")).join("")}
-  ${prem?"":`<button class="btn yel" id="goprem"><span class="grow" style="text-align:center">Buka semua teknik \u2014 Premium ${HARGA}</span></button>`}`;
-  document.getElementById("bk").onclick=home;
-  app.querySelectorAll("[data-lock]").forEach(b=>b.onclick=()=>premiumPage("Halaman Teknik Cepat adalah fitur Premium."));
-  const gp=document.getElementById("goprem");if(gp)gp.onclick=()=>premiumPage();
+  const gh=document.getElementById("gohafal");if(gh)gh.onclick=hafalPage;
   scrollTop();
 }
 function hafalPage(){
@@ -920,13 +942,32 @@ function premiumPage(note){
     app.innerHTML=`<button class="back" id="bk">\u2039 Kembali</button><h1>Premium aktif</h1>
     <div class="card" style="border-color:var(--teal)"><span class="sticker">PREMIUM</span><p style="margin:10px 0 0">Perangkat ini sudah Premium. Semua fitur terbuka:</p>
     <ul class="feat"><li>Bank penuh ${Q.length} soal (${TOPICS.length} topik) + latihan tanpa batas</li><li>Latihan per sesi per subtes (maksimal 50 soal per sesi)</li><li>Simulasi CAT A\u2013D 110 soal / 100 menit (Simulasi v1 tanpa Figural)</li><li>Semua ${TRICKS.length} kartu Trik Cepat, ${TEKNIK.length} Teknik Cepat, dan Cara Menghafal + rencana 14 hari</li></ul></div>
-    <button class="btn pri" id="go">Mulai latihan</button>`;
+    <div class="card"><h3 style="margin:0 0 6px">Cara kerja Premium di aplikasi ini</h3>
+    <p><b>Ini bukan login akun.</b> Tidak ada nama pengguna dan tidak ada kata sandi. Premium dibuka dengan <b>kode aktivasi</b> yang dimasukkan sekali di perangkat ini.</p>
+    <p>Setelah aktif, status Premium <b>tersimpan di perangkat ini</b> \u2014 tetap aktif walau aplikasi ditutup dan dibuka lagi \u2014 sampai kamu menonaktifkannya atau menghapus data situs di browser.</p>
+    <p style="margin-bottom:0">Jadi, bila perangkat ini sudah Premium padahal kamu <b>belum memasukkan kode yang baru kamu buat</b>, itu karena perangkat ini sudah pernah memasukkan kode sebelumnya dan statusnya masih tersimpan. Kode baru itu untuk <b>pembeli atau perangkat lain</b> \u2014 tidak perlu dimasukkan di perangkat ini.</p></div>
+    <button class="btn pri" id="go">Mulai latihan</button>
+    <h2>Keluar dari Premium di perangkat ini</h2>
+    <p class="mut" style="margin:0">Menonaktifkan hanya menghapus status Premium <b>di perangkat ini saja</b>. Kodemu <b>tidak hangus</b> \u2014 masukkan lagi kapan pun di halaman ini untuk mengaktifkan Premium kembali.</p>
+    <button class="btn" id="deact"><span class="grow" style="text-align:center"><b>Nonaktifkan Premium di perangkat ini</b></span></button>
+    <div id="dmsg"></div>`;
     document.getElementById("bk").onclick=home;
     document.getElementById("go").onclick=home;
+    const db=document.getElementById("deact");
+    db.onclick=()=>{
+      if(db.dataset.arm){deactivatePremium();premiumPage("Premium sudah dinonaktifkan di perangkat ini. Kodemu tidak hangus \u2014 masukkan lagi di bawah untuk mengaktifkan kembali.");return}
+      db.dataset.arm="1";
+      db.innerHTML=`<span class="grow" style="text-align:center"><b>Yakin? Ketuk sekali lagi untuk menonaktifkan</b></span>`;
+      document.getElementById("dmsg").innerHTML=`<div class="msg info">Setelah dinonaktifkan, perangkat ini kembali ke paket gratis. Kamu bisa mengaktifkan lagi dengan kode yang sama.</div>`;
+    };
     scrollTop();return;
   }
   app.innerHTML=`<button class="back" id="bk">\u2039 Kembali</button><h1>Buka Premium</h1>
   ${note?`<div class="msg info">${esc(note)}</div>`:""}
+  <div class="card"><h3 style="margin:0 0 6px">Bukan login \u2014 Premium dibuka dengan kode</h3>
+  <p>Aplikasi ini <b>tidak punya akun</b>: tidak ada nama pengguna, tidak ada kata sandi, dan tidak ada tombol masuk atau keluar seperti aplikasi lain. Cara kerjanya begini:</p>
+  <ol style="margin:8px 0;padding-left:22px"><li style="margin:4px 0;line-height:1.6">Kamu membeli lewat WhatsApp, lalu menerima <b>kode aktivasi</b> dari admin.</li><li style="margin:4px 0;line-height:1.6">Kode itu dimasukkan <b>sekali</b> di perangkatmu, di kolom di bawah halaman ini.</li><li style="margin:4px 0;line-height:1.6">Premium langsung aktif dan <b>tersimpan di perangkat itu</b> \u2014 tetap aktif walau aplikasi ditutup dan dibuka lagi \u2014 sampai dinonaktifkan atau data situs di browser dihapus.</li></ol>
+  <p style="margin-bottom:0">Satu kode untuk satu pembeli. Kalau perangkatmu sudah Premium, berarti perangkat itu sudah pernah memasukkan kode \u2014 kode baru yang dibuat untuk pembeli lain tidak perlu dimasukkan di perangkatmu.</p></div>
   <div class="card"><span class="sticker">HARGA PELUNCURAN</span><div class="price-row" style="margin-top:12px"><span class="price-old">${HARGA_ASLI}</span><span class="price">${HARGA}</span><span class="savebadge">HEMAT 76% \u00B7 Rp65.000</span></div><p style="margin:8px 0 0"><b>${HARGA} membuka semua Premium di aplikasi ini.</b></p><p class="mut" style="margin:2px 0 0">Sekali bayar \u00B7 tanpa langganan \u00B7 tanpa kedaluwarsa</p><div class="promonote"><b>Promo sampai ${PROMO_SAMPAI}.</b> Setelah tanggal itu, harga Premium menjadi <b>${HARGA_ASLI}</b>.</div>
   <ul class="feat"><li>Bank penuh ${Q.length} soal terklasifikasi: TWK ${nQ("TWK")}, TIU ${nQ("TIU")}, TKP ${nQ("TKP")} (${TOPICS.length} topik)</li><li>Latihan acak, per subtes, dan per topik tanpa batas</li><li>Latihan per sesi per subtes (maksimal 50 soal per sesi, pilih lewat dropdown)</li><li>Simulasi CAT A\u2013D 110 soal / 100 menit + Simulasi Mini tanpa batas</li><li>Pembahasan lengkap semua soal</li><li>${TRICKS.length} kartu Trik Cepat + ${TEKNIK.length} Teknik Cepat + Cara Menghafal &amp; rencana 14 hari</li></ul>
   <div class="disc" style="margin-bottom:0"><b>Jujur:</b> soal Figural (gambar) belum tersedia di versi ini \u2014 sedang disiapkan untuk v2. Yang kamu beli adalah ${Q.length} soal di atas. Ini alat latihan, bukan soal resmi BKN, dan tidak menjamin kelulusan.</div></div>
@@ -935,7 +976,7 @@ function premiumPage(note){
   <h2>Sudah punya kode?</h2>
   <div class="card"><label class="mut" for="code" style="font-weight:600">Kode aktivasi Premium (format XXXX-XXXX)</label>
   <input class="codein" id="code" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX" maxlength="9">
-  <p class="mut small" style="margin:0">1 kode = 1 pembeli, aktif di perangkat pertama yang memasukkannya. Mohon jangan dibagikan.</p>
+  <p class="mut small" style="margin:0">1 kode = 1 pembeli. Masukkan kode di perangkatmu sendiri \u2014 Premium akan tersimpan di perangkat itu sampai dinonaktifkan atau data situs dihapus. Mohon jangan dibagikan.</p>
   <button class="btn pri" id="act">Aktifkan Premium</button><div id="amsg"></div></div>`;
   document.getElementById("bk").onclick=home;
   document.getElementById("wabuy").onclick=()=>{
