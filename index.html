@@ -158,7 +158,15 @@ table.frac td,table.frac th{border:2px solid var(--bd);padding:6px 10px;text-ali
 .day.done .dt{opacity:.62}
 .day b{font-family:"Space Grotesk",sans-serif}
 /* ---------- premium ---------- */
-.price{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:2rem;line-height:1.1}
+.price{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:2.15rem;line-height:1.1}
+.price-row{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.price-old{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:1.35rem;line-height:1;color:var(--mut);text-decoration:line-through;text-decoration-thickness:3px;text-decoration-color:var(--red)}
+.savebadge{display:inline-block;background:var(--red);color:#fff;border:2px solid var(--bd);border-radius:4px;padding:2px 9px;font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:.82rem;letter-spacing:.02em;box-shadow:var(--sh-sm)}
+.promonote{border:2px solid var(--bd);background:var(--yel);color:#1F2937;border-radius:6px;padding:10px 12px;margin:12px 0 0;font-size:.93rem;line-height:1.5}
+.promonote b{font-family:"Space Grotesk",sans-serif}
+.priceline{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin:8px 0 2px}
+.priceline .old{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:1.02rem;color:var(--mut);text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:var(--red)}
+.priceline .new{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:1.35rem;line-height:1}
 .codein{display:block;width:100%;min-height:56px;border-radius:6px;border:2px solid var(--bd);background:var(--card);color:var(--ink);font-family:ui-monospace,Menlo,monospace;font-size:1.25rem;letter-spacing:.14em;text-transform:uppercase;text-align:center;padding:10px;margin:8px 0 4px}
 .codein:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
 .msg{border:2px solid var(--bd);border-radius:6px;padding:12px 14px;margin:12px 0;font-size:.95rem}
@@ -634,7 +642,9 @@ t("Kamu diminta lembur setiap hari selama sebulan tanpa kejelasan kompensasi. Si
 // Nomor WhatsApp bisnis (format 628xxxxxxxxxx). MASIH KOSONG — menunggu Direktur.
 // Selama kosong, tombol beli menampilkan pesan jujur bahwa pembelian via WA belum aktif.
 const FEEDBACK="";
-const HARGA="Rp15.000";
+const HARGA="Rp20.000";
+const HARGA_ASLI="Rp85.000";
+const PROMO_SAMPAI="31 Desember 2026";
 const KISI={TWK:["Pancasila, UUD 1945, NKRI, Bhinneka Tunggal Ika","Nasionalisme, integritas, bela negara","Sejarah dan isu nasional","Bahasa Indonesia"],TIU:["Verbal: sinonim, antonim, analogi","Numerik: deret, persen, perbandingan, soal cerita","Logika: silogisme dan penalaran analitis","Figural (soal gambar): belum ada di aplikasi ini — ditunda ke v2"],TKP:["Pelayanan publik, jejaring kerja","Sosial budaya, teknologi informasi dan komunikasi","Profesionalisme, anti radikalisme"]};
 const NAMA={TWK:"Tes Wawasan Kebangsaan",TIU:"Tes Intelegensia Umum",TKP:"Tes Karakteristik Pribadi"};
 const PG={TWK:65,TIU:80,TKP:166};
@@ -783,7 +793,7 @@ function home(){
   </div>
   <div class="disc"><b>Penting:</b> Aplikasi latihan mandiri ini <b>bukan aplikasi resmi BKN dan tidak menjamin kelulusan</b>. Soal disusun sendiri mengacu kisi-kisi KepmenPANRB 321/2024. <b>Soal Figural belum tersedia di v1</b> — sedang disiapkan untuk v2.</div>
   ${prem?`<div class="card" style="border-color:var(--teal)"><span class="sticker">PREMIUM AKTIF</span><p style="margin:10px 0 0">Semua fitur terbuka: bank ${Q.length} soal, latihan tanpa batas, latihan per sesi, semua trik &amp; teknik, dan Simulasi CAT A\u2013D 110 soal / 100 menit.</p></div>`
-  :`<div class="card"><span class="sticker">GRATIS HARI INI</span><p style="margin:10px 0 4px">Sisa latihan gratis: <b>${fl} dari 10 soal</b> \u00B7 Simulasi Mini: <b>${fs.miniUsed?"sudah dipakai":"1x gratis"}</b> \u00B7 Topik gratis penuh: <b>${FREE_TOPIC}</b></p><p class="mut" style="margin:0">Premium ${HARGA} sekali bayar membuka semuanya, tanpa langganan.</p><button class="btn yel" id="goprem"><span class="grow" style="text-align:center">Buka Premium \u2014 ${HARGA}</span></button></div>`}
+  :`<div class="card"><span class="sticker">GRATIS HARI INI</span><p style="margin:10px 0 4px">Sisa latihan gratis: <b>${fl} dari 10 soal</b> \u00B7 Simulasi Mini: <b>${fs.miniUsed?"sudah dipakai":"1x gratis"}</b> \u00B7 Topik gratis penuh: <b>${FREE_TOPIC}</b></p><div style="margin-top:14px"><span class="sticker">HARGA PELUNCURAN</span><div class="priceline"><span class="old">${HARGA_ASLI}</span><span class="new">${HARGA}</span><span class="savebadge">HEMAT 76%</span></div><p style="margin:2px 0 0"><b>${HARGA} membuka semua Premium</b> \u2014 sekali bayar, tanpa langganan.</p><p class="mut" style="margin:4px 0 0">Promo sampai <b style="color:var(--ink)">${PROMO_SAMPAI}</b>. Setelah itu harga menjadi ${HARGA_ASLI}.</p></div><button class="btn yel" id="goprem"><span class="grow" style="text-align:center">Buka Semua Premium \u2014 ${HARGA}</span></button></div>`}
   <button class="big" id="q10"><span>Mulai latihan</span><small>10 soal acak dari semua topik${prem?"":" (kuota gratis harian)"}</small></button>
   <h2>Pilih subtes \u2014 latihan 10 soal</h2>
   <div class="g3">${["TWK","TIU","TKP"].map(k=>`<button class="tile" data-k="${k}"><span class="dot" style="background:${SUBC[k]}"></span><b>${k}</b><span>${NAMA[k].replace("Tes ","")}<br>${nQ(k)} soal</span></button>`).join("")}</div>
@@ -917,10 +927,10 @@ function premiumPage(note){
   }
   app.innerHTML=`<button class="back" id="bk">\u2039 Kembali</button><h1>Buka Premium</h1>
   ${note?`<div class="msg info">${esc(note)}</div>`:""}
-  <div class="card"><div class="price">${HARGA}</div><p class="mut" style="margin:2px 0 8px">sekali bayar \u00B7 tanpa langganan \u00B7 tanpa kedaluwarsa</p>
+  <div class="card"><span class="sticker">HARGA PELUNCURAN</span><div class="price-row" style="margin-top:12px"><span class="price-old">${HARGA_ASLI}</span><span class="price">${HARGA}</span><span class="savebadge">HEMAT 76% \u00B7 Rp65.000</span></div><p style="margin:8px 0 0"><b>${HARGA} membuka semua Premium di aplikasi ini.</b></p><p class="mut" style="margin:2px 0 0">Sekali bayar \u00B7 tanpa langganan \u00B7 tanpa kedaluwarsa</p><div class="promonote"><b>Promo sampai ${PROMO_SAMPAI}.</b> Setelah tanggal itu, harga Premium menjadi <b>${HARGA_ASLI}</b>.</div>
   <ul class="feat"><li>Bank penuh ${Q.length} soal terklasifikasi: TWK ${nQ("TWK")}, TIU ${nQ("TIU")}, TKP ${nQ("TKP")} (${TOPICS.length} topik)</li><li>Latihan acak, per subtes, dan per topik tanpa batas</li><li>Latihan per sesi per subtes (maksimal 50 soal per sesi, pilih lewat dropdown)</li><li>Simulasi CAT A\u2013D 110 soal / 100 menit + Simulasi Mini tanpa batas</li><li>Pembahasan lengkap semua soal</li><li>${TRICKS.length} kartu Trik Cepat + ${TEKNIK.length} Teknik Cepat + Cara Menghafal &amp; rencana 14 hari</li></ul>
   <div class="disc" style="margin-bottom:0"><b>Jujur:</b> soal Figural (gambar) belum tersedia di versi ini \u2014 sedang disiapkan untuk v2. Yang kamu beli adalah ${Q.length} soal di atas. Ini alat latihan, bukan soal resmi BKN, dan tidak menjamin kelulusan.</div></div>
-  <button class="btn yel" id="wabuy"><span class="grow" style="text-align:center">Buka Premium via WhatsApp</span></button>
+  <button class="btn yel" id="wabuy"><span class="grow" style="text-align:center">Buka Semua Premium via WhatsApp \u2014 ${HARGA}</span></button><p class="mut small" style="text-align:center;margin:-2px 0 0">Harga peluncuran ${HARGA} (dari ${HARGA_ASLI}) \u00B7 promo sampai ${PROMO_SAMPAI}</p>
   <div id="wamsg"></div>
   <h2>Sudah punya kode?</h2>
   <div class="card"><label class="mut" for="code" style="font-weight:600">Kode aktivasi Premium (format XXXX-XXXX)</label>
@@ -931,7 +941,7 @@ function premiumPage(note){
   document.getElementById("wabuy").onclick=()=>{
     const box=document.getElementById("wamsg");
     if(!FEEDBACK){box.innerHTML=`<div class="msg err"><b>Pembelian via WhatsApp belum aktif.</b> Nomor WhatsApp bisnis MUGA STUDIO belum diisi, jadi tombol ini belum bisa menghubungkanmu ke admin. Bila kamu sudah membeli dan menerima kode dari admin, masukkan kodemu di bawah \u2014 aktivasi kode tetap berfungsi.</div>`;return}
-    const text="Halo MUGA STUDIO, saya mau beli Premium Siap Abdi (jalur CPNS) "+HARGA+". Saya sudah coba latihan gratisnya.";
+    const text="Halo MUGA STUDIO, saya mau beli Premium Siap Abdi (jalur CPNS) harga peluncuran "+HARGA+" (harga normal "+HARGA_ASLI+", promo sampai "+PROMO_SAMPAI+"). "+HARGA+" untuk membuka semua Premium. Saya sudah coba latihan gratisnya.";
     window.open("https://wa.me/"+FEEDBACK+"?text="+encodeURIComponent(text),"_blank","noopener");
   };
   document.getElementById("act").onclick=()=>{
