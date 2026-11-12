@@ -670,6 +670,7 @@ const PROMO_SAMPAI="31 Desember 2026";
    dan semua tampilan coret/promo hilang — tidak perlu update manual. */
 const PROMO_AKTIF=Date.now()<=new Date(2026,11,31,23,59,59).getTime();
 const HARGA=PROMO_AKTIF?"Rp20.000":HARGA_ASLI;
+const BUILD_STAMP="Build P12 · Halaman Premium diperbarui 12 Nov 2026";
 const KISI={TWK:["Pancasila, UUD 1945, NKRI, Bhinneka Tunggal Ika","Nasionalisme, integritas, bela negara","Sejarah dan isu nasional","Bahasa Indonesia"],TIU:["Verbal: sinonim, antonim, analogi","Numerik: deret, persen, perbandingan, soal cerita","Logika: silogisme dan penalaran analitis","Figural (soal gambar): belum ada di aplikasi ini — ditunda ke v2"],TKP:["Pelayanan publik, jejaring kerja","Sosial budaya, teknologi informasi dan komunikasi","Profesionalisme, anti radikalisme"]};
 const NAMA={TWK:"Tes Wawasan Kebangsaan",TIU:"Tes Intelegensia Umum",TKP:"Tes Karakteristik Pribadi"};
 const PG={TWK:65,TIU:80,TKP:166};
@@ -736,6 +737,19 @@ function codeChecksumOK(code){
 function isPremium(){const p=lsGet("skd-prem-v1",null);return !!(p&&p.code&&codeChecksumOK(p.code))}
 function activatePremium(code){lsSet("skd-prem-v1",{code:String(code).toUpperCase().replace(/[^A-Z0-9]/g,""),at:Date.now()})}
 function deactivatePremium(){try{localStorage.removeItem("skd-prem-v1")}catch(e){}}
+function storedPremiumCode(){const p=lsGet("skd-prem-v1",null);return (p&&p.code)?String(p.code).toUpperCase().replace(/[^A-Z0-9]/g,""):""}
+function cleanCodeInput(raw){return String(raw||"").toUpperCase().replace(/[\s\-_]/g,"")}
+function formatCodeDisplay(cleaned){const c=String(cleaned||"");return c.length>4?c.slice(0,4)+"-"+c.slice(4):c}
+function validateActivationCode(raw){
+  const c=cleanCodeInput(raw);
+  if(!c)return{ok:false,kind:"empty",msg:"Kolom kode masih kosong. Masukkan atau tempel kode 8 karakter dari admin (format XXXX-XXXX)."};
+  if(c.length<8)return{ok:false,kind:"short",msg:"Kode terlalu pendek: baru "+c.length+" dari 8 karakter (format XXXX-XXXX). Periksa lagi \u2014 mungkin ada huruf yang belum tercopy atau terhapus saat menempel."};
+  if(c.length>8)return{ok:false,kind:"long",msg:"Kode terlalu panjang: ada "+c.length+" karakter, padahal kode hanya 8 karakter (XXXX-XXXX). Hapus kelebihan karakternya. Bila menempel dari chat, pastikan yang disalin hanya kodenya saja, tanpa kata lain."};
+  const bad=[...new Set(c.split("").filter(ch=>ALPH.indexOf(ch)<0))];
+  if(bad.length)return{ok:false,kind:"chars",msg:"Karakter tidak dipakai dalam kode: "+bad.join(", ")+". Kode Siap Abdi tidak memakai huruf I, O, L dan angka 0, 1. Periksa apakah karakter itu salah ketik \u2014 misalnya O yang sebenarnya bukan bagian kode, atau 0/1 yang tertukar dengan huruf."};
+  if(!codeChecksumOK(c))return{ok:false,kind:"checksum",msg:"Kode tidak cocok \u2014 pemeriksaan kode gagal. Kemungkinan besar ada satu huruf yang salah ketik. Cara paling aman: salin kode dari generator atau chat admin, lalu tempel di sini (jangan ketik manual satu-satu)."};
+  return{ok:true,code:c};
+}
 /* ================= DATA TRIK & TEKNIK ================= */
 const TRICKS=[
 {tp:"Pancasila dan nilai",t:"Pancasila — Cocokkan Nilai, Bukan Bunyi Sila",inti:"Baca kasusnya dulu, tanya \u201Cnilai apa yang dilanggar/diterapkan?\u201D, baru cocokkan ke sila lewat kata kunci — jangan menghafal bunyi sila saja.",langkah:["Baca kasus, garis bawahi kata kerja/keadaannya (menolong, bermusyawarah, adil, bersatu).","Cocokkan ke kata kunci sila: 1 Ketuhanan, 2 Kemanusiaan, 3 Persatuan, 4 Kerakyatan, 5 Keadilan.","Bila dua sila terasa cocok, tanya: ini soal perasaan pada satu orang (Sila 2) atau soal kebersamaan/keadilan untuk semua (Sila 3/5)?"],contoh:"\u201CWarga desa bergotong royong memperbaiki jembatan rusak tanpa dibayar.\u201D \u2192 Sila ke-3, Persatuan Indonesia (kerja bersama untuk kepentingan bersama).",jebakan:"Kasus menolong tetangga yang sakit (empati pada satu orang) \u2192 Sila ke-2, bukan ke-3. Bedakan empati personal vs persatuan bersama."},
@@ -950,57 +964,74 @@ function hafalPage(){
 }
 /* ================= PREMIUM / PAYWALL ================= */
 function premiumPage(note){
-  if(isPremium()){
-    app.innerHTML=`<button class="back" id="bk">\u2039 Kembali</button><h1>Premium aktif</h1>
-    <div class="card" style="border-color:var(--teal)"><span class="sticker">PREMIUM</span><p style="margin:10px 0 0">Perangkat ini sudah Premium. Semua fitur terbuka:</p>
-    <ul class="feat"><li>Bank penuh ${Q.length} soal (${TOPICS.length} topik) + latihan tanpa batas</li><li>Latihan per sesi per subtes (maksimal 50 soal per sesi)</li><li>Simulasi CAT A\u2013D 110 soal / 100 menit (Simulasi v1 tanpa Figural)</li><li>Semua ${TRICKS.length} kartu Trik Cepat, ${TEKNIK.length} Teknik Cepat, dan Cara Menghafal + rencana 14 hari</li></ul></div>
-    <div class="card"><h3 style="margin:0 0 6px">Cara kerja Premium di aplikasi ini</h3>
-    <p><b>Ini bukan login akun.</b> Tidak ada nama pengguna dan tidak ada kata sandi. Premium dibuka dengan <b>kode aktivasi</b> yang dimasukkan sekali di perangkat ini.</p>
-    <p>Setelah aktif, status Premium <b>tersimpan di perangkat ini</b> \u2014 tetap aktif walau aplikasi ditutup dan dibuka lagi \u2014 sampai kamu menonaktifkannya atau menghapus data situs di browser.</p>
-    <p style="margin-bottom:0">Jadi, bila perangkat ini sudah Premium padahal kamu <b>belum memasukkan kode yang baru kamu buat</b>, itu karena perangkat ini sudah pernah memasukkan kode sebelumnya dan statusnya masih tersimpan. Kode baru itu untuk <b>pembeli atau perangkat lain</b> \u2014 tidak perlu dimasukkan di perangkat ini.</p></div>
-    <button class="btn pri" id="go">Mulai latihan</button>
-    <h2>Keluar dari Premium di perangkat ini</h2>
-    <p class="mut" style="margin:0">Menonaktifkan hanya menghapus status Premium <b>di perangkat ini saja</b>. Kodemu <b>tidak hangus</b> \u2014 masukkan lagi kapan pun di halaman ini untuk mengaktifkan Premium kembali.</p>
-    <button class="btn" id="deact"><span class="grow" style="text-align:center"><b>Nonaktifkan Premium di perangkat ini</b></span></button>
-    <div id="dmsg"></div>`;
-    document.getElementById("bk").onclick=home;
-    document.getElementById("go").onclick=home;
-    const db=document.getElementById("deact");
-    db.onclick=()=>{
-      if(db.dataset.arm){deactivatePremium();premiumPage("Premium sudah dinonaktifkan di perangkat ini. Kodemu tidak hangus \u2014 masukkan lagi di bawah untuk mengaktifkan kembali.");return}
-      db.dataset.arm="1";
-      db.innerHTML=`<span class="grow" style="text-align:center"><b>Yakin? Ketuk sekali lagi untuk menonaktifkan</b></span>`;
-      document.getElementById("dmsg").innerHTML=`<div class="msg info">Setelah dinonaktifkan, perangkat ini kembali ke paket gratis. Kamu bisa mengaktifkan lagi dengan kode yang sama.</div>`;
-    };
-    scrollTop();return;
-  }
-  app.innerHTML=`<button class="back" id="bk">\u2039 Kembali</button><h1>Buka Premium</h1>
+  const prem=isPremium();
+  const stored=storedPremiumCode();
+  const storedDisp=stored?formatCodeDisplay(stored):"";
+  app.innerHTML=`<button class="back" id="bk">‹ Kembali</button><h1>${prem?"Premium aktif":"Buka Premium"}</h1>
   ${note?`<div class="msg info">${esc(note)}</div>`:""}
-  <div class="card"><h3 style="margin:0 0 6px">Bukan login \u2014 Premium dibuka dengan kode</h3>
-  <p>Aplikasi ini <b>tidak punya akun</b>: tidak ada nama pengguna, tidak ada kata sandi, dan tidak ada tombol masuk atau keluar seperti aplikasi lain. Cara kerjanya begini:</p>
-  <ol style="margin:8px 0;padding-left:22px"><li style="margin:4px 0;line-height:1.6">Kamu membeli lewat WhatsApp, lalu menerima <b>kode aktivasi</b> dari admin.</li><li style="margin:4px 0;line-height:1.6">Kode itu dimasukkan <b>sekali</b> di perangkatmu, di kolom di bawah halaman ini.</li><li style="margin:4px 0;line-height:1.6">Premium langsung aktif dan <b>tersimpan di perangkat itu</b> \u2014 tetap aktif walau aplikasi ditutup dan dibuka lagi \u2014 sampai dinonaktifkan atau data situs di browser dihapus.</li></ol>
-  <p style="margin-bottom:0">Satu kode untuk satu pembeli. Kalau perangkatmu sudah Premium, berarti perangkat itu sudah pernah memasukkan kode \u2014 kode baru yang dibuat untuk pembeli lain tidak perlu dimasukkan di perangkatmu.</p></div>
-  <div class="card">${PROMO_AKTIF?`<span class="sticker">HARGA PELUNCURAN</span><div class="price-row" style="margin-top:12px"><span class="price-old">${HARGA_ASLI}</span><span class="price">${HARGA}</span><span class="savebadge">HEMAT 76% \u00B7 Rp65.000</span></div>`:`<span class="sticker">HARGA PREMIUM</span><div class="price-row" style="margin-top:12px"><span class="price">${HARGA}</span></div>`}<p style="margin:8px 0 0"><b>${HARGA} membuka semua Premium di aplikasi ini.</b></p><p class="mut" style="margin:2px 0 0">Sekali bayar \u00B7 tanpa langganan \u00B7 tanpa kedaluwarsa</p>${PROMO_AKTIF?`<div class="promonote"><b>Promo sampai ${PROMO_SAMPAI}.</b> Setelah tanggal itu, harga Premium menjadi <b>${HARGA_ASLI}</b>.</div>`:""}
-  <ul class="feat"><li>Bank penuh ${Q.length} soal terklasifikasi: TWK ${nQ("TWK")}, TIU ${nQ("TIU")}, TKP ${nQ("TKP")} (${TOPICS.length} topik)</li><li>Latihan acak, per subtes, dan per topik tanpa batas</li><li>Latihan per sesi per subtes (maksimal 50 soal per sesi, pilih lewat dropdown)</li><li>Simulasi CAT A\u2013D 110 soal / 100 menit + Simulasi Mini tanpa batas</li><li>Pembahasan lengkap semua soal</li><li>${TRICKS.length} kartu Trik Cepat + ${TEKNIK.length} Teknik Cepat + Cara Menghafal &amp; rencana 14 hari</li></ul>
-  <div class="disc" style="margin-bottom:0"><b>Jujur:</b> soal Figural (gambar) belum tersedia di versi ini \u2014 sedang disiapkan untuk v2. Yang kamu beli adalah ${Q.length} soal di atas. Ini alat latihan, bukan soal resmi BKN, dan tidak menjamin kelulusan.</div></div>
-  <button class="btn yel" id="wabuy"><span class="grow" style="text-align:center">Buka Semua Premium via WhatsApp \u2014 ${HARGA}</span></button><p class="mut small" style="text-align:center;margin:-2px 0 0">${PROMO_AKTIF?("Harga peluncuran "+HARGA+" (dari "+HARGA_ASLI+") \u00B7 promo sampai "+PROMO_SAMPAI):("Harga Premium "+HARGA+" \u00B7 sekali bayar, tanpa langganan")}</p>
-  <div id="wamsg"></div>
-  <h2>Sudah punya kode?</h2>
+  <div class="card" style="${prem?"border-color:var(--teal)":""}"><span class="sticker">${prem?"PREMIUM AKTIF":"BELUM AKTIF"}</span>
+  ${prem?`<p style="margin:10px 0 0">Perangkat ini <b>sudah Premium</b>. Semua fitur terbuka: bank ${Q.length} soal, latihan tanpa batas, latihan per sesi, Simulasi CAT A–D, semua trik &amp; teknik, dan Cara Menghafal.</p>
+  ${storedDisp?`<p style="margin:8px 0 0">Kode yang aktif di perangkat ini: <b style="font-family:ui-monospace,Menlo,monospace;letter-spacing:.08em">${esc(storedDisp)}</b></p>`:""}
+  <p class="mut" style="margin:8px 0 0">Mau coba kode lain? Kolom kode tetap ada di bawah — masukkan kode baru di sana, tidak perlu menonaktifkan dulu.</p>`
+  :`<p style="margin:10px 0 0">Perangkat ini <b>belum Premium</b>. Kalau kamu sudah punya kode dari admin, masukkan langsung di kolom kode di bawah — tidak perlu membeli lagi.</p>`}
+  </div>
+  <div class="card"><h3 style="margin:0 0 6px">Bukan login — Premium dibuka dengan kode</h3>
+  <p>Aplikasi ini <b>tidak punya akun</b>: tidak ada nama pengguna, tidak ada kata sandi, dan tidak ada tombol masuk/keluar (log in / log out) seperti aplikasi lain.</p>
+  <ol style="margin:8px 0;padding-left:22px"><li style="margin:4px 0;line-height:1.6">Kamu membeli lewat WhatsApp, lalu menerima <b>kode aktivasi</b> dari admin.</li><li style="margin:4px 0;line-height:1.6">Kode itu dimasukkan <b>sekali</b> di perangkatmu, di kolom kode di bawah ini.</li><li style="margin:4px 0;line-height:1.6">Premium langsung aktif dan <b>tersimpan di perangkat itu</b> — tetap aktif walau aplikasi ditutup dan dibuka lagi — sampai dinonaktifkan atau data situs di browser dihapus.</li></ol>
+  <p style="margin-bottom:0">Jadi tidak ada “log out”: untuk berhenti Premium di perangkat ini, pakai tombol <b>Nonaktifkan Premium</b> di bawah. Untuk mencoba kode lain, cukup masukkan kode baru di kolom kode — tidak perlu nonaktif dulu.</p></div>
+  <h2>${prem?"Coba kode lain / ganti kode":"Sudah punya kode?"}</h2>
   <div class="card"><label class="mut" for="code" style="font-weight:600">Kode aktivasi Premium (format XXXX-XXXX)</label>
-  <input class="codein" id="code" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX" maxlength="9">
-  <p class="mut small" style="margin:0">1 kode = 1 pembeli. Masukkan kode di perangkatmu sendiri \u2014 Premium akan tersimpan di perangkat itu sampai dinonaktifkan atau data situs dihapus. Mohon jangan dibagikan.</p>
-  <button class="btn pri" id="act">Aktifkan Premium</button><div id="amsg"></div></div>`;
+  <input class="codein" id="code" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX">
+  <p class="mut small" style="margin:0">Tempel kode di sini — spasi dan tanda hubung akan dibersihkan otomatis dan huruf menjadi kapital. Cara paling aman: <b>salin kode lalu tempel</b>, jangan ketik manual. 1 kode = 1 pembeli; masukkan di perangkatmu sendiri dan mohon jangan dibagikan.</p>
+  ${prem?`<p class="mut small" style="margin:6px 0 0">Perangkat ini sudah Premium. Kode baru yang valid akan <b>mengganti kode aktif</b> di perangkat ini. Kode lama tidak hangus — bisa dipakai lagi kapan pun.</p>`:""}
+  <button class="btn pri" id="act">Aktifkan Premium</button><div id="amsg"></div></div>
+  ${prem?`<h2>Nonaktifkan Premium di perangkat ini</h2>
+  <p class="mut" style="margin:0">Ini pengganti “log out” di aplikasi tanpa akun ini. Menonaktifkan hanya menghapus status Premium <b>di perangkat ini saja</b>. Kodemu <b>tidak hangus</b> — masukkan lagi kapan pun di kolom kode di atas untuk mengaktifkan kembali.</p>
+  <button class="btn" id="deact"><span class="grow" style="text-align:center"><b>Nonaktifkan Premium di perangkat ini</b></span></button>
+  <div id="dmsg"></div>
+  <button class="btn pri" id="go">Mulai latihan</button>`:""}
+  <div class="card">${PROMO_AKTIF?`<span class="sticker">HARGA PELUNCURAN</span><div class="price-row" style="margin-top:12px"><span class="price-old">${HARGA_ASLI}</span><span class="price">${HARGA}</span><span class="savebadge">HEMAT 76% · Rp65.000</span></div>`:`<span class="sticker">HARGA PREMIUM</span><div class="price-row" style="margin-top:12px"><span class="price">${HARGA}</span></div>`}<p style="margin:8px 0 0"><b>${HARGA} membuka semua Premium di aplikasi ini.</b></p><p class="mut" style="margin:2px 0 0">Sekali bayar · tanpa langganan · tanpa kedaluwarsa</p>${PROMO_AKTIF?`<div class="promonote"><b>Promo sampai ${PROMO_SAMPAI}.</b> Setelah tanggal itu, harga Premium menjadi <b>${HARGA_ASLI}</b>.</div>`:""}
+  <ul class="feat"><li>Bank penuh ${Q.length} soal terklasifikasi: TWK ${nQ("TWK")}, TIU ${nQ("TIU")}, TKP ${nQ("TKP")} (${TOPICS.length} topik)</li><li>Latihan acak, per subtes, dan per topik tanpa batas</li><li>Latihan per sesi per subtes (maksimal 50 soal per sesi, pilih lewat dropdown)</li><li>Simulasi CAT A–D 110 soal / 100 menit + Simulasi Mini tanpa batas</li><li>Pembahasan lengkap semua soal</li><li>${TRICKS.length} kartu Trik Cepat + ${TEKNIK.length} Teknik Cepat + Cara Menghafal &amp; rencana 14 hari</li></ul>
+  <div class="disc" style="margin-bottom:0"><b>Jujur:</b> soal Figural (gambar) belum tersedia di versi ini — sedang disiapkan untuk v2. Yang kamu beli adalah ${Q.length} soal di atas. Ini alat latihan, bukan soal resmi BKN, dan tidak menjamin kelulusan.</div></div>
+  <h2>Belum punya kode? Beli dulu di sini</h2>
+  <div class="card"><p style="margin:0"><b>Tombol WhatsApp di bawah ini untuk MEMBELI, bukan untuk mengaktifkan.</b> Alurnya: ketuk tombol itu → bayar ke admin → admin mengirim kode → masukkan kode itu di kolom kode di atas, lalu ketuk “Aktifkan Premium”.</p>
+  <button class="btn yel" id="wabuy"><span class="grow" style="text-align:center">Beli Premium via WhatsApp — ${HARGA} (tombol membeli)</span></button>
+  <p class="mut small" style="text-align:center;margin:0">${PROMO_AKTIF?("Harga peluncuran "+HARGA+" (dari "+HARGA_ASLI+") · promo sampai "+PROMO_SAMPAI):("Harga Premium "+HARGA+" · sekali bayar, tanpa langganan")}</p>
+  <div id="wamsg"></div></div>
+  <p class="mut small" style="text-align:center;margin:18px 0 0">Siap Abdi · ${BUILD_STAMP} · Bila mengirim screenshot halaman ini, versi ini ikut terlihat agar admin tahu build yang kamu pakai.</p>`;
   document.getElementById("bk").onclick=home;
+  const goBtn=document.getElementById("go");if(goBtn)goBtn.onclick=home;
+  const db=document.getElementById("deact");
+  if(db)db.onclick=()=>{
+    if(db.dataset.arm){deactivatePremium();premiumPage("Premium sudah dinonaktifkan di perangkat ini. Kodemu tidak hangus — masukkan lagi di kolom kode untuk mengaktifkan kembali.");return}
+    db.dataset.arm="1";
+    db.innerHTML=`<span class="grow" style="text-align:center"><b>Yakin? Ketuk sekali lagi untuk menonaktifkan</b></span>`;
+    const dm=document.getElementById("dmsg");if(dm)dm.innerHTML=`<div class="msg info">Setelah dinonaktifkan, perangkat ini kembali ke paket gratis. Kamu bisa mengaktifkan lagi dengan kode yang sama.</div>`;
+  };
+  const codeEl=document.getElementById("code");
+  const formatNow=()=>{if(!codeEl)return;const cleaned=cleanCodeInput(codeEl.value);codeEl.value=formatCodeDisplay(cleaned)};
+  if(codeEl){
+    codeEl.addEventListener("input",formatNow);
+    codeEl.addEventListener("paste",()=>{setTimeout(formatNow,0)});
+    codeEl.addEventListener("blur",formatNow);
+  }
   document.getElementById("wabuy").onclick=()=>{
     const box=document.getElementById("wamsg");
-    if(!FEEDBACK){box.innerHTML=`<div class="msg info"><b>Pembelian via WhatsApp belum aktif.</b> Nomor WhatsApp bisnis MUGA STUDIO belum diisi, jadi tombol ini belum bisa menghubungkanmu ke admin. Bila kamu sudah membeli dan menerima kode dari admin, masukkan kodemu di bawah \u2014 aktivasi kode tetap berfungsi.</div>`;return}
+    if(!FEEDBACK){box.innerHTML=`<div class="msg info"><b>Pembelian via WhatsApp belum aktif.</b> Nomor WhatsApp bisnis MUGA STUDIO belum diisi, jadi tombol membeli ini belum bisa menghubungkanmu ke admin. Bila kamu sudah membeli dan menerima kode dari admin, masukkan kodemu di kolom kode di atas — aktivasi kode tetap berfungsi.</div>`;return}
     const text=PROMO_AKTIF?("Halo MUGA STUDIO, saya mau beli Premium Siap Abdi (jalur CPNS) harga peluncuran "+HARGA+" (harga normal "+HARGA_ASLI+", promo sampai "+PROMO_SAMPAI+"). "+HARGA+" untuk membuka semua Premium. Saya sudah coba latihan gratisnya."):("Halo MUGA STUDIO, saya mau beli Premium Siap Abdi (jalur CPNS) seharga "+HARGA+". "+HARGA+" untuk membuka semua Premium. Saya sudah coba latihan gratisnya.");
     window.open("https://wa.me/"+FEEDBACK+"?text="+encodeURIComponent(text),"_blank","noopener");
   };
   document.getElementById("act").onclick=()=>{
-    const v=document.getElementById("code").value, box=document.getElementById("amsg");
-    if(codeChecksumOK(v)){activatePremium(v);box.innerHTML=`<div class="msg ok"><b>Premium aktif!</b> Kode diterima. Semua fitur sekarang terbuka di perangkat ini.</div><button class="btn pri" id="go2">Mulai pakai Premium</button>`;document.getElementById("go2").onclick=home}
-    else{box.innerHTML=`<div class="msg err"><b>Kode tidak valid.</b> Periksa lagi formatnya: 8 karakter (XXXX-XXXX), huruf kapital dan angka, tanpa huruf I, O, L dan tanpa angka 0 dan 1. Pastikan kode berasal dari admin MUGA STUDIO.</div>`}
+    const box=document.getElementById("amsg");
+    if(codeEl)formatNow();
+    const raw=codeEl?codeEl.value:"";
+    const res=validateActivationCode(raw);
+    if(!res.ok){box.innerHTML=`<div class="msg err"><b>Kode belum bisa diterima.</b> ${esc(res.msg)}</div>`;if(codeEl)codeEl.focus();return}
+    if(prem&&stored&&res.code===stored){box.innerHTML=`<div class="msg info"><b>Perangkat ini sudah Premium dengan kode yang sama.</b> Kode ${esc(formatCodeDisplay(res.code))} memang kode yang sedang aktif di perangkat ini — tidak perlu diaktifkan lagi, semua fitur sudah terbuka.</div><button class="btn pri" id="go2">Mulai pakai Premium</button>`;document.getElementById("go2").onclick=home;return}
+    const wasPrem=prem;
+    activatePremium(res.code);
+    box.innerHTML=`<div class="msg ok"><b>Premium aktif!</b> ${wasPrem?"Kode baru diterima — kode aktif di perangkat ini sudah diganti dengan kode baru itu. Kode lama tidak hangus dan bisa dipakai lagi.":"Kode diterima. Semua fitur sekarang terbuka di perangkat ini."}</div><button class="btn pri" id="go2">Mulai pakai Premium</button>`;
+    document.getElementById("go2").onclick=home;
   };
   scrollTop();
 }
