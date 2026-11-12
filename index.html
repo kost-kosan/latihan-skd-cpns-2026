@@ -1909,7 +1909,7 @@ t("Temanmu mengajakmu mengikuti komunitas hobi yang mengharuskan anggotanya memu
 /* ================= KONFIG ================= */
 // Nomor WhatsApp bisnis (format 628xxxxxxxxxx). MASIH KOSONG — menunggu Direktur.
 // Selama kosong, tombol beli menampilkan pesan jujur bahwa pembelian via WA belum aktif.
-const FEEDBACK="";
+const FEEDBACK="6285878782553";
 const HARGA_ASLI="Rp85.000";
 const PROMO_SAMPAI="31 Desember 2026";
 /* Logika tanggal promo: harga peluncuran Rp20.000 hanya berlaku sampai 31 Des 2026 pukul 23.59
@@ -1917,7 +1917,7 @@ const PROMO_SAMPAI="31 Desember 2026";
    dan semua tampilan coret/promo hilang — tidak perlu update manual. */
 const PROMO_AKTIF=Date.now()<=new Date(2026,11,31,23,59,59).getTime();
 const HARGA=PROMO_AKTIF?"Rp20.000":HARGA_ASLI;
-const BUILD_STAMP="Build P18 · Bank 1.500 soal · 91 kartu trik · 12 Nov 2026";
+const BUILD_STAMP="Build P19 · Bank 1.500 soal · 91 kartu trik · 13 Nov 2026";
 const KISI={TWK:["Pancasila, UUD 1945, NKRI, Bhinneka Tunggal Ika","Nasionalisme, integritas, bela negara","Bahasa negara (Bahasa Indonesia)","Sejarah nasional adalah konten di dalam 5 aspek di atas (interpretasi) — bukan aspek ke-6"],TIU:["Verbal: analogi (termasuk latihan kosakata sinonim/antonim sebagai sub-jenis analogi — interpretasi, bukan kategori resmi Kepmen)","Verbal: silogisme (menarik kesimpulan dari dua pernyataan)","Verbal: penalaran analitis","Numerik: berhitung, deret angka, perbandingan kuantitatif, soal cerita","Figural (soal gambar): pilot 15 soal tersedia di latihan TIU (analogi, ketidaksamaan, serial); Simulasi CAT belum memuat soal figural"],TKP:["Pelayanan publik, jejaring kerja","Sosial budaya, teknologi informasi dan komunikasi","Profesionalisme, anti radikalisme"]};
 const NAMA={TWK:"Tes Wawasan Kebangsaan",TIU:"Tes Intelegensia Umum",TKP:"Tes Karakteristik Pribadi"};
 const PG={TWK:65,TIU:80,TKP:166};
