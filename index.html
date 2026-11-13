@@ -218,6 +218,8 @@ table.frac td,table.frac th{border:2px solid var(--bd);padding:6px 10px;text-ali
    pesan status/error tepat di bawah field, tombol aksi di bawahnya. */
 .codein{display:block;width:100%;min-height:56px;border-radius:6px;border:3px solid var(--bd);background:var(--card);color:var(--ink);font-family:ui-monospace,Menlo,monospace;font-size:1.25rem;letter-spacing:.14em;text-transform:uppercase;text-align:center;padding:10px;margin:8px 0 4px}
 .codein:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.accin{display:block;width:100%;min-height:52px;border-radius:14px;border:3px solid var(--bd);background:var(--card);color:var(--ink);font-size:1rem;padding:10px 12px;margin:6px 0 10px}
+.accin:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
 .msg{border:3px solid var(--bd);border-radius:6px;padding:12px 14px;margin:12px 0;font-size:.95rem}
 .msg.ok{background:var(--okbg)} .msg.err{background:var(--nobg)} .msg.info{background:var(--paper)}
 .msg .ic{vertical-align:-6px;margin-right:6px}
@@ -2040,7 +2042,7 @@ const PROMO_SAMPAI="31 Desember 2026";
    dan semua tampilan coret/promo hilang — tidak perlu update manual. */
 const PROMO_AKTIF=Date.now()<=new Date(2026,11,31,23,59,59).getTime();
 const HARGA=PROMO_AKTIF?"Rp20.000":HARGA_ASLI;
-const BUILD_STAMP="Build P21 · Bank 1.500 soal · 91 kartu trik · 13 Nov 2026";
+const BUILD_STAMP="Build P22 · Bank 1.500 soal · 91 kartu trik · 13 Nov 2026";
 const KISI={TWK:["Pancasila, UUD 1945, NKRI, Bhinneka Tunggal Ika","Nasionalisme, integritas, bela negara","Bahasa negara (Bahasa Indonesia)","Sejarah nasional adalah konten di dalam 5 aspek di atas (interpretasi) — bukan aspek ke-6"],TIU:["Verbal: analogi (termasuk latihan kosakata sinonim/antonim sebagai sub-jenis analogi — interpretasi, bukan kategori resmi Kepmen)","Verbal: silogisme (menarik kesimpulan dari dua pernyataan)","Verbal: penalaran analitis","Numerik: berhitung, deret angka, perbandingan kuantitatif, soal cerita","Figural (soal gambar): pilot 15 soal tersedia di latihan TIU (analogi, ketidaksamaan, serial); Simulasi CAT belum memuat soal figural"],TKP:["Pelayanan publik, jejaring kerja","Sosial budaya, teknologi informasi dan komunikasi","Profesionalisme, anti radikalisme"]};
 const NAMA={TWK:"Tes Wawasan Kebangsaan",TIU:"Tes Intelegensia Umum",TKP:"Tes Karakteristik Pribadi"};
 const PG={TWK:65,TIU:80,TKP:166};
@@ -2165,7 +2167,7 @@ function codeChecksumOK(code){
   for(let i=0;i<7;i++){const idx=ALPH.indexOf(c[i]);if(idx<0)return false;s+=idx*(i+1)}
   return ALPH.indexOf(c[7])===s%31;
 }
-function isPremium(){const p=lsGet("skd-prem-v1",null);return !!(p&&p.code&&codeChecksumOK(p.code))}
+function isPremium(){const fb=window.__FBST;if(fb&&fb.user&&fb.profileKnown)return !!fb.premium;const p=lsGet("skd-prem-v1",null);return !!(p&&p.code&&codeChecksumOK(p.code))}
 function activatePremium(code){lsSet("skd-prem-v1",{code:String(code).toUpperCase().replace(/[^A-Z0-9]/g,""),at:Date.now()})}
 function deactivatePremium(){try{localStorage.removeItem("skd-prem-v1")}catch(e){}}
 function storedPremiumCode(){const p=lsGet("skd-prem-v1",null);return (p&&p.code)?String(p.code).toUpperCase().replace(/[^A-Z0-9]/g,""):""}
@@ -2387,13 +2389,119 @@ function bindTheme(){const b=document.getElementById("thm");if(!b)return;b.oncli
 </script>
 <script>
 "use strict";
+/* ================= AKUN & PREMIUM FIREBASE (P22) =================
+   Status akun + Premium dibaca dari Firestore lewat jembatan window.__fb
+   (SDK Firebase v10 dimuat malas dari CDN gstatic oleh skrip pemuat di akhir
+   body — render pertama tidak pernah terblokir). Bila SDK gagal dimuat
+   (offline / CDN tak terjangkau), status menjadi "failed": konten gratis
+   tetap jalan seperti biasa, status Premium lama di perangkat tetap diakui,
+   dan aksi yang butuh server menampilkan pesan "Butuh internet ...". */
+const FBST=window.__FBST={status:"loading",user:null,profileKnown:false,premium:false,kode:"",migrated:{}};
+let fbFlash="";
+function premiumChecking(){return FBST.status==="loading"||(!!FBST.user&&!FBST.profileKnown)}
+function fbRerender(){if(window.__page==="premium"){const n=fbFlash;fbFlash="";premiumPage(n||undefined)}else if(window.__page==="home")home()}
+window.__fbRerender=fbRerender;
+function fbErrMsg(e){
+  const c=e&&e.code?String(e.code):"";
+  if(c.indexOf("network")>=0||c.indexOf("unavailable")>=0)return "Butuh internet untuk memeriksa Premium. Periksa koneksimu, lalu coba lagi.";
+  switch(c){
+    case "auth/email-already-in-use":return "Email ini sudah terdaftar. Silakan masuk saja lewat formulir Masuk di atas.";
+    case "auth/invalid-email":return "Format email belum benar. Contoh yang benar: nama@gmail.com";
+    case "auth/weak-password":return "Password terlalu pendek \u2014 minimal 6 karakter.";
+    case "auth/user-not-found":case "auth/wrong-password":case "auth/invalid-credential":return "Email atau password salah. Periksa lagi, atau ketuk \u201CLupa password?\u201D.";
+    case "auth/too-many-requests":return "Terlalu banyak percobaan. Tunggu beberapa menit, lalu coba lagi.";
+    case "auth/user-disabled":return "Akun ini dinonaktifkan. Hubungi admin lewat WhatsApp.";
+    default:return "Sedang ada gangguan. Coba lagi sebentar lagi \u2014 latihan gratis tetap bisa dipakai seperti biasa.";
+  }
+}
+/* Penukaran kode 2 langkah (WAJIB berurutan, TANPA transaksi gabungan, karena
+   Rules memakai get() yang hanya membaca state yang sudah ter-commit):
+   (2) baca dokumen kode dan cek aktif \u2192 (3) arrayUnion UID ke dipakaiOleh
+   (ditolak Rules bila slot penuh) \u2192 (4) BARU set profil user premium=true. */
+async function fbRedeem(code){
+  const fb=window.__fb,uid=FBST.user.uid;
+  const cref=fb.doc("siap_abdi_codes",code);
+  const snap=await fb.getDoc(cref);
+  if(!snap.exists)return{ok:false,msg:"Kode tidak ditemukan di server. Periksa lagi ejaannya \u2014 atau tanyakan ke admin, mungkin kode ini belum didaftarkan."};
+  const d=snap.data()||{};
+  if(d.aktif!==true)return{ok:false,msg:"Kode ini belum aktif di server. Tanyakan ke admin untuk mengaktifkannya dulu."};
+  try{await fb.updateDoc(cref,{dipakaiOleh:fb.union(uid)})}
+  catch(e){return{ok:false,msg:"Kode sudah dipakai jumlah maksimal akun. Satu kode hanya bisa dipakai maksimal 2 akun \u2014 bila kamu merasa ini kekeliruan, hubungi admin lewat tombol WhatsApp di bawah."}}
+  await fb.setDoc(fb.doc("siap_abdi_users",uid),{premium:true,kode:code},{merge:true});
+  return{ok:true};
+}
+/* Migrasi: kode lama tersimpan di perangkat (checksum valid) ditukarkan
+   otomatis sekali saat pemiliknya masuk dan profilnya belum Premium. */
+async function fbTryMigrate(uid){
+  if(FBST.migrated[uid])return;FBST.migrated[uid]=true;
+  const local=storedPremiumCode();
+  if(!local||!codeChecksumOK(local)||FBST.premium)return;
+  try{
+    const r=await fbRedeem(local);
+    if(r.ok){deactivatePremium();FBST.premium=true;FBST.kode=local;fbFlash="Kode Premium lamamu di perangkat ini sudah dipindahkan ke akunmu. Premium sekarang aktif untuk akun ini."}
+    else fbFlash="Kode lama di perangkat ini belum bisa dipindahkan ke akun: "+r.msg;
+  }catch(e){fbFlash="Kode lama di perangkat ini belum bisa dipindahkan ke akun. "+fbErrMsg(e)}
+}
+window.__fbAuthChanged=async function(u){
+  if(!u){FBST.user=null;FBST.premium=false;FBST.kode="";FBST.profileKnown=false;if(FBST.status!=="failed")FBST.status="ready";fbRerender();return}
+  FBST.user={uid:u.uid,email:u.email||""};FBST.status="ready";FBST.profileKnown=false;fbRerender();
+  try{
+    const uref=window.__fb.doc("siap_abdi_users",u.uid);
+    let snap=await window.__fb.getDoc(uref);
+    if(!snap.exists){await window.__fb.setDoc(uref,{premium:false});snap=await window.__fb.getDoc(uref)}
+    const d=snap.data()||{};
+    FBST.premium=!!d.premium;FBST.kode=d.kode?String(d.kode):"";FBST.profileKnown=true;
+    await fbTryMigrate(u.uid);
+  }catch(e){FBST.profileKnown=true;fbFlash=fbErrMsg(e)}
+  fbRerender();
+};
+function acctMarkerHTML(){
+  let t;
+  if(premiumChecking())t="Akun: memeriksa status Premium\u2026";
+  else if(FBST.user)t="Masuk sebagai "+esc(FBST.user.email)+" \u00B7 "+(FBST.premium?"Premium aktif":"Belum Premium")+" \u2014 ketuk untuk akun &amp; kode";
+  else if(FBST.status==="failed")t="Akun Premium butuh internet \u2014 ketuk untuk info akun";
+  else t="Belum masuk akun \u2014 ketuk untuk masuk / buat akun Premium";
+  return `<button class="btn" id="acctmark"><span class="grow"><b>Akun Premium</b><br><span class="mut small">${t}</span></span><span class="arr">\u203A</span></button>`;
+}
+function acctCardHTML(){
+  if(FBST.status==="failed")return `<div class="card"><h3 style="margin:0 0 6px">Akun Premium</h3><div class="msg info" style="margin:0"><b>Butuh internet untuk memeriksa Premium.</b> Bagian akun dan penukaran kode perlu koneksi internet. Latihan gratis tetap bisa dipakai seperti biasa \u2014 coba lagi saat ada internet.</div></div>`;
+  if(FBST.user)return `<div class="card"><h3 style="margin:0 0 6px">Akun kamu</h3>
+  <p style="margin:0">Masuk sebagai <b>${esc(FBST.user.email)}</b></p>
+  <p style="margin:6px 0 0">Status Premium akun ini: <b>${FBST.profileKnown?(FBST.premium?"AKTIF":"BELUM AKTIF"):"memeriksa\u2026"}</b></p>
+  ${FBST.premium&&FBST.kode?`<p class="mut" style="margin:6px 0 0">Kode yang terdaftar di akun ini: <b style="font-family:ui-monospace,Menlo,monospace;letter-spacing:.08em">${esc(formatCodeDisplay(FBST.kode))}</b> \u00B7 1 kode maksimal 2 akun.</p>`:""}
+  <div id="accmsg" aria-live="polite"></div>
+  <button class="btn" id="logout"><span class="grow" style="text-align:center"><b>Keluar dari akun</b></span></button>
+  <p class="mut small" style="margin:8px 0 0">Keluar hanya mengeluarkan akun dari perangkat ini. Premium akunmu tidak hilang \u2014 masuk lagi kapan pun dengan email dan password yang sama.</p></div>`;
+  return `<div class="card"><h3 style="margin:0 0 6px">Langkah 1 \u2014 Masuk atau buat akun</h3>
+  <p style="margin:0 0 4px">Premium sekarang memakai <b>akun</b> (email + password), supaya satu kode hanya bisa dipakai <b>maksimal 2 akun</b> dan tidak bisa dibagikan sembarangan. Membuat akun itu gratis dan cukup sekali \u2014 setelah masuk, masukkan kodemu di Langkah 2.</p>
+  <h3 style="margin:14px 0 2px">Sudah punya akun? Masuk</h3>
+  <label class="mut" for="li-email" style="font-weight:600">Email</label>
+  <input class="accin" id="li-email" type="email" autocomplete="email" placeholder="nama@gmail.com">
+  <label class="mut" for="li-pass" style="font-weight:600">Password</label>
+  <input class="accin" id="li-pass" type="password" autocomplete="current-password" placeholder="Password akunmu">
+  <div id="lmsg" aria-live="polite"></div>
+  <button class="btn pri" id="login"><span class="grow" style="text-align:center">MASUK</span></button>
+  <button class="lnk" id="resetpw" style="margin-top:8px">Lupa password?</button>
+  <h3 style="margin:18px 0 2px">Belum punya akun? Buat akun baru</h3>
+  <label class="mut" for="su-email" style="font-weight:600">Email</label>
+  <input class="accin" id="su-email" type="email" autocomplete="email" placeholder="nama@gmail.com">
+  <label class="mut" for="su-pass" style="font-weight:600">Password (minimal 6 karakter)</label>
+  <input class="accin" id="su-pass" type="password" autocomplete="new-password" placeholder="Buat password">
+  <label class="mut" for="su-pass2" style="font-weight:600">Ulangi password</label>
+  <input class="accin" id="su-pass2" type="password" autocomplete="new-password" placeholder="Ketik password yang sama lagi">
+  <div id="smsg" aria-live="polite"></div>
+  <button class="btn pri" id="signup"><span class="grow" style="text-align:center">BUAT AKUN</span></button>
+  <p class="mut small" style="margin:8px 0 0">Tidak ada verifikasi email \u2014 akun langsung bisa dipakai. Passwordmu disimpan aman oleh Google; admin tidak bisa melihatnya. Bila lupa, pakai tautan \u201CLupa password?\u201D di atas.</p></div>`;
+}
 /* ================= BERANDA ================= */
 function mascotHTML(teks){return `<div class="guide"><svg class="mascot" viewBox="0 0 120 120" aria-hidden="true"><use href="#puppet"/></svg><p class="bubble">${teks}</p></div>`}
 function home(){
-  const prem=isPremium(), fl=freeLeft(), fs=freeState(), h=hist();
+  window.__page="home";
+  const prem=isPremium(), chk=premiumChecking(), fl=freeLeft(), fs=freeState(), h=hist();
   app.innerHTML=`
   <header class="hd"><div class="logo">SA</div><div class="grow"><h1>Siap Abdi</h1><p class="mut" style="margin:0">Latihan Soal CPNS, TNI, Polri &amp; BUMN</p></div>${themeBtnHTML()}</header>
   ${mascotHTML("Halo! Ketuk <b>MULAI LATIHAN</b> di tombol besar di bawah ini untuk mulai. Pelajaran dan sesi ada di bawahnya.")}
+  ${acctMarkerHTML()}
   <button class="big" id="q10"><span>Mulai Latihan</span><small>10 soal acak dari semua topik — langsung mulai, tidak perlu pilih-pilih dulu${prem?"":" · memakai jatah gratis hari ini"}</small></button>
   <h2 style="margin-top:6px">Pilih jalur</h2>
   <svg class="scribble" viewBox="0 0 150 11" preserveAspectRatio="none" aria-hidden="true"><path d="M3 7 C 35 3, 62 10, 92 5 S 138 4, 147 6" fill="none" stroke="#E8322A" stroke-width="3.2" stroke-linecap="round"/></svg>
@@ -2405,7 +2513,7 @@ function home(){
   </div>
   <div class="disc"><b>Penting:</b> Aplikasi latihan mandiri ini <b>bukan aplikasi resmi BKN dan tidak menjamin kelulusan</b>. Soal disusun sendiri mengacu kisi-kisi KepmenPANRB 321/2024 (Diktum KEDUA). Angka passing grade yang dipakai di aplikasi ini (TWK 65, TIU 80, TKP 166) adalah <b>acuan persiapan dari seleksi 2024</b> berdasarkan KepmenPANRB 321/2024 TA 2024 — bukan penetapan untuk seleksi berikutnya. Soal Figural (gambar): pilot 15 soal tersedia di latihan; Simulasi Penuh (CAT) masih tanpa Figural.</div>
   ${prem?`<div class="card" style="border-color:var(--teal)"><span class="sticker">PREMIUM AKTIF</span><p style="margin:10px 0 0">Semua fitur terbuka: bank ${Q.length} soal, latihan tanpa batas, latihan per sesi, semua trik &amp; teknik, dan Simulasi CAT A\u2013D 110 soal / 100 menit.</p></div>`
-  :`<div class="card"><span class="sticker">GRATIS HARI INI</span><p style="margin:10px 0 4px">Sisa latihan gratis: <b>${fl} dari 10 soal</b> \u00B7 Simulasi Mini: <b>${fs.miniUsed?"sudah dipakai":"1x gratis"}</b> \u00B7 Topik gratis penuh: <b>${FREE_TOPIC}</b></p>${fl<=0?`<div class="msg info" style="margin:10px 0 0"><b>Jatah latihan gratis hari ini sudah habis.</b> Jatah 10 soal acak per hari ini terisi penuh lagi <b>besok</b> — besok kamu bisa latihan gratis lagi tanpa membayar apa pun. Mau lanjut sekarang juga? Premium membuka latihan tanpa batas.</div>`:""}${fs.miniUsed?`<p class="mut" style="margin:8px 0 0">Simulasi Mini gratis hari ini juga sudah terpakai — jatahnya kembali lagi besok. Premium membuka Simulasi Mini tanpa batas.</p>`:""}${PROMO_AKTIF?`<div style="margin-top:14px"><span class="sticker">HARGA PELUNCURAN</span><div class="priceline"><span class="old">${HARGA_ASLI}</span><span class="new">${HARGA}</span><span class="savebadge">HEMAT 76%</span></div><p style="margin:2px 0 0"><b>${HARGA} membuka semua Premium</b> \u2014 sekali bayar, tanpa langganan.</p><p class="mut" style="margin:4px 0 0">Promo sampai <b style="color:var(--ink)">${PROMO_SAMPAI}</b>. Setelah itu harga menjadi ${HARGA_ASLI}.</p></div>`:`<div style="margin-top:14px"><span class="sticker">HARGA PREMIUM</span><div class="priceline"><span class="new">${HARGA}</span></div><p style="margin:2px 0 0"><b>${HARGA} membuka semua Premium</b> \u2014 sekali bayar, tanpa langganan.</p></div>`}<button class="btn pri" id="goprem"><span class="grow" style="text-align:center">Buka Semua Premium \u2014 ${HARGA}</span></button></div>`}
+  :`<div class="card"><span class="sticker">GRATIS HARI INI</span><p style="margin:10px 0 4px">Sisa latihan gratis: <b>${fl} dari 10 soal</b> \u00B7 Simulasi Mini: <b>${fs.miniUsed?"sudah dipakai":"1x gratis"}</b> \u00B7 Topik gratis penuh: <b>${FREE_TOPIC}</b></p>${fl<=0?`<div class="msg info" style="margin:10px 0 0"><b>Jatah latihan gratis hari ini sudah habis.</b> Jatah 10 soal acak per hari ini terisi penuh lagi <b>besok</b> — besok kamu bisa latihan gratis lagi tanpa membayar apa pun. Mau lanjut sekarang juga? Premium membuka latihan tanpa batas.</div>`:""}${fs.miniUsed?`<p class="mut" style="margin:8px 0 0">Simulasi Mini gratis hari ini juga sudah terpakai — jatahnya kembali lagi besok. Premium membuka Simulasi Mini tanpa batas.</p>`:""}${PROMO_AKTIF?`<div style="margin-top:14px"><span class="sticker">HARGA PELUNCURAN</span><div class="priceline"><span class="old">${HARGA_ASLI}</span><span class="new">${HARGA}</span><span class="savebadge">HEMAT 76%</span></div><p style="margin:2px 0 0"><b>${HARGA} membuka semua Premium</b> \u2014 sekali bayar, tanpa langganan.</p><p class="mut" style="margin:4px 0 0">Promo sampai <b style="color:var(--ink)">${PROMO_SAMPAI}</b>. Setelah itu harga menjadi ${HARGA_ASLI}.</p></div>`:`<div style="margin-top:14px"><span class="sticker">HARGA PREMIUM</span><div class="priceline"><span class="new">${HARGA}</span></div><p style="margin:2px 0 0"><b>${HARGA} membuka semua Premium</b> \u2014 sekali bayar, tanpa langganan.</p></div>`}<button class="btn pri" id="goprem"><span class="grow" style="text-align:center">${chk?"Memeriksa status Premium\u2026":"Buka Semua Premium \u2014 "+HARGA}</span></button></div>`}
   <h2>Latihan per subtes (10 soal)</h2>
   <p class="mut" style="margin:0 0 2px">Ada 3 pelajaran. Ketuk tombol <b>MULAI LATIHAN</b> pada pelajaran yang kamu mau — soalnya diacak, lengkap dengan pembahasan.</p>
   <div class="subcards">${["TWK","TIU","TKP"].map(k=>`<div class="subcard"><div class="stop"><span class="subcode" style="background:${SUBC[k]}">${k}</span><div><h3>${k} — ${esc(NAMA[k])}</h3><p class="sdesc">${nQ(k)} soal di bank · 10 soal acak tiap latihan</p></div></div><button class="btn pri mega" data-k="${k}">MULAI LATIHAN</button></div>`).join("")}</div>
@@ -2425,6 +2533,7 @@ function home(){
   <div class="foot"><button class="lnk" id="inf">Kisi-kisi dan tentang</button><button class="lnk" id="inst">Pasang di layar utama</button><button class="lnk" id="prem2">${prem?"Status Premium":"Premium " + HARGA}</button></div>`;
   const $=id=>document.getElementById(id);
   bindTheme();
+  if($("acctmark"))$("acctmark").onclick=()=>premiumPage();
   if($("goprem"))$("goprem").onclick=()=>premiumPage();
   $("jalurcpns").onclick=()=>{const el=$("q10");if(el)el.scrollIntoView({behavior:"smooth",block:"start"})};
   $("q10").onclick=()=>startLatihan({mode:"ALL",label:"Latihan acak"});
@@ -2458,7 +2567,7 @@ function info(){
   ${Object.keys(KISI).map(k=>`<details class="card"><summary><b>${k}</b> &nbsp;${NAMA[k]}</summary><ul class="feat">${KISI[k].map(x=>`<li>${esc(x)}</li>`).join("")}</ul></details>`).join("")}
   <div class="card"><h3 style="margin:0 0 6px">Struktur SKD (acuan KepmenPANRB 321/2024, Diktum KEDUA)</h3><p style="margin:0">110 soal dalam 100 menit: TWK 30, TIU 35, TKP 45. Skor: TWK/TIU benar +5, salah 0 (maks 150/175); TKP tiap opsi bernilai 1\u20135 (maks 225). Passing grade: TWK 65, TIU 80, TKP 166 \u2014 lolos hanya bila <b>ketiga subtes</b> melewati ambangnya. Angka passing grade ini adalah <b>acuan persiapan dari seleksi 2024</b> berdasarkan KepmenPANRB 321/2024 TA 2024, bukan penetapan untuk seleksi berikutnya. Pastikan angka terbaru ke pengumuman resmi SSCASN dan BKN.</p><p style="margin:8px 0 0">Catatan jujur soal skor TKP: pembobotan nilai 1\u20135 per opsi di aplikasi ini adalah <b>rubrik internal bank soal</b>, karena BKN tidak menerbitkan bobot per opsi \u2014 jadi skor TKP latihanmu adalah perkiraan belajar, bukan kunci resmi.</p></div>
   <div class="disc"><b>Jujur soal cakupan:</b> v1 berisi ${Q.length} soal (TWK ${nQ("TWK")}, TIU ${nQ("TIU")}, TKP ${nQ("TKP")}) dalam ${TOPICS.length} topik. <b>Soal Figural (gambar) kini tersedia sebagai pilot 15 soal di latihan TIU</b> (analogi, ketidaksamaan, serial), tetapi Simulasi CAT tetap tanpa Figural dan dilabeli \u201CSimulasi v1 tanpa Figural\u201D.</div>
-  <div class="disc">Aplikasi latihan mandiri, <b>bukan aplikasi resmi BKN atau KemenPANRB, dan tidak menjamin kelulusan</b>. Soal dibuat sendiri dan belum tentu sama dengan soal asli. Tidak ada login dan tidak ada data pribadi yang dikirim ke server; kuota gratis, status premium, dan riwayat hanya disimpan di perangkat ini.</div>
+  <div class="disc">Aplikasi latihan mandiri, <b>bukan aplikasi resmi BKN atau KemenPANRB, dan tidak menjamin kelulusan</b>. Soal dibuat sendiri dan belum tentu sama dengan soal asli. Latihan gratis tidak butuh akun dan tidak mengirim data apa pun. Akun (email + password) hanya dipakai untuk Premium \u2014 disimpan aman di server Google Firebase \u2014 supaya satu kode aktivasi hanya bisa dipakai maksimal 2 akun. Kuota gratis dan riwayat latihan hanya disimpan di perangkat ini.</div>
   <button class="btn" id="inst"><span class="grow"><b>Pasang aplikasi di layar utama (opsional)</b><br><span class="mut small">Panduan langkah demi langkah untuk Android dan iPhone — tanpa memasang pun, aplikasi tetap bisa dibuka lewat link seperti biasa</span></span><span class="arr">›</span></button>`;
   document.getElementById("bk").onclick=home;document.getElementById("inst").onclick=installPage;scrollTop();
 }
@@ -2574,34 +2683,34 @@ function hafalPage(){
 }
 /* ================= PREMIUM / PAYWALL ================= */
 function premiumPage(note){
+  window.__page="premium";
+  const chk=premiumChecking();
   const prem=isPremium();
   const stored=storedPremiumCode();
   const storedDisp=stored?formatCodeDisplay(stored):"";
   app.innerHTML=`<button class="back" id="bk">‹ Kembali</button><h1>${prem?"Premium aktif":"Buka Premium"}</h1>
   ${note?`<div class="msg info">${esc(note)}</div>`:""}
-  <div class="card" style="${prem?"border-color:var(--teal)":""}"><span class="sticker">${prem?"PREMIUM AKTIF":"BELUM AKTIF"}</span>
+  <div class="card" style="${prem?"border-color:var(--teal)":""}"><span class="sticker">${prem?"PREMIUM AKTIF":chk?"MEMERIKSA":"BELUM AKTIF"}</span>
   ${prem?`<p style="margin:10px 0 0">Perangkat ini <b>sudah Premium</b>. Semua fitur terbuka: bank ${Q.length} soal, latihan tanpa batas, latihan per sesi, Simulasi CAT A–D, semua trik &amp; teknik, dan Cara Menghafal.</p>
   ${storedDisp?`<p style="margin:8px 0 0">Kode yang aktif di perangkat ini: <b style="font-family:ui-monospace,Menlo,monospace;letter-spacing:.08em">${esc(storedDisp)}</b></p>`:""}
   <p class="mut" style="margin:8px 0 0">Mau coba kode lain? Kolom kode tetap ada di bawah — masukkan kode baru di sana, tidak perlu menonaktifkan dulu.</p>`
-  :`<p style="margin:10px 0 0">Perangkat ini <b>belum Premium</b>. Kalau kamu sudah punya kode dari admin, masukkan langsung di kolom kode di bawah — tidak perlu membeli lagi.</p>`}
+  :`<p style="margin:10px 0 0">Perangkat ini <b>belum Premium</b>. Kalau kamu sudah punya kode dari admin, masuk dulu ke akunmu di bawah, lalu masukkan kode itu di kolom kode — tidak perlu membeli lagi.</p>`}
+  ${chk&&!prem?`<p class="mut" style="margin:8px 0 0"><span class="spinrow"><span class="spin" aria-hidden="true"></span> Sedang memeriksa status Premium akunmu\u2026</span></p>`:""}
   </div>
-  <div class="card"><h3 style="margin:0 0 6px">Bukan login — Premium dibuka dengan kode</h3>
-  <p>Aplikasi ini <b>tidak punya akun</b>: tidak ada nama pengguna, tidak ada kata sandi, dan tidak ada tombol masuk/keluar (log in / log out) seperti aplikasi lain.</p>
-  <ol style="margin:8px 0;padding-left:22px"><li style="margin:4px 0;line-height:1.6">Kamu membeli lewat WhatsApp, lalu menerima <b>kode aktivasi</b> dari admin.</li><li style="margin:4px 0;line-height:1.6">Kode itu dimasukkan <b>sekali</b> di perangkatmu, di kolom kode di bawah ini.</li><li style="margin:4px 0;line-height:1.6">Premium langsung aktif dan <b>tersimpan di perangkat itu</b> — tetap aktif walau aplikasi ditutup dan dibuka lagi — sampai dinonaktifkan atau data situs di browser dihapus.</li></ol>
-  <p style="margin-bottom:0">Jadi tidak ada “log out”: untuk berhenti Premium di perangkat ini, pakai tombol <b>Nonaktifkan Premium</b> di bawah. Untuk mencoba kode lain, cukup masukkan kode baru di kolom kode — tidak perlu nonaktif dulu.</p></div>
-  ${mascotHTML("Kode dimasukkan di sini. Ketik atau tempel kodemu, lalu ketuk <b>AKTIFKAN</b>.")}
-  <h2>${prem?"Coba kode lain / ganti kode":"Sudah punya kode?"}</h2>
-  <div class="card"><label class="mut" for="code" style="font-weight:600">Kode aktivasi Premium (format XXXX-XXXX)</label>
-  <input class="codein" id="code" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX">
-  <p class="mut small" style="margin:0">Tempel kode di sini — spasi dan tanda hubung akan dibersihkan otomatis dan huruf menjadi kapital. Cara paling aman: <b>salin kode lalu tempel</b>, jangan ketik manual. 1 kode = 1 pembeli; masukkan di perangkatmu sendiri dan mohon jangan dibagikan.</p>
+  ${acctCardHTML()}
+  ${mascotHTML(FBST.user?"Kode dimasukkan di sini. Ketik atau tempel kodemu, lalu ketuk <b>AKTIFKAN</b>.":"Satu langkah lagi: masuk atau buat akun dulu di atas, baru masukkan kodemu di sini.")}
+  <h2>${prem?"Coba kode lain / ganti kode":"Langkah 2 — Sudah punya kode?"}</h2>
+  <div class="card">${FBST.user?"":`<div class="msg info" style="margin:0 0 10px"><b>Masuk / buat akun dulu, lalu masukkan kode.</b> Kolom kode di bawah aktif setelah kamu masuk ke akun (Langkah 1 di atas), supaya kodemu tercatat atas nama akunmu dan tidak bisa dipakai orang lain.</div>`}<label class="mut" for="code" style="font-weight:600">Kode aktivasi Premium (format XXXX-XXXX)</label>
+  <input class="codein" id="code" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX"${FBST.user?"":" disabled"}>
+  <p class="mut small" style="margin:0">Tempel kode di sini — spasi dan tanda hubung akan dibersihkan otomatis dan huruf menjadi kapital. Cara paling aman: <b>salin kode lalu tempel</b>, jangan ketik manual. 1 kode = 1 pembeli, maksimal 2 akun; mohon jangan dibagikan.</p>
   ${prem?`<p class="mut small" style="margin:6px 0 0">Perangkat ini sudah Premium. Kode baru yang valid akan <b>mengganti kode aktif</b> di perangkat ini. Kode lama tidak hangus — bisa dipakai lagi kapan pun.</p>`:""}
   <div id="amsg" aria-live="polite"></div>
-  <button class="btn pri mega" id="act">AKTIFKAN</button></div>
-  ${prem?`<h2>Nonaktifkan Premium di perangkat ini</h2>
-  <p class="mut" style="margin:0">Ini pengganti “log out” di aplikasi tanpa akun ini. Menonaktifkan hanya menghapus status Premium <b>di perangkat ini saja</b>. Kodemu <b>tidak hangus</b> — masukkan lagi kapan pun di kolom kode di atas untuk mengaktifkan kembali.</p>
+  <button class="btn pri mega" id="act"${FBST.user?"":" disabled"}>AKTIFKAN</button></div>
+  ${prem&&!FBST.user?`<h2>Nonaktifkan Premium di perangkat ini</h2>
+  <p class="mut" style="margin:0">Menonaktifkan hanya menghapus status Premium <b>di perangkat ini saja</b>. Kodemu <b>tidak hangus</b> — masukkan lagi kapan pun di kolom kode di atas untuk mengaktifkan kembali.</p>
   <button class="btn" id="deact"><span class="grow" style="text-align:center"><b>Nonaktifkan Premium di perangkat ini</b></span></button>
   <div id="dmsg"></div>
-  <button class="btn pri" id="go">Mulai latihan</button>`:""}
+  <button class="btn pri" id="go">Mulai latihan</button>`:(prem?`<button class="btn pri" id="go">Mulai latihan</button>`:"")}
   <div class="card">${PROMO_AKTIF?`<span class="sticker">HARGA PELUNCURAN</span><div class="price-row" style="margin-top:12px"><span class="price-old">${HARGA_ASLI}</span><span class="price-wrap"><span class="price">${HARGA}</span><svg class="scribble-circle" viewBox="0 0 200 70" preserveAspectRatio="none" aria-hidden="true"><path d="M100 5 C 150 3, 196 12, 197 34 C 198 57, 140 67, 92 66 C 45 65, 4 56, 3 33 C 2 12, 60 4, 108 6" fill="none" stroke="#E8322A" stroke-width="3.5" stroke-linecap="round"/></svg></span><span class="savebadge">HEMAT 76% · Rp65.000</span></div>`:`<span class="sticker">HARGA PREMIUM</span><div class="price-row" style="margin-top:12px"><span class="price-wrap"><span class="price">${HARGA}</span><svg class="scribble-circle" viewBox="0 0 200 70" preserveAspectRatio="none" aria-hidden="true"><path d="M100 5 C 150 3, 196 12, 197 34 C 198 57, 140 67, 92 66 C 45 65, 4 56, 3 33 C 2 12, 60 4, 108 6" fill="none" stroke="#E8322A" stroke-width="3.5" stroke-linecap="round"/></svg></span></div>`}<p style="margin:8px 0 0"><b>${HARGA} membuka semua Premium di aplikasi ini.</b></p><p class="mut" style="margin:2px 0 0">Sekali bayar · tanpa langganan · tanpa kedaluwarsa</p>${PROMO_AKTIF?`<div class="promonote"><b>Promo sampai ${PROMO_SAMPAI}.</b> Setelah tanggal itu, harga Premium menjadi <b>${HARGA_ASLI}</b>.</div>`:""}
   <ul class="feat"><li>${ic("check")}<span>Bank penuh ${Q.length} soal terklasifikasi: TWK ${nQ("TWK")}, TIU ${nQ("TIU")}, TKP ${nQ("TKP")} (${TOPICS.length} topik)</span></li><li>${ic("check")}<span>Latihan acak, per subtes, dan per topik tanpa batas</span></li><li>${ic("check")}<span>Latihan per sesi per subtes (maksimal 50 soal per sesi, pilih lewat kartu sesi)</span></li><li>${ic("check")}<span>Simulasi CAT A–D 110 soal / 100 menit + Simulasi Mini tanpa batas</span></li><li>${ic("check")}<span>Pembahasan lengkap semua soal</span></li><li>${ic("check")}<span>${TRICKS.length+TRIK_MODEL.length+STRATEGI450.length} kartu Trik Cepat (${TRICKS.length} per topik + ${TRIK_MODEL.length} per model soal + ${STRATEGI450.length} Strategi Skor 450+) + ${TEKNIK.length} Teknik Cepat + Cara Menghafal &amp; rencana 14 hari</span></li></ul>
   <div class="disc" style="margin-bottom:0"><b>Jujur:</b> Soal Figural (gambar): pilot 15 soal tersedia di latihan; Simulasi Penuh (CAT) masih tanpa Figural. Yang kamu beli adalah ${Q.length} soal di atas. Ini alat latihan, bukan soal resmi BKN, dan tidak menjamin kelulusan.</div></div>
@@ -2631,24 +2740,61 @@ function premiumPage(note){
     window.open("https://wa.me/"+FEEDBACK+"?text="+encodeURIComponent(text),"_blank","noopener");
   };
   const actBtn=document.getElementById("act");
-  actBtn.onclick=()=>{
+  if(actBtn)actBtn.onclick=()=>{
     const box=document.getElementById("amsg");
+    if(!FBST.user){box.innerHTML=`<div class="msg info"><b>Masuk / buat akun dulu, lalu masukkan kode.</b> Gulir ke Langkah 1 di atas untuk masuk atau membuat akun — setelah itu kolom kode ini aktif.</div>`;return}
+    if(FBST.status==="failed"||!window.__fb){box.innerHTML=`<div class="msg info"><b>Butuh internet untuk memeriksa Premium.</b> Periksa koneksimu, lalu coba lagi.</div>`;return}
+    if(!FBST.profileKnown){box.innerHTML=`<div class="msg info"><span class="spinrow"><span class="spin" aria-hidden="true"></span>Sedang memeriksa status Premium akunmu\u2026 coba lagi sebentar lagi.</span></div>`;return}
     if(codeEl)formatNow();
     const raw=codeEl?codeEl.value:"";
-    /* Spinner singkat saat kode diperiksa (momen tunggu nyata: validasi + aktivasi). */
+    /* Langkah (1): format + checksum diperiksa lokal dulu, sebelum server. */
+    const res=validateActivationCode(raw);
+    if(!res.ok){box.innerHTML=`<div class="msg err" role="alert">${ic("alert")}<b>Kode belum bisa diterima.</b> ${esc(res.msg)}</div>`;if(codeEl)codeEl.focus();return}
+    if(FBST.premium&&FBST.kode===res.code){box.innerHTML=`<div class="msg info"><b>Akun ini sudah Premium dengan kode yang sama.</b> Kode ${esc(formatCodeDisplay(res.code))} memang kode yang terdaftar di akunmu \u2014 tidak perlu ditukarkan lagi, semua fitur sudah terbuka.</div><button class="btn pri" id="go2">Mulai pakai Premium</button>`;document.getElementById("go2").onclick=home;return}
+    /* Langkah (2)\u2013(4) berjalan berurutan di dalam fbRedeem. */
     actBtn.disabled=true;
-    box.innerHTML=`<div class="msg info"><span class="spinrow"><span class="spin" aria-hidden="true"></span>Memeriksa kode kamu…</span></div>`;
-    setTimeout(()=>{
+    box.innerHTML=`<div class="msg info"><span class="spinrow"><span class="spin" aria-hidden="true"></span>Memeriksa kode ke server\u2026</span></div>`;
+    fbRedeem(res.code).then(r=>{
       actBtn.disabled=false;
-      const res=validateActivationCode(raw);
-      if(!res.ok){box.innerHTML=`<div class="msg err" role="alert">${ic("alert")}<b>Kode belum bisa diterima.</b> ${esc(res.msg)}</div>`;if(codeEl)codeEl.focus();return}
-      if(prem&&stored&&res.code===stored){box.innerHTML=`<div class="msg info"><b>Perangkat ini sudah Premium dengan kode yang sama.</b> Kode ${esc(formatCodeDisplay(res.code))} memang kode yang sedang aktif di perangkat ini — tidak perlu diaktifkan lagi, semua fitur sudah terbuka.</div><button class="btn pri" id="go2">Mulai pakai Premium</button>`;document.getElementById("go2").onclick=home;return}
-      const wasPrem=prem;
-      activatePremium(res.code);
-      box.innerHTML=`<div class="msg ok">${ic("check")}<b>Premium aktif!</b> ${wasPrem?"Kode baru diterima — kode aktif di perangkat ini sudah diganti dengan kode baru itu. Kode lama tidak hangus dan bisa dipakai lagi.":"Kode diterima. Semua fitur sekarang terbuka di perangkat ini."}</div><button class="btn pri" id="go2">Mulai pakai Premium</button>`;
-      document.getElementById("go2").onclick=home;
-    },450);
+      if(!r.ok){box.innerHTML=`<div class="msg err" role="alert">${ic("alert")}<b>Kode belum bisa diterima.</b> ${esc(r.msg)}</div>`;if(codeEl)codeEl.focus();return}
+      FBST.premium=true;FBST.kode=res.code;
+      if(storedPremiumCode()===res.code)deactivatePremium();
+      premiumPage("Premium aktif! Kode "+formatCodeDisplay(res.code)+" sekarang terdaftar untuk akun "+(FBST.user?FBST.user.email:"")+". Semua fitur terbuka \u2014 selamat berlatih.");
+    }).catch(e=>{actBtn.disabled=false;box.innerHTML=`<div class="msg err" role="alert">${ic("alert")}<b>Kode belum bisa diperiksa.</b> ${esc(fbErrMsg(e))}</div>`});
   };
+  /* ---- ikatan formulir akun (masuk / buat akun / lupa password / keluar) ---- */
+  const loginBtn=document.getElementById("login");
+  if(loginBtn)loginBtn.onclick=()=>{
+    const box=document.getElementById("lmsg");
+    if(!window.__fb){box.innerHTML=`<div class="msg info"><b>Butuh internet untuk memeriksa Premium.</b> Periksa koneksimu, lalu coba lagi.</div>`;return}
+    const em=document.getElementById("li-email").value.trim(),pw=document.getElementById("li-pass").value;
+    if(!em||!pw){box.innerHTML=`<div class="msg err" role="alert">${ic("alert")} Isi email dan password dulu ya.</div>`;return}
+    loginBtn.disabled=true;
+    box.innerHTML=`<div class="msg info"><span class="spinrow"><span class="spin" aria-hidden="true"></span>Sedang masuk\u2026</span></div>`;
+    window.__fb.signIn(em,pw).then(()=>{/* listener auth me-render ulang halaman ini */}).catch(e=>{loginBtn.disabled=false;box.innerHTML=`<div class="msg err" role="alert">${ic("alert")} <b>Belum bisa masuk.</b> ${esc(fbErrMsg(e))}</div>`});
+  };
+  const suBtn=document.getElementById("signup");
+  if(suBtn)suBtn.onclick=()=>{
+    const box=document.getElementById("smsg");
+    if(!window.__fb){box.innerHTML=`<div class="msg info"><b>Butuh internet untuk memeriksa Premium.</b> Periksa koneksimu, lalu coba lagi.</div>`;return}
+    const em=document.getElementById("su-email").value.trim(),p1=document.getElementById("su-pass").value,p2=document.getElementById("su-pass2").value;
+    if(!em){box.innerHTML=`<div class="msg err" role="alert">${ic("alert")} Isi email dulu ya.</div>`;return}
+    if(p1!==p2){box.innerHTML=`<div class="msg err" role="alert">${ic("alert")} <b>Password dan ulangi password tidak sama.</b> Ketik password yang sama persis di kedua kolom.</div>`;return}
+    suBtn.disabled=true;
+    box.innerHTML=`<div class="msg info"><span class="spinrow"><span class="spin" aria-hidden="true"></span>Sedang membuat akun\u2026</span></div>`;
+    window.__fb.create(em,p1).then(()=>{/* listener auth me-render ulang halaman ini */}).catch(e=>{suBtn.disabled=false;box.innerHTML=`<div class="msg err" role="alert">${ic("alert")} <b>Akun belum bisa dibuat.</b> ${esc(fbErrMsg(e))}</div>`});
+  };
+  const rpBtn=document.getElementById("resetpw");
+  if(rpBtn)rpBtn.onclick=()=>{
+    const box=document.getElementById("lmsg");
+    if(!window.__fb){box.innerHTML=`<div class="msg info"><b>Butuh internet untuk memeriksa Premium.</b> Periksa koneksimu, lalu coba lagi.</div>`;return}
+    const emEl=document.getElementById("li-email"),em=emEl.value.trim();
+    if(!em){box.innerHTML=`<div class="msg err" role="alert">${ic("alert")} Isi emailmu dulu di kolom Email di atas, lalu ketuk Lupa password lagi.</div>`;emEl.focus();return}
+    rpBtn.disabled=true;
+    window.__fb.reset(em).then(()=>{rpBtn.disabled=false;box.innerHTML=`<div class="msg ok">${ic("check")} <b>Email atur ulang password sudah dikirim</b> ke ${esc(em)}. Buka email itu dan ikuti tautannya untuk membuat password baru, lalu masuk lagi di sini.</div>`}).catch(e=>{rpBtn.disabled=false;box.innerHTML=`<div class="msg err" role="alert">${ic("alert")} ${esc(fbErrMsg(e))}</div>`});
+  };
+  const loBtn=document.getElementById("logout");
+  if(loBtn)loBtn.onclick=()=>{if(window.__fb)window.__fb.signOut().catch(()=>{})};
   scrollTop();
 }
 /* ================= LATIHAN (umpan balik langsung) ================= */
@@ -2873,6 +3019,52 @@ function examFin(){
 /* ================= MULAI ================= */
 if(typeof Q==="undefined"||!Q.length){app.innerHTML="<p style=\"padding:20px\">Bank soal gagal dimuat.</p>"}
 else if(!restoreExam())home();
+</script>
+<script>
+/* ================= PEMUAT FIREBASE (P22) =================
+   SDK Firebase v10 (build compat resmi) dimuat MALAS dari CDN gstatic setelah
+   render pertama, berurutan app \u2192 auth \u2192 firestore, lalu dijembatani ke kode
+   aplikasi lewat window.__fb. Bila CDN tidak terjangkau, status akun menjadi
+   "failed" dan aplikasi tetap berjalan penuh dalam mode gratis. */
+(function(){
+  var urls=[
+    "https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js",
+    "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js",
+    "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"
+  ];
+  var i=0;
+  function fail(){if(window.__FBST&&window.__FBST.status==="loading"){window.__FBST.status="failed";if(window.__fbRerender)window.__fbRerender()}}
+  function init(){
+    if(window.__fb)return;
+    try{
+      var cfg={apiKey:"AIzaSyBGi6DcZOW25bNF0sXECXziZHl7U3ZypcE",authDomain:"muga-studio.firebaseapp.com",projectId:"muga-studio",storageBucket:"muga-studio.firebasestorage.app",messagingSenderId:"10073531336",appId:"1:10073531336:web:3f5d50e4025d29ffb1d6fd"};
+      firebase.initializeApp(cfg);
+      var auth=firebase.auth(),db=firebase.firestore();
+      window.__fb={
+        create:function(e,p){return auth.createUserWithEmailAndPassword(e,p)},
+        signIn:function(e,p){return auth.signInWithEmailAndPassword(e,p)},
+        signOut:function(){return auth.signOut()},
+        reset:function(e){return auth.sendPasswordResetEmail(e)},
+        doc:function(c,id){return db.collection(c).doc(id)},
+        getDoc:function(r){return r.get()},
+        setDoc:function(r,d,m){return r.set(d,m||{})},
+        updateDoc:function(r,d){return r.update(d)},
+        union:function(v){return firebase.firestore.FieldValue.arrayUnion(v)}
+      };
+      if(window.__FBST&&window.__FBST.status==="loading")window.__FBST.status="ready";
+      auth.onAuthStateChanged(function(u){if(window.__fbAuthChanged)window.__fbAuthChanged(u?{uid:u.uid,email:u.email}:null)});
+    }catch(e){if(window.__FBST){window.__FBST.status="failed";if(window.__fbRerender)window.__fbRerender()}}
+  }
+  function next(){
+    if(i>=urls.length){init();return}
+    var s=document.createElement("script");
+    s.src=urls[i++];s.async=true;s.onload=next;s.onerror=fail;
+    document.head.appendChild(s);
+  }
+  setTimeout(function(){if(!window.__fb)fail()},20000);
+  if("requestIdleCallback" in window)requestIdleCallback(function(){next()},{timeout:2500});
+  else setTimeout(next,600);
+})();
 </script>
 
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})});}</script>
