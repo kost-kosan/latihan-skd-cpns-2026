@@ -8,27 +8,38 @@
 <title>Siap Abdi — Latihan Soal CPNS, TNI, Polri &amp; BUMN</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0f766e">
+<meta property="og:title" content="Siap Abdi — Latihan Soal CPNS, TNI, Polri & BUMN">
+<meta property="og:description" content="Latihan soal SKD CPNS: 1.500 soal TWK, TIU, TKP + pembahasan, sesi A–J, simulasi CAT, 91 kartu trik. Rp20.000 sekali bayar. Bukan aplikasi resmi BKN.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://abdi-cpns.my.id/">
+<meta property="og:image" content="https://kost-kosan.github.io/latihan-skd-cpns-2026/icon-512.png">
+<meta property="og:image:width" content="512">
+<meta property="og:image:height" content="512">
+<meta name="twitter:card" content="summary">
+<meta name="description" content="Latihan soal SKD CPNS: 1.500 soal TWK, TIU, TKP + pembahasan, sesi A–J, simulasi CAT, 91 kartu trik. Rp20.000 sekali bayar. Bukan aplikasi resmi BKN.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#F4F1EA; --paper:#FFF8E7; --card:#FFFDF6; --ink:#1F2937; --mut:#5B6472;
+  --bg:#FBF4DF; --paper:#FFF6DE; --card:#FFFDF6; --ink:#2A2A24; --mut:#6E6A5B;
+  --read:#37352D; --btnbase:#2A2A24; --face:linear-gradient(180deg,#FFFFFF 0%,#F6F0DA 100%);
   --teal:#0F766E; --teal-t:#DCEFEA; --yel:#FFD400; --red:#DC2626; --grn:#16A34A;
-  --okbg:#DFF3E4; --nobg:#FBE7E2; --partbg:#FDEBC8; --bd:#1F2937;
-  --sh:4px 4px 0 rgba(31,41,55,.16); --sh-sm:2px 2px 0 rgba(31,41,55,.16);
-  --shc:rgba(31,41,55,.24);
+  --okbg:#DFF3E4; --nobg:#FBE7E2; --partbg:#FDEBC8; --bd:#2A2A24;
+  --sh:3px 3px 0 rgba(42,42,36,.14); --sh-sm:2px 2px 0 rgba(42,42,36,.12);
+  --shc:rgba(42,42,36,.9);
   color-scheme:light;
   /* Token spasi + skala tipe fluid — nilai gaya Open Props
      (github.com/argyleink/open-props, lisensi MIT), ditulis ulang sebagai token Siap Abdi.
      Angka clamp() skala tipe dihitung manual (min/max rem + suku vw+rem). */
   --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:24px; --sp-6:32px; --sp-7:48px;
   --tap:48px;
-  --sh-3d:5px 6px 0 var(--shc); --sh-3d-sm:3px 4px 0 var(--shc);
+  --sh-3d:0 9px 0 var(--btnbase); --sh-3d-sm:0 5px 0 var(--btnbase);
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     --bg:#111827; --paper:#1F2937; --card:#1B2536; --ink:#E9E6DC; --mut:#AAB4C0;
+    --read:#DDD9CC; --btnbase:rgba(0,0,0,.6); --face:linear-gradient(180deg,#2A3648 0%,#1B2536 100%);
     --teal:#2DD4BF; --teal-t:#14332F; --okbg:#173D2A; --nobg:#472B27; --partbg:#4A3A15; --bd:#C7CDD6;
     --sh:4px 4px 0 rgba(0,0,0,.45); --sh-sm:2px 2px 0 rgba(0,0,0,.45);
     --shc:rgba(0,0,0,.55);
@@ -37,6 +48,7 @@
 }
 :root[data-theme="dark"]{
   --bg:#111827; --paper:#1F2937; --card:#1B2536; --ink:#E9E6DC; --mut:#AAB4C0;
+  --read:#DDD9CC; --btnbase:rgba(0,0,0,.6); --face:linear-gradient(180deg,#2A3648 0%,#1B2536 100%);
   --teal:#2DD4BF; --teal-t:#14332F; --okbg:#173D2A; --nobg:#472B27; --partbg:#4A3A15; --bd:#C7CDD6;
   --sh:4px 4px 0 rgba(0,0,0,.45); --sh-sm:2px 2px 0 rgba(0,0,0,.45);
   --shc:rgba(0,0,0,.55);
@@ -273,10 +285,95 @@ ul.feat li .ic{color:var(--grn);width:22px;height:22px;margin-top:2px}
 .skl.w55{width:55%}.skl.w75{width:75%}.skl.w40{width:40%}
 @keyframes skpulse{0%,100%{opacity:.08}50%{opacity:.2}}
 @media (prefers-reduced-motion:reduce){.tm.low{animation:none}.bar i{transition:none}.dlg{animation:none}.spin{animation-duration:1.6s}.skl{animation:none;opacity:.13}}
+
+/* ================= BUILD P20 — POLES UI RONDE 3 =================
+   Tombol super 3D gaya mainan (dasar 7–10px, kilap gradasi, tertekan jelas),
+   ramah gaptek, maskot boneka pemandu, krem lembut + teks baca lega,
+   grain kertas, coretan tangan, label seksi bernomor mono. */
+body{color:var(--read);line-height:1.65}
+body::after{content:"";position:fixed;inset:0;z-index:200;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E")}
+h1,h2,h3,.disp{color:var(--ink)}
+main{counter-reset:seksi}
+h2{font-family:"Space Mono",ui-monospace,Menlo,monospace;counter-increment:seksi}
+h2::before{content:counter(seksi,decimal-leading-zero) " / ";color:var(--teal)}
+/* --- tombol super 3D --- */
+.btn{border-radius:15px;background:var(--face);box-shadow:0 6px 0 var(--btnbase),inset 0 3px 0 rgba(255,255,255,.55),inset 0 -4px 0 rgba(42,42,36,.08);min-height:58px}
+.btn:active{transform:translateY(5px);box-shadow:0 1px 0 var(--btnbase),inset 0 2px 0 rgba(255,255,255,.45)}
+.btn.pri,.btn.yel{min-height:66px;font-size:1.14rem;border-radius:17px;color:#fff;box-shadow:0 9px 0 var(--btnbase),inset 0 4px 0 rgba(255,255,255,.35),inset 0 -6px 0 rgba(0,0,0,.16)}
+.btn.pri{background:linear-gradient(180deg,#15A08D 0%,#0F766E 55%,#0A5C54 100%)}
+.btn.yel{background:linear-gradient(180deg,#35C96B 0%,#1FAF57 55%,#178A41 100%)}
+.btn.pri:active,.btn.yel:active{transform:translateY(7px);box-shadow:0 2px 0 var(--btnbase),inset 0 3px 0 rgba(255,255,255,.3)}
+.btn.mega{min-height:78px;font-size:1.28rem;letter-spacing:.02em;border-radius:20px;box-shadow:0 10px 0 var(--btnbase),inset 0 4px 0 rgba(255,255,255,.4),inset 0 -6px 0 rgba(0,0,0,.16)}
+.btn.mega:active{transform:translateY(8px);box-shadow:0 2px 0 var(--btnbase),inset 0 3px 0 rgba(255,255,255,.3)}
+.btn:disabled{box-shadow:0 3px 0 var(--btnbase)}
+:root[data-theme="dark"] .btn.pri,:root[data-theme="dark"] .btn.yel,:root[data-theme="dark"] .big{color:#fff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn.pri,:root:not([data-theme="light"]) .btn.yel,:root:not([data-theme="light"]) .big{color:#fff}}
+.big{border-radius:20px;padding:26px 20px;min-height:96px;background:linear-gradient(180deg,#15A08D 0%,#0F766E 55%,#0A5C54 100%);box-shadow:0 10px 0 var(--btnbase),inset 0 4px 0 rgba(255,255,255,.35),inset 0 -6px 0 rgba(0,0,0,.16)}
+.big:active{transform:translateY(8px);box-shadow:0 2px 0 var(--btnbase),inset 0 3px 0 rgba(255,255,255,.3)}
+.iconbtn,.xbtn{border-radius:13px;background:var(--face);box-shadow:0 5px 0 var(--btnbase),inset 0 2px 0 rgba(255,255,255,.55)}
+.iconbtn:active,.xbtn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--btnbase)}
+.logo{border-radius:14px;box-shadow:0 4px 0 var(--btnbase)}
+/* --- kartu sekunder dilunakkan: border tipis + bayangan halus --- */
+.card{border:2px solid var(--bd);border-radius:16px;box-shadow:var(--sh)}
+.disc{border:2px solid var(--bd);border-radius:14px;box-shadow:var(--sh-sm)}
+.sessbox,.subdd,.topdd,.trickcard{border:2px solid var(--bd);border-radius:16px;box-shadow:var(--sh-sm)}
+.path{border:2px solid var(--bd);border-radius:16px;box-shadow:var(--sh-sm)}
+.qcard{border:2.5px solid var(--bd);border-radius:18px;box-shadow:var(--sh);padding:20px 18px}
+.fbcard{border:2px solid var(--bd);border-radius:16px;box-shadow:var(--sh-sm);line-height:1.7}
+.msg{border:2px solid var(--bd);border-radius:14px}
+.exbox,.trapbox{border:2px solid var(--bd);border-radius:12px}
+.dlg{border-radius:16px}
+.nb{border:2px solid var(--bd);border-radius:12px;box-shadow:var(--sh-sm)}
+.sesssel{border:2px solid var(--bd);border-radius:13px;box-shadow:var(--sh-sm)}
+.tm{border-radius:8px}
+.bar{border-radius:99px}.bar i{border-radius:99px}
+.tag,.locktab,.locktag{border-radius:999px}
+.sticker{border-radius:999px}
+.codein{border-radius:14px;min-height:60px}
+/* --- soal & opsi diperbesar --- */
+.q{font-size:clamp(1.13rem,1.06rem + .6vw,1.26rem);line-height:1.7;color:var(--read)}
+.opt{border-radius:15px;padding:16px 15px;font-size:1.07rem;min-height:60px;background:var(--face);box-shadow:0 5px 0 var(--btnbase),inset 0 2px 0 rgba(255,255,255,.55)}
+.opt:active{transform:translateY(4px);box-shadow:0 1px 0 var(--btnbase)}
+.opt:disabled{box-shadow:0 5px 0 var(--btnbase)}
+.opt .l{width:40px;height:40px;border-radius:11px;font-size:1.02rem}
+.opt.dim{opacity:.55}
+.chip{border-radius:14px;background:var(--face);box-shadow:0 5px 0 var(--btnbase),inset 0 2px 0 rgba(255,255,255,.55);padding:12px 16px;font-size:1rem}
+.chip:active{transform:translateY(4px);box-shadow:0 1px 0 var(--btnbase)}
+.day{border:2px solid var(--bd);border-radius:14px;background:var(--face);box-shadow:0 5px 0 var(--btnbase),inset 0 2px 0 rgba(255,255,255,.55)}
+.day:active{transform:translateY(4px);box-shadow:0 1px 0 var(--btnbase)}
+/* --- maskot boneka pemandu + balon ucapan --- */
+.guide{display:flex;gap:12px;align-items:flex-end;margin:4px 0 16px}
+.guide .mascot{width:72px;height:72px;flex:0 0 72px;filter:drop-shadow(0 6px 6px rgba(42,42,36,.22))}
+.guide .bubble{margin:0 0 8px;background:var(--card);border:2.5px solid var(--bd);border-radius:16px;padding:11px 14px;font-size:.98rem;font-weight:600;line-height:1.5;color:var(--read);position:relative;box-shadow:3px 3px 0 rgba(42,42,36,.14);flex:1;min-width:0}
+.guide .bubble::before{content:"";position:absolute;left:-9px;bottom:16px;width:14px;height:14px;background:var(--card);border-left:2.5px solid var(--bd);border-bottom:2.5px solid var(--bd);transform:rotate(45deg)}
+/* --- instruksi pendek sehari-hari --- */
+.howto{margin:14px 0 0;background:#FFE98A;color:#2A2A24;border:2.5px dashed rgba(42,42,36,.5);border-radius:13px;padding:10px 13px;font-size:.95rem;font-weight:700;line-height:1.5}
+/* --- kartu subtes Beranda: tombol MULAI LATIHAN mega, sama besar --- */
+.subcards{display:flex;flex-direction:column;gap:14px;margin:12px 0}
+.subcard{background:var(--card);border:2px solid var(--bd);border-radius:18px;box-shadow:var(--sh);padding:16px}
+.subcard .stop{display:flex;gap:12px;align-items:flex-start}
+.subcode{width:52px;height:52px;flex:0 0 52px;border:3px solid var(--bd);border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:.95rem;color:#fff;box-shadow:0 4px 0 var(--btnbase)}
+.subcard h3{margin:2px 0;font-size:1.12rem}
+.subcard .sdesc{margin:0;font-size:.9rem;color:var(--mut);line-height:1.5}
+.subcard .btn{margin:14px 0 0}
+/* --- sesi A–J: kartu besar 2 kolom yang lega --- */
+.sessgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sesscard{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:86px;padding:14px;border:3px solid var(--bd);border-radius:17px;background:var(--face);color:var(--ink);font:inherit;cursor:pointer;text-align:left;box-shadow:0 6px 0 var(--btnbase),inset 0 2px 0 rgba(255,255,255,.55)}
+.sesscard:active{transform:translateY(5px);box-shadow:0 1px 0 var(--btnbase)}
+.sesscard:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.sesscard .sl{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:1.5rem;line-height:1.1}
+.sesscard .sc{font-size:.88rem;color:var(--mut);font-weight:600}
+.sesscard .ss{font-size:.82rem;font-weight:700;color:var(--teal)}
+/* --- coretan tangan --- */
+.scribble{display:block;width:150px;height:11px;margin:0 0 6px}
+.price-wrap{position:relative;display:inline-block;padding:3px 10px 4px 2px}
+.scribble-circle{position:absolute;left:-7px;top:-7px;width:calc(100% + 12px);height:calc(100% + 13px);pointer-events:none}
+@media (prefers-reduced-motion:reduce){.btn:active,.opt:active,.sesscard:active,.big:active,.chip:active{transform:none}}
 </style>
 </head>
 <body>
 <main id="app"></main>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><radialGradient id="pupBody" cx="35%" cy="26%" r="85%"><stop offset="0%" stop-color="#FFEF9F"/><stop offset="55%" stop-color="#FFC914"/><stop offset="100%" stop-color="#EDA200"/></radialGradient><symbol id="puppet" viewBox="0 0 120 120"><ellipse cx="60" cy="110" rx="31" ry="5.5" fill="rgba(42,42,36,.18)"/><ellipse cx="41" cy="104" rx="11" ry="6" fill="#E8322A"/><ellipse cx="79" cy="104" rx="11" ry="6" fill="#E8322A"/><ellipse cx="19" cy="76" rx="8.5" ry="14" fill="#EDA200" transform="rotate(18 19 76)"/><ellipse cx="103" cy="50" rx="8" ry="14" fill="#EDA200" transform="rotate(-32 103 50)"/><ellipse cx="60" cy="68" rx="37" ry="35" fill="url(#pupBody)"/><ellipse cx="60" cy="81" rx="19" ry="14.5" fill="#FFF3C2" opacity=".85"/><path d="M29 43 A32 32 0 0 1 91 43 L91 46 L29 46 Z" fill="#E8322A"/><rect x="23" y="42" width="74" height="7.5" rx="3.75" fill="#C2241C"/><circle cx="60" cy="12" r="4" fill="#C2241C"/><ellipse cx="41" cy="52" rx="12" ry="6.5" fill="#FFFFFF" opacity=".32" transform="rotate(-16 41 52)"/><ellipse cx="46" cy="61" rx="9" ry="11" fill="#FFFFFF"/><ellipse cx="74" cy="61" rx="9" ry="11" fill="#FFFFFF"/><circle cx="47" cy="63" r="4.6" fill="#2A2A24"/><circle cx="75" cy="63" r="4.6" fill="#2A2A24"/><circle cx="48.7" cy="61" r="1.7" fill="#FFFFFF"/><circle cx="76.7" cy="61" r="1.7" fill="#FFFFFF"/><ellipse cx="60" cy="71" rx="3.1" ry="2.3" fill="#D98E00"/><ellipse cx="34" cy="75" rx="6" ry="4" fill="#FF9D94" opacity=".6"/><ellipse cx="86" cy="75" rx="6" ry="4" fill="#FF9D94" opacity=".6"/><path d="M51 77 Q60 86 69 77" fill="none" stroke="#2A2A24" stroke-width="3" stroke-linecap="round"/></symbol></defs></svg>
 <script>
 // BANK SOAL. Tambah soal dengan menyalin satu baris lalu mengganti isinya.
 // Setiap baris diakhiri koma, kecuali baris terakhir sebelum "];".
@@ -1917,7 +2014,7 @@ const PROMO_SAMPAI="31 Desember 2026";
    dan semua tampilan coret/promo hilang — tidak perlu update manual. */
 const PROMO_AKTIF=Date.now()<=new Date(2026,11,31,23,59,59).getTime();
 const HARGA=PROMO_AKTIF?"Rp20.000":HARGA_ASLI;
-const BUILD_STAMP="Build P19 · Bank 1.500 soal · 91 kartu trik · 13 Nov 2026";
+const BUILD_STAMP="Build P20 · Bank 1.500 soal · 91 kartu trik · 13 Nov 2026";
 const KISI={TWK:["Pancasila, UUD 1945, NKRI, Bhinneka Tunggal Ika","Nasionalisme, integritas, bela negara","Bahasa negara (Bahasa Indonesia)","Sejarah nasional adalah konten di dalam 5 aspek di atas (interpretasi) — bukan aspek ke-6"],TIU:["Verbal: analogi (termasuk latihan kosakata sinonim/antonim sebagai sub-jenis analogi — interpretasi, bukan kategori resmi Kepmen)","Verbal: silogisme (menarik kesimpulan dari dua pernyataan)","Verbal: penalaran analitis","Numerik: berhitung, deret angka, perbandingan kuantitatif, soal cerita","Figural (soal gambar): pilot 15 soal tersedia di latihan TIU (analogi, ketidaksamaan, serial); Simulasi CAT belum memuat soal figural"],TKP:["Pelayanan publik, jejaring kerja","Sosial budaya, teknologi informasi dan komunikasi","Profesionalisme, anti radikalisme"]};
 const NAMA={TWK:"Tes Wawasan Kebangsaan",TIU:"Tes Intelegensia Umum",TKP:"Tes Karakteristik Pribadi"};
 const PG={TWK:65,TIU:80,TKP:166};
@@ -2265,12 +2362,15 @@ function bindTheme(){const b=document.getElementById("thm");if(!b)return;b.oncli
 <script>
 "use strict";
 /* ================= BERANDA ================= */
+function mascotHTML(teks){return `<div class="guide"><svg class="mascot" viewBox="0 0 120 120" aria-hidden="true"><use href="#puppet"/></svg><p class="bubble">${teks}</p></div>`}
 function home(){
   const prem=isPremium(), fl=freeLeft(), fs=freeState(), h=hist();
   app.innerHTML=`
   <header class="hd"><div class="logo">SA</div><div class="grow"><h1>Siap Abdi</h1><p class="mut" style="margin:0">Latihan Soal CPNS, TNI, Polri &amp; BUMN</p></div>${themeBtnHTML()}</header>
+  ${mascotHTML("Halo! Ketuk <b>MULAI LATIHAN</b> di tombol besar di bawah ini untuk mulai. Pelajaran dan sesi ada di bawahnya.")}
   <button class="big" id="q10"><span>Mulai Latihan</span><small>10 soal acak dari semua topik — langsung mulai, tidak perlu pilih-pilih dulu${prem?"":" · memakai jatah gratis hari ini"}</small></button>
   <h2 style="margin-top:6px">Pilih jalur</h2>
+  <svg class="scribble" viewBox="0 0 150 11" preserveAspectRatio="none" aria-hidden="true"><path d="M3 7 C 35 3, 62 10, 92 5 S 138 4, 147 6" fill="none" stroke="#E8322A" stroke-width="3.2" stroke-linecap="round"/></svg>
   <div class="paths">
     <button class="path" id="jalurcpns"><span class="pic">${ic("book")}</span><b>CPNS</b><span>SKD \u00B7 ${Q.length} soal \u00B7 ${TOPICS.length} topik \u00B7 TWK ${nQ("TWK")} \u00B7 TIU ${nQ("TIU")} \u00B7 TKP ${nQ("TKP")} \u00B7 ada pembahasan</span><span class="tag">AKTIF</span></button>
     <div class="path soon" aria-disabled="true"><span class="pic">${ic("shield")}</span><b>TNI</b><span>Latihan seleksi TNI belum tersedia.</span><span class="locktag">SEGERA HADIR</span></div>
@@ -2279,14 +2379,15 @@ function home(){
   </div>
   <div class="disc"><b>Penting:</b> Aplikasi latihan mandiri ini <b>bukan aplikasi resmi BKN dan tidak menjamin kelulusan</b>. Soal disusun sendiri mengacu kisi-kisi KepmenPANRB 321/2024 (Diktum KEDUA). Angka passing grade yang dipakai di aplikasi ini (TWK 65, TIU 80, TKP 166) adalah <b>acuan persiapan dari seleksi 2024</b> berdasarkan KepmenPANRB 321/2024 TA 2024 — bukan penetapan untuk seleksi berikutnya. Soal Figural (gambar): pilot 15 soal tersedia di latihan; Simulasi Penuh (CAT) masih tanpa Figural.</div>
   ${prem?`<div class="card" style="border-color:var(--teal)"><span class="sticker">PREMIUM AKTIF</span><p style="margin:10px 0 0">Semua fitur terbuka: bank ${Q.length} soal, latihan tanpa batas, latihan per sesi, semua trik &amp; teknik, dan Simulasi CAT A\u2013D 110 soal / 100 menit.</p></div>`
-  :`<div class="card"><span class="sticker">GRATIS HARI INI</span><p style="margin:10px 0 4px">Sisa latihan gratis: <b>${fl} dari 10 soal</b> \u00B7 Simulasi Mini: <b>${fs.miniUsed?"sudah dipakai":"1x gratis"}</b> \u00B7 Topik gratis penuh: <b>${FREE_TOPIC}</b></p>${fl<=0?`<div class="msg info" style="margin:10px 0 0"><b>Jatah latihan gratis hari ini sudah habis.</b> Jatah 10 soal acak per hari ini terisi penuh lagi <b>besok</b> — besok kamu bisa latihan gratis lagi tanpa membayar apa pun. Mau lanjut sekarang juga? Premium membuka latihan tanpa batas.</div>`:""}${fs.miniUsed?`<p class="mut" style="margin:8px 0 0">Simulasi Mini gratis hari ini juga sudah terpakai — jatahnya kembali lagi besok. Premium membuka Simulasi Mini tanpa batas.</p>`:""}${PROMO_AKTIF?`<div style="margin-top:14px"><span class="sticker">HARGA PELUNCURAN</span><div class="priceline"><span class="old">${HARGA_ASLI}</span><span class="new">${HARGA}</span><span class="savebadge">HEMAT 76%</span></div><p style="margin:2px 0 0"><b>${HARGA} membuka semua Premium</b> \u2014 sekali bayar, tanpa langganan.</p><p class="mut" style="margin:4px 0 0">Promo sampai <b style="color:var(--ink)">${PROMO_SAMPAI}</b>. Setelah itu harga menjadi ${HARGA_ASLI}.</p></div>`:`<div style="margin-top:14px"><span class="sticker">HARGA PREMIUM</span><div class="priceline"><span class="new">${HARGA}</span></div><p style="margin:2px 0 0"><b>${HARGA} membuka semua Premium</b> \u2014 sekali bayar, tanpa langganan.</p></div>`}<button class="btn" id="goprem"><span class="grow" style="text-align:center">Buka Semua Premium \u2014 ${HARGA}</span></button></div>`}
-  <h2>Pilihan lain — latihan per subtes (10 soal)</h2>
-  <div class="g3">${["TWK","TIU","TKP"].map(k=>`<button class="tile" data-k="${k}"><span class="dot" style="background:${SUBC[k]}"></span><b>${k}</b><span>${NAMA[k].replace("Tes ","")}<br>${nQ(k)} soal</span></button>`).join("")}</div>
+  :`<div class="card"><span class="sticker">GRATIS HARI INI</span><p style="margin:10px 0 4px">Sisa latihan gratis: <b>${fl} dari 10 soal</b> \u00B7 Simulasi Mini: <b>${fs.miniUsed?"sudah dipakai":"1x gratis"}</b> \u00B7 Topik gratis penuh: <b>${FREE_TOPIC}</b></p>${fl<=0?`<div class="msg info" style="margin:10px 0 0"><b>Jatah latihan gratis hari ini sudah habis.</b> Jatah 10 soal acak per hari ini terisi penuh lagi <b>besok</b> — besok kamu bisa latihan gratis lagi tanpa membayar apa pun. Mau lanjut sekarang juga? Premium membuka latihan tanpa batas.</div>`:""}${fs.miniUsed?`<p class="mut" style="margin:8px 0 0">Simulasi Mini gratis hari ini juga sudah terpakai — jatahnya kembali lagi besok. Premium membuka Simulasi Mini tanpa batas.</p>`:""}${PROMO_AKTIF?`<div style="margin-top:14px"><span class="sticker">HARGA PELUNCURAN</span><div class="priceline"><span class="old">${HARGA_ASLI}</span><span class="new">${HARGA}</span><span class="savebadge">HEMAT 76%</span></div><p style="margin:2px 0 0"><b>${HARGA} membuka semua Premium</b> \u2014 sekali bayar, tanpa langganan.</p><p class="mut" style="margin:4px 0 0">Promo sampai <b style="color:var(--ink)">${PROMO_SAMPAI}</b>. Setelah itu harga menjadi ${HARGA_ASLI}.</p></div>`:`<div style="margin-top:14px"><span class="sticker">HARGA PREMIUM</span><div class="priceline"><span class="new">${HARGA}</span></div><p style="margin:2px 0 0"><b>${HARGA} membuka semua Premium</b> \u2014 sekali bayar, tanpa langganan.</p></div>`}<button class="btn pri" id="goprem"><span class="grow" style="text-align:center">Buka Semua Premium \u2014 ${HARGA}</span></button></div>`}
+  <h2>Latihan per subtes (10 soal)</h2>
+  <p class="mut" style="margin:0 0 2px">Ada 3 pelajaran. Ketuk tombol <b>MULAI LATIHAN</b> pada pelajaran yang kamu mau — soalnya diacak, lengkap dengan pembahasan.</p>
+  <div class="subcards">${["TWK","TIU","TKP"].map(k=>`<div class="subcard"><div class="stop"><span class="subcode" style="background:${SUBC[k]}">${k}</span><div><h3>${k} — ${esc(NAMA[k])}</h3><p class="sdesc">${nQ(k)} soal di bank · 10 soal acak tiap latihan</p></div></div><button class="btn pri mega" data-k="${k}">MULAI LATIHAN</button></div>`).join("")}</div>
   <h2>Latihan per sesi ${prem?"":"<span class=\"locktag\">PREMIUM</span>"}</h2>
   <p class="mut small" style="margin:0 0 4px">Semua soal bank dibagi per sesi (maksimal 50 soal per sesi), tanpa pengulangan antar-sesi. Kerjakan satu sesi penuh dengan pembahasan per soal.</p>
-  ${["TWK","TIU","TKP"].map(k=>{const sess=getSessions(k);return `<div class="sessbox"><label for="sess-${k}"><b>${k}</b> \u2014 ${esc(NAMA[k])} \u00B7 ${nQ(k)} soal \u00B7 ${sess.length} sesi</label><div class="sessrow"><select class="sesssel" id="sess-${k}" aria-label="Pilih sesi ${k}"><option value="">Pilih sesi...</option>${sess.map(s=>`<option value="${s.letter}">Sesi ${s.letter} \u2014 ${s.count} soal${lastSuffix(s.key)}</option>`).join("")}</select><button class="btn sessgo" id="goSess-${k}">Mulai sesi</button></div><div class="sessmsg" id="sessmsg-${k}"></div></div>`}).join("")}
+  ${["TWK","TIU","TKP"].map(k=>{const sess=getSessions(k);return `<div class="sessbox"><label><b>${k}</b> \u2014 ${esc(NAMA[k])} \u00B7 ${nQ(k)} soal \u00B7 ${sess.length} sesi</label><p class="mut small" style="margin:0 0 10px">Ketuk satu kartu sesi untuk langsung mulai sesi itu.</p><div class="sessgrid">${sess.map(s=>{const ls=lastScore(s.key);return `<button class="sesscard" data-sk="${k}" data-letter="${s.letter}"><span class="sl">Sesi ${s.letter}</span><span class="sc">${s.count} soal</span>${ls!==null?`<span class="ss">Terakhir: ${ls}%</span>`:""}</button>`}).join("")}</div><div class="sessmsg" id="sessmsg-${k}"></div></div>`}).join("")}
   <h2>Simulasi ujian</h2>
-  <div class="sessbox"><label for="catSel"><b>Simulasi CAT \u2014 110 soal / 100 menit</b><br><span class="mut small">TWK 30 \u00B7 TIU 35 \u00B7 TKP 45 \u00B7 passing grade TWK 65 \u00B7 TIU 80 \u00B7 TKP 166 (acuan persiapan dari seleksi 2024) \u00B7 skor &amp; passing grade per subtes</span> ${prem?"":"<span class=\"locktag\">PREMIUM</span>"}</label><div class="sessrow"><select class="sesssel" id="catSel" aria-label="Pilih simulasi CAT"><option value="">Pilih simulasi CAT...</option>${CAT_LETTERS.map(Lt=>`<option value="${Lt}">Simulasi CAT ${Lt} \u2014 110 soal / 100 menit${lastSuffix("CAT-"+Lt)}</option>`).join("")}</select><button class="btn sessgo" id="catGo">Mulai simulasi</button></div><div class="sessmsg" id="catmsg"></div><p class="mut small" style="margin:10px 0 0">Soal antar-simulasi dapat berulang karena diambil dari bank ${Q.length} soal yang sama.</p></div>
+  <div class="sessbox"><label for="catSel"><b>Simulasi CAT \u2014 110 soal / 100 menit</b><br><span class="mut small">TWK 30 \u00B7 TIU 35 \u00B7 TKP 45 \u00B7 passing grade TWK 65 \u00B7 TIU 80 \u00B7 TKP 166 (acuan persiapan dari seleksi 2024) \u00B7 skor &amp; passing grade per subtes</span> ${prem?"":"<span class=\"locktag\">PREMIUM</span>"}</label><div class="sessrow"><select class="sesssel" id="catSel" aria-label="Pilih simulasi CAT"><option value="">Pilih simulasi CAT...</option>${CAT_LETTERS.map(Lt=>`<option value="${Lt}">Simulasi CAT ${Lt} \u2014 110 soal / 100 menit${lastSuffix("CAT-"+Lt)}</option>`).join("")}</select><button class="btn pri sessgo" id="catGo">MULAI SIMULASI</button></div><div class="sessmsg" id="catmsg"></div><p class="mut small" style="margin:10px 0 0">Soal antar-simulasi dapat berulang karena diambil dari bank ${Q.length} soal yang sama.</p></div>
   <p class="mut small" style="margin:-4px 0 6px 2px">Label jujur: <b>Simulasi v1 tanpa Figural</b> (TIU dihitung dari topik verbal, numerik, dan logika).</p>
   <button class="btn" id="simmini"><span class="grow"><b>Simulasi Mini \u2014 24 soal / 22 menit</b><br><span class="mut small">TWK 6 \u00B7 TIU 8 \u00B7 TKP 10 \u00B7 ada penghitung waktu${prem?"":" \u00B7 gratis 1x"}</span></span><span class="arr">\u203A</span></button>
   <h2>Latihan terarah</h2>
@@ -2302,11 +2403,9 @@ function home(){
   $("jalurcpns").onclick=()=>{const el=$("q10");if(el)el.scrollIntoView({behavior:"smooth",block:"start"})};
   $("q10").onclick=()=>startLatihan({mode:"ALL",label:"Latihan acak"});
   app.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>startLatihan({mode:"SUB",k:b.dataset.k,label:"Latihan "+b.dataset.k}));
-  ["TWK","TIU","TKP"].forEach(k=>{
-    const btn=$("goSess-"+k);if(!btn)return;
-    btn.onclick=()=>{
-      const sel=$("sess-"+k);const letter=sel?sel.value:"";
-      if(!letter){const msg=$("sessmsg-"+k);if(msg)msg.innerHTML=`<div class="msg info" style="margin:0">Pilih sesi dulu dari daftar di atas.</div>`;if(sel)sel.focus();return}
+    app.querySelectorAll(".sesscard").forEach(card=>{
+    card.onclick=()=>{
+      const k=card.dataset.sk,letter=card.dataset.letter;
       if(!isPremium())return premiumPage("Latihan per sesi adalah fitur Premium. Paket gratis tetap: 10 soal acak/hari, topik "+FREE_TOPIC+" penuh, dan Simulasi Mini 1x.");
       const s=getSession(k,letter);if(!s)return;
       startLatihan({mode:"SESI",k:k,letter:letter,label:k+" Sesi "+letter,scoreKey:s.key});
@@ -2463,24 +2562,25 @@ function premiumPage(note){
   <p>Aplikasi ini <b>tidak punya akun</b>: tidak ada nama pengguna, tidak ada kata sandi, dan tidak ada tombol masuk/keluar (log in / log out) seperti aplikasi lain.</p>
   <ol style="margin:8px 0;padding-left:22px"><li style="margin:4px 0;line-height:1.6">Kamu membeli lewat WhatsApp, lalu menerima <b>kode aktivasi</b> dari admin.</li><li style="margin:4px 0;line-height:1.6">Kode itu dimasukkan <b>sekali</b> di perangkatmu, di kolom kode di bawah ini.</li><li style="margin:4px 0;line-height:1.6">Premium langsung aktif dan <b>tersimpan di perangkat itu</b> — tetap aktif walau aplikasi ditutup dan dibuka lagi — sampai dinonaktifkan atau data situs di browser dihapus.</li></ol>
   <p style="margin-bottom:0">Jadi tidak ada “log out”: untuk berhenti Premium di perangkat ini, pakai tombol <b>Nonaktifkan Premium</b> di bawah. Untuk mencoba kode lain, cukup masukkan kode baru di kolom kode — tidak perlu nonaktif dulu.</p></div>
+  ${mascotHTML("Kode dimasukkan di sini. Ketik atau tempel kodemu, lalu ketuk <b>AKTIFKAN</b>.")}
   <h2>${prem?"Coba kode lain / ganti kode":"Sudah punya kode?"}</h2>
   <div class="card"><label class="mut" for="code" style="font-weight:600">Kode aktivasi Premium (format XXXX-XXXX)</label>
   <input class="codein" id="code" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX">
   <p class="mut small" style="margin:0">Tempel kode di sini — spasi dan tanda hubung akan dibersihkan otomatis dan huruf menjadi kapital. Cara paling aman: <b>salin kode lalu tempel</b>, jangan ketik manual. 1 kode = 1 pembeli; masukkan di perangkatmu sendiri dan mohon jangan dibagikan.</p>
   ${prem?`<p class="mut small" style="margin:6px 0 0">Perangkat ini sudah Premium. Kode baru yang valid akan <b>mengganti kode aktif</b> di perangkat ini. Kode lama tidak hangus — bisa dipakai lagi kapan pun.</p>`:""}
   <div id="amsg" aria-live="polite"></div>
-  <button class="btn pri" id="act">Aktifkan Premium</button></div>
+  <button class="btn pri mega" id="act">AKTIFKAN</button></div>
   ${prem?`<h2>Nonaktifkan Premium di perangkat ini</h2>
   <p class="mut" style="margin:0">Ini pengganti “log out” di aplikasi tanpa akun ini. Menonaktifkan hanya menghapus status Premium <b>di perangkat ini saja</b>. Kodemu <b>tidak hangus</b> — masukkan lagi kapan pun di kolom kode di atas untuk mengaktifkan kembali.</p>
   <button class="btn" id="deact"><span class="grow" style="text-align:center"><b>Nonaktifkan Premium di perangkat ini</b></span></button>
   <div id="dmsg"></div>
   <button class="btn pri" id="go">Mulai latihan</button>`:""}
-  <div class="card">${PROMO_AKTIF?`<span class="sticker">HARGA PELUNCURAN</span><div class="price-row" style="margin-top:12px"><span class="price-old">${HARGA_ASLI}</span><span class="price">${HARGA}</span><span class="savebadge">HEMAT 76% · Rp65.000</span></div>`:`<span class="sticker">HARGA PREMIUM</span><div class="price-row" style="margin-top:12px"><span class="price">${HARGA}</span></div>`}<p style="margin:8px 0 0"><b>${HARGA} membuka semua Premium di aplikasi ini.</b></p><p class="mut" style="margin:2px 0 0">Sekali bayar · tanpa langganan · tanpa kedaluwarsa</p>${PROMO_AKTIF?`<div class="promonote"><b>Promo sampai ${PROMO_SAMPAI}.</b> Setelah tanggal itu, harga Premium menjadi <b>${HARGA_ASLI}</b>.</div>`:""}
-  <ul class="feat"><li>${ic("check")}<span>Bank penuh ${Q.length} soal terklasifikasi: TWK ${nQ("TWK")}, TIU ${nQ("TIU")}, TKP ${nQ("TKP")} (${TOPICS.length} topik)</span></li><li>${ic("check")}<span>Latihan acak, per subtes, dan per topik tanpa batas</span></li><li>${ic("check")}<span>Latihan per sesi per subtes (maksimal 50 soal per sesi, pilih lewat dropdown)</span></li><li>${ic("check")}<span>Simulasi CAT A–D 110 soal / 100 menit + Simulasi Mini tanpa batas</span></li><li>${ic("check")}<span>Pembahasan lengkap semua soal</span></li><li>${ic("check")}<span>${TRICKS.length+TRIK_MODEL.length+STRATEGI450.length} kartu Trik Cepat (${TRICKS.length} per topik + ${TRIK_MODEL.length} per model soal + ${STRATEGI450.length} Strategi Skor 450+) + ${TEKNIK.length} Teknik Cepat + Cara Menghafal &amp; rencana 14 hari</span></li></ul>
+  <div class="card">${PROMO_AKTIF?`<span class="sticker">HARGA PELUNCURAN</span><div class="price-row" style="margin-top:12px"><span class="price-old">${HARGA_ASLI}</span><span class="price-wrap"><span class="price">${HARGA}</span><svg class="scribble-circle" viewBox="0 0 200 70" preserveAspectRatio="none" aria-hidden="true"><path d="M100 5 C 150 3, 196 12, 197 34 C 198 57, 140 67, 92 66 C 45 65, 4 56, 3 33 C 2 12, 60 4, 108 6" fill="none" stroke="#E8322A" stroke-width="3.5" stroke-linecap="round"/></svg></span><span class="savebadge">HEMAT 76% · Rp65.000</span></div>`:`<span class="sticker">HARGA PREMIUM</span><div class="price-row" style="margin-top:12px"><span class="price-wrap"><span class="price">${HARGA}</span><svg class="scribble-circle" viewBox="0 0 200 70" preserveAspectRatio="none" aria-hidden="true"><path d="M100 5 C 150 3, 196 12, 197 34 C 198 57, 140 67, 92 66 C 45 65, 4 56, 3 33 C 2 12, 60 4, 108 6" fill="none" stroke="#E8322A" stroke-width="3.5" stroke-linecap="round"/></svg></span></div>`}<p style="margin:8px 0 0"><b>${HARGA} membuka semua Premium di aplikasi ini.</b></p><p class="mut" style="margin:2px 0 0">Sekali bayar · tanpa langganan · tanpa kedaluwarsa</p>${PROMO_AKTIF?`<div class="promonote"><b>Promo sampai ${PROMO_SAMPAI}.</b> Setelah tanggal itu, harga Premium menjadi <b>${HARGA_ASLI}</b>.</div>`:""}
+  <ul class="feat"><li>${ic("check")}<span>Bank penuh ${Q.length} soal terklasifikasi: TWK ${nQ("TWK")}, TIU ${nQ("TIU")}, TKP ${nQ("TKP")} (${TOPICS.length} topik)</span></li><li>${ic("check")}<span>Latihan acak, per subtes, dan per topik tanpa batas</span></li><li>${ic("check")}<span>Latihan per sesi per subtes (maksimal 50 soal per sesi, pilih lewat kartu sesi)</span></li><li>${ic("check")}<span>Simulasi CAT A–D 110 soal / 100 menit + Simulasi Mini tanpa batas</span></li><li>${ic("check")}<span>Pembahasan lengkap semua soal</span></li><li>${ic("check")}<span>${TRICKS.length+TRIK_MODEL.length+STRATEGI450.length} kartu Trik Cepat (${TRICKS.length} per topik + ${TRIK_MODEL.length} per model soal + ${STRATEGI450.length} Strategi Skor 450+) + ${TEKNIK.length} Teknik Cepat + Cara Menghafal &amp; rencana 14 hari</span></li></ul>
   <div class="disc" style="margin-bottom:0"><b>Jujur:</b> Soal Figural (gambar): pilot 15 soal tersedia di latihan; Simulasi Penuh (CAT) masih tanpa Figural. Yang kamu beli adalah ${Q.length} soal di atas. Ini alat latihan, bukan soal resmi BKN, dan tidak menjamin kelulusan.</div></div>
   <h2>Belum punya kode? Beli dulu di sini</h2>
   <div class="card"><p style="margin:0"><b>Tombol WhatsApp di bawah ini untuk MEMBELI, bukan untuk mengaktifkan.</b> Alurnya: ketuk tombol itu → bayar ke admin → admin mengirim kode → masukkan kode itu di kolom kode di atas, lalu ketuk “Aktifkan Premium”.</p>
-  <button class="btn yel" id="wabuy"><span class="grow" style="text-align:center">Beli Premium via WhatsApp — ${HARGA} (tombol membeli)</span></button>
+  <button class="btn yel mega" id="wabuy">BELI VIA WHATSAPP — ${HARGA}</button>
   <p class="mut small" style="text-align:center;margin:0">${PROMO_AKTIF?("Harga peluncuran "+HARGA+" (dari "+HARGA_ASLI+") · promo sampai "+PROMO_SAMPAI):("Harga Premium "+HARGA+" · sekali bayar, tanpa langganan")}</p>
   <div id="wamsg"></div></div>
   <p class="mut small" style="text-align:center;margin:18px 0 0">Siap Abdi · ${BUILD_STAMP} · Bila mengirim screenshot halaman ini, versi ini ikut terlihat agar admin tahu build yang kamu pakai.</p>`;
@@ -2552,14 +2652,49 @@ function bindExit(fn){const b=document.getElementById("qx");b.onclick=()=>{if(b.
 function showQ(){
   const it=L.list[L.i],q=it.q;L.ans=null;
   app.innerHTML=`${qbarHTML("Soal "+(L.i+1)+" / "+L.list.length)}
+  ${mascotHTML("Pilih satu jawaban ya. Kalau ragu, ketuk <b>LIHAT JAWABAN</b> di bawah soal.")}
   <div class="qcard"><div class="qmeta"><span class="tag">${q.k}</span><span class="tag">${esc(q.tp)}</span></div>
   <p class="q">${esc(q.q)}</p>${figStemHTML(q,64)}
+  <p class="howto">Ketuk satu jawaban, lalu ketuk LANJUT.</p>
   <div class="opts">${it.o.map((o,j)=>`<button class="opt" data-j="${j}"><span class="l">${String.fromCharCode(65+j)}</span>${o.fig?`<span class="figwrap">${renderFigural(o.fig,86)}</span>`:`<span>${esc(o.t)}</span>`}</button>`).join("")}</div></div>
-  <div id="fb"></div>`;
+  <button class="btn" id="peek">LIHAT JAWABAN</button>
+  <div id="fb"></div>
+  <button class="btn pri mega" id="nx">${L.i+1<L.list.length?"LANJUT":"LIHAT HASIL"}</button>`;
   document.getElementById("qprog").style.width=((L.i+1)/L.list.length*100)+"%";
   bindExit(()=>{L=null;home()});
   app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>pickLat(+b.dataset.j));
+  document.getElementById("peek").onclick=peekLat;
+  document.getElementById("nx").onclick=nextLat;
   scrollTop();
+}
+function nextLat(){
+  if(!L)return;
+  if(L.ans===null){
+    const fb=document.getElementById("fb");
+    if(fb){fb.innerHTML=`<div class="msg info"><b>Pilih satu jawaban dulu ya.</b> Ketuk jawaban yang menurutmu benar — atau ketuk LIHAT JAWABAN untuk melihat kunci dan pembahasannya.</div>`;fb.scrollIntoView({block:"nearest"})}
+    return;
+  }
+  if(L.i+1<L.list.length){
+    if(L.quota&&freeLeft()<=0){L.earlyEnd=true;return finLat()}
+    L.i++;showQ();
+  }else finLat();
+}
+function bindTrk(tr,trOpen){
+  const b=document.getElementById("trk");if(!b)return;
+  b.onclick=()=>{const box=document.getElementById("trkbox");if(!trOpen){box.innerHTML=`<div class="msg info">Kartu trik ini bagian dari Premium. Contoh gratis: ${FREE_TRICK_TOPIC}. <button class="lnk" id="trkgo" style="padding:4px 2px;min-height:36px">Buka Premium ${HARGA}</button></div>`;document.getElementById("trkgo").onclick=()=>premiumPage("Semua kartu Trik Cepat adalah fitur Premium.");return}box.innerHTML=trickCardHTML(tr)};
+}
+function peekLat(){
+  if(!L||L.ans!==null)return;
+  const it=L.list[L.i],q=it.q,best=Math.max(...it.o.map(o=>o.p));
+  L.ans=-1;L.mx[q.k]+=best;
+  app.querySelectorAll(".opt").forEach((b,x)=>{b.disabled=true;if(it.o[x].p===best)b.classList.add("ok");else b.classList.add("dim")});
+  const pk=document.getElementById("peek");if(pk){pk.disabled=true;pk.textContent="JAWABAN SUDAH TERLIHAT"}
+  const tr=TRICKS.find(x=>x.tp===q.tp);
+  const trOpen=isPremium()||q.tp===FREE_TRICK_TOPIC;
+  document.getElementById("fb").innerHTML=`<div class="fbcard"><h3>Ini jawabannya — soal ini tidak dihitung poinnya</h3><p style="margin:0">${esc(q.e)}</p>
+  ${tr?`<button class="btn" id="trk" style="margin-bottom:0"><span class="grow"><b>Trik Cepat topik ini:</b> ${esc(tr.t)}</span><span class="arr">${trOpen?"›":ic("lock","sm")}</span></button><div id="trkbox"></div>`:""}</div>`;
+  bindTrk(tr,trOpen);
+  document.getElementById("nx").scrollIntoView({block:"nearest"});
 }
 function pickLat(j){
   if(L.ans!==null)return;L.ans=j;
@@ -2570,15 +2705,9 @@ function pickLat(j){
   const tr=TRICKS.find(x=>x.tp===q.tp);
   const trOpen=isPremium()||q.tp===FREE_TRICK_TOPIC;
   document.getElementById("fb").innerHTML=`<div class="fbcard"><h3>Pembahasan \u2014 poin kamu: ${it.o[j].p} dari ${best}</h3><p style="margin:0">${esc(q.e)}</p>
-  ${tr?`<button class="btn" id="trk" style="margin-bottom:0"><span class="grow"><b>Trik Cepat topik ini:</b> ${esc(tr.t)}</span><span class="arr">${trOpen?"\u203A":ic("lock","sm")}</span></button><div id="trkbox"></div>`:""}</div>
-  <button class="btn pri" id="nx">${L.i+1<L.list.length?"Soal berikutnya":"Lihat hasil"}</button>`;
-  document.getElementById("nx").onclick=()=>{
-    if(L.i+1<L.list.length){
-      if(L.quota&&freeLeft()<=0){L.earlyEnd=true;return finLat()}
-      L.i++;showQ();
-    }else finLat();
-  };
-  if(tr){document.getElementById("trk").onclick=()=>{const box=document.getElementById("trkbox");if(!trOpen){box.innerHTML=`<div class="msg info">Kartu trik ini bagian dari Premium. Contoh gratis: ${FREE_TRICK_TOPIC}. <button class="lnk" id="trkgo" style="padding:4px 2px;min-height:36px">Buka Premium ${HARGA}</button></div>`;document.getElementById("trkgo").onclick=()=>premiumPage("Semua kartu Trik Cepat adalah fitur Premium.");return}box.innerHTML=trickCardHTML(tr)}}
+  ${tr?`<button class="btn" id="trk" style="margin-bottom:0"><span class="grow"><b>Trik Cepat topik ini:</b> ${esc(tr.t)}</span><span class="arr">${trOpen?"\u203A":ic("lock","sm")}</span></button><div id="trkbox"></div>`:""}</div>`;
+  const pk=document.getElementById("peek");if(pk){pk.disabled=true;pk.textContent="JAWABAN SUDAH TERLIHAT"}
+  bindTrk(tr,trOpen);
   document.getElementById("nx").scrollIntoView({block:"nearest"});
 }
 function ringSvg(pct){return `<svg viewBox="0 0 120 120" width="150" height="150" role="img" aria-label="Skor ${pct} persen"><circle cx="60" cy="60" r="52" fill="none" stroke="var(--bd)" stroke-width="3"/><circle cx="60" cy="60" r="52" fill="none" stroke="var(--teal)" stroke-width="10" stroke-dasharray="${(pct*3.267).toFixed(1)} 400" transform="rotate(-90 60 60)"/><text x="60" y="68" text-anchor="middle" font-size="26" font-weight="700" fill="var(--ink)" font-family="Space Grotesk,sans-serif">${pct}%</text></svg>`}
