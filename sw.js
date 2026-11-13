@@ -1,5 +1,5 @@
 // Naikkan angka versi ini setiap kali kamu mengganti index.html agar HP mengambil versi baru.
-const V = "skd-v25";
+const V = "skd-v26";
 const FILES = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", "icon-maskable-512.png"];
 
 self.addEventListener("install", (e) => {
