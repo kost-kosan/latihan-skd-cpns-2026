@@ -397,6 +397,16 @@ h2::before{content:counter(seksi,decimal-leading-zero) " / ";color:var(--teal)}
 .topdd>summary{min-height:58px;padding:12px 14px;font-size:1rem;border-radius:15px}
 .subdd>.ddin2,.topdd>.inti{animation:ddin .22s ease-out}
 @media (prefers-reduced-motion:reduce){.ddbody{animation:none}.ddchev,.subdd>summary::after,.topdd>summary::after{transition:none}.ddh:active,.subdd>summary:active,.topdd>summary:active{transform:none}}
+
+/* ================= BUILD P23 — KARTU SOAL LATIHAN TIDAK TERPOTONG =================
+   Di mode latihan, bar lengket (.qbar) dapat menutupi bagian atas kartu soal
+   saat halaman/kartu digulir ke tampilan, sehingga baris pertama batang soal
+   tampak setengah terpotong. Samakan perilaku gulirnya dengan Simulasi:
+   beri jarak gulir di atas kartu soal & kartu pembahasan sebesar tinggi bar
+   lengket, dan tambah bantalan atas kartu soal agar batang soal selalu utuh. */
+html{scroll-padding-top:118px}
+.qcard{scroll-margin-top:118px;padding-top:24px}
+.fbcard{scroll-margin-top:118px}
 </style>
 </head>
 <body>
@@ -2042,7 +2052,7 @@ const PROMO_SAMPAI="31 Desember 2026";
    dan semua tampilan coret/promo hilang — tidak perlu update manual. */
 const PROMO_AKTIF=Date.now()<=new Date(2026,11,31,23,59,59).getTime();
 const HARGA=PROMO_AKTIF?"Rp20.000":HARGA_ASLI;
-const BUILD_STAMP="Build P22 · Bank 1.500 soal · 91 kartu trik · 13 Nov 2026";
+const BUILD_STAMP="Build P23 · Bank 1.500 soal · 91 kartu trik · 13 Nov 2026";
 const KISI={TWK:["Pancasila, UUD 1945, NKRI, Bhinneka Tunggal Ika","Nasionalisme, integritas, bela negara","Bahasa negara (Bahasa Indonesia)","Sejarah nasional adalah konten di dalam 5 aspek di atas (interpretasi) — bukan aspek ke-6"],TIU:["Verbal: analogi (termasuk latihan kosakata sinonim/antonim sebagai sub-jenis analogi — interpretasi, bukan kategori resmi Kepmen)","Verbal: silogisme (menarik kesimpulan dari dua pernyataan)","Verbal: penalaran analitis","Numerik: berhitung, deret angka, perbandingan kuantitatif, soal cerita","Figural (soal gambar): pilot 15 soal tersedia di latihan TIU (analogi, ketidaksamaan, serial); Simulasi CAT belum memuat soal figural"],TKP:["Pelayanan publik, jejaring kerja","Sosial budaya, teknologi informasi dan komunikasi","Profesionalisme, anti radikalisme"]};
 const NAMA={TWK:"Tes Wawasan Kebangsaan",TIU:"Tes Intelegensia Umum",TKP:"Tes Karakteristik Pribadi"};
 const PG={TWK:65,TIU:80,TKP:166};
@@ -2473,7 +2483,7 @@ function acctCardHTML(){
   <button class="btn" id="logout"><span class="grow" style="text-align:center"><b>Keluar dari akun</b></span></button>
   <p class="mut small" style="margin:8px 0 0">Keluar hanya mengeluarkan akun dari perangkat ini. Premium akunmu tidak hilang \u2014 masuk lagi kapan pun dengan email dan password yang sama.</p></div>`;
   return `<div class="card"><h3 style="margin:0 0 6px">Langkah 1 \u2014 Masuk atau buat akun</h3>
-  <p style="margin:0 0 4px">Premium sekarang memakai <b>akun</b> (email + password), supaya satu kode hanya bisa dipakai <b>maksimal 2 akun</b> dan tidak bisa dibagikan sembarangan. Membuat akun itu gratis dan cukup sekali \u2014 setelah masuk, masukkan kodemu di Langkah 2.</p>
+  <p style="margin:0 0 4px">Premium sekarang memakai <b>akun</b> (email + password), supaya satu kode hanya bisa dipakai <b>maksimal 2 akun</b> dan tidak bisa dibagikan sembarangan. Membuat akun itu gratis dan cukup sekali \u2014 setelah masuk, masukkan kodemu di Langkah 3.</p>
   <h3 style="margin:14px 0 2px">Sudah punya akun? Masuk</h3>
   <label class="mut" for="li-email" style="font-weight:600">Email</label>
   <input class="accin" id="li-email" type="email" autocomplete="email" placeholder="nama@gmail.com">
@@ -2513,7 +2523,7 @@ function home(){
   </div>
   <div class="disc"><b>Penting:</b> Aplikasi latihan mandiri ini <b>bukan aplikasi resmi BKN dan tidak menjamin kelulusan</b>. Soal disusun sendiri mengacu kisi-kisi KepmenPANRB 321/2024 (Diktum KEDUA). Angka passing grade yang dipakai di aplikasi ini (TWK 65, TIU 80, TKP 166) adalah <b>acuan persiapan dari seleksi 2024</b> berdasarkan KepmenPANRB 321/2024 TA 2024 — bukan penetapan untuk seleksi berikutnya. Soal Figural (gambar): pilot 15 soal tersedia di latihan; Simulasi Penuh (CAT) masih tanpa Figural.</div>
   ${prem?`<div class="card" style="border-color:var(--teal)"><span class="sticker">PREMIUM AKTIF</span><p style="margin:10px 0 0">Semua fitur terbuka: bank ${Q.length} soal, latihan tanpa batas, latihan per sesi, semua trik &amp; teknik, dan Simulasi CAT A\u2013D 110 soal / 100 menit.</p></div>`
-  :`<div class="card"><span class="sticker">GRATIS HARI INI</span><p style="margin:10px 0 4px">Sisa latihan gratis: <b>${fl} dari 10 soal</b> \u00B7 Simulasi Mini: <b>${fs.miniUsed?"sudah dipakai":"1x gratis"}</b> \u00B7 Topik gratis penuh: <b>${FREE_TOPIC}</b></p>${fl<=0?`<div class="msg info" style="margin:10px 0 0"><b>Jatah latihan gratis hari ini sudah habis.</b> Jatah 10 soal acak per hari ini terisi penuh lagi <b>besok</b> — besok kamu bisa latihan gratis lagi tanpa membayar apa pun. Mau lanjut sekarang juga? Premium membuka latihan tanpa batas.</div>`:""}${fs.miniUsed?`<p class="mut" style="margin:8px 0 0">Simulasi Mini gratis hari ini juga sudah terpakai — jatahnya kembali lagi besok. Premium membuka Simulasi Mini tanpa batas.</p>`:""}${PROMO_AKTIF?`<div style="margin-top:14px"><span class="sticker">HARGA PELUNCURAN</span><div class="priceline"><span class="old">${HARGA_ASLI}</span><span class="new">${HARGA}</span><span class="savebadge">HEMAT 76%</span></div><p style="margin:2px 0 0"><b>${HARGA} membuka semua Premium</b> \u2014 sekali bayar, tanpa langganan.</p><p class="mut" style="margin:4px 0 0">Promo sampai <b style="color:var(--ink)">${PROMO_SAMPAI}</b>. Setelah itu harga menjadi ${HARGA_ASLI}.</p></div>`:`<div style="margin-top:14px"><span class="sticker">HARGA PREMIUM</span><div class="priceline"><span class="new">${HARGA}</span></div><p style="margin:2px 0 0"><b>${HARGA} membuka semua Premium</b> \u2014 sekali bayar, tanpa langganan.</p></div>`}<button class="btn pri" id="goprem"><span class="grow" style="text-align:center">${chk?"Memeriksa status Premium\u2026":"Buka Semua Premium \u2014 "+HARGA}</span></button></div>`}
+  :`<div class="card"><span class="sticker">GRATIS HARI INI</span><p style="margin:10px 0 4px">Sisa latihan gratis: <b>${fl} dari 10 soal</b> \u00B7 Simulasi Mini: <b>${fs.miniUsed?"sudah dipakai":"1x gratis"}</b> \u00B7 Topik gratis penuh: <b>${FREE_TOPIC}</b></p><p class="mut small" style="margin:0 0 4px">Kuota 10 soal gratis per hari ini <b>dipakai bersama</b> untuk semua latihan \u2014 latihan acak dan latihan per subtes memakai jatah yang sama. Jatahnya terisi penuh lagi <b>besok</b>, jadi besok kamu bisa latihan gratis lagi.</p>${fl<=0?`<div class="msg info" style="margin:10px 0 0"><b>Jatah latihan gratis hari ini sudah habis.</b> Jatah 10 soal acak per hari ini terisi penuh lagi <b>besok</b> — besok kamu bisa latihan gratis lagi tanpa membayar apa pun. Mau lanjut sekarang juga? Premium membuka latihan tanpa batas.</div>`:""}${fs.miniUsed?`<p class="mut" style="margin:8px 0 0">Simulasi Mini gratis hari ini juga sudah terpakai — jatahnya kembali lagi besok. Premium membuka Simulasi Mini tanpa batas.</p>`:""}${PROMO_AKTIF?`<div style="margin-top:14px"><span class="sticker">HARGA PELUNCURAN</span><div class="priceline"><span class="old">${HARGA_ASLI}</span><span class="new">${HARGA}</span><span class="savebadge">HEMAT 76%</span></div><p style="margin:2px 0 0"><b>${HARGA} membuka semua Premium</b> \u2014 sekali bayar, tanpa langganan.</p><p class="mut" style="margin:4px 0 0">Promo sampai <b style="color:var(--ink)">${PROMO_SAMPAI}</b>. Setelah itu harga menjadi ${HARGA_ASLI}.</p></div>`:`<div style="margin-top:14px"><span class="sticker">HARGA PREMIUM</span><div class="priceline"><span class="new">${HARGA}</span></div><p style="margin:2px 0 0"><b>${HARGA} membuka semua Premium</b> \u2014 sekali bayar, tanpa langganan.</p></div>`}<button class="btn pri" id="goprem"><span class="grow" style="text-align:center">${chk?"Memeriksa status Premium\u2026":"Buka Semua Premium \u2014 "+HARGA}</span></button></div>`}
   <h2>Latihan per subtes (10 soal)</h2>
   <p class="mut" style="margin:0 0 2px">Ada 3 pelajaran. Ketuk tombol <b>MULAI LATIHAN</b> pada pelajaran yang kamu mau — soalnya diacak, lengkap dengan pembahasan.</p>
   <div class="subcards">${["TWK","TIU","TKP"].map(k=>`<div class="subcard"><div class="stop"><span class="subcode" style="background:${SUBC[k]}">${k}</span><div><h3>${k} — ${esc(NAMA[k])}</h3><p class="sdesc">${nQ(k)} soal di bank · 10 soal acak tiap latihan</p></div></div><button class="btn pri mega" data-k="${k}">MULAI LATIHAN</button></div>`).join("")}</div>
@@ -2697,9 +2707,25 @@ function premiumPage(note){
   :`<p style="margin:10px 0 0">Perangkat ini <b>belum Premium</b>. Kalau kamu sudah punya kode dari admin, masuk dulu ke akunmu di bawah, lalu masukkan kode itu di kolom kode — tidak perlu membeli lagi.</p>`}
   ${chk&&!prem?`<p class="mut" style="margin:8px 0 0"><span class="spinrow"><span class="spin" aria-hidden="true"></span> Sedang memeriksa status Premium akunmu\u2026</span></p>`:""}
   </div>
+  <h2>Cara beli &amp; aktivasi Premium</h2>
+  <div class="card"><ol style="margin:0;padding-left:22px;line-height:1.65">
+  <li style="margin:0 0 8px">Buat akun dulu (gratis). Isi email dan password. Akun ini yang menyimpan Premium kamu.</li>
+  <li style="margin:0 0 8px">Beli lewat WhatsApp. Ketuk tombol BELI VIA WHATSAPP, kamu akan chat dengan admin. Admin akan memberi tahu cara bayar dan mengirim kode aktivasi setelah pembayaran diterima.</li>
+  <li style="margin:0 0 8px">Masukkan kode. Kembali ke halaman ini, ketik kode XXXX-XXXX di kolom, ketuk AKTIFKAN.</li>
+  <li style="margin:0">Premium aktif. Semua sesi, simulasi CAT, trik, dan hafalan terbuka. Satu kode berlaku untuk maksimal 2 akun.</li>
+  </ol>
+  <p class="mut" style="margin:10px 0 0">Kode tidak bisa dipakai? Periksa ejaannya, pastikan kode sudah didaftarkan admin, atau tanya admin lewat WhatsApp.</p></div>
   ${acctCardHTML()}
+  <h2>Langkah 2 — Beli lewat WhatsApp</h2>
+  <div class="card">${PROMO_AKTIF?`<span class="sticker">HARGA PELUNCURAN</span><div class="price-row" style="margin-top:12px"><span class="price-old">${HARGA_ASLI}</span><span class="price-wrap"><span class="price">${HARGA}</span><svg class="scribble-circle" viewBox="0 0 200 70" preserveAspectRatio="none" aria-hidden="true"><path d="M100 5 C 150 3, 196 12, 197 34 C 198 57, 140 67, 92 66 C 45 65, 4 56, 3 33 C 2 12, 60 4, 108 6" fill="none" stroke="#E8322A" stroke-width="3.5" stroke-linecap="round"/></svg></span><span class="savebadge">HEMAT 76% · Rp65.000</span></div>`:`<span class="sticker">HARGA PREMIUM</span><div class="price-row" style="margin-top:12px"><span class="price-wrap"><span class="price">${HARGA}</span><svg class="scribble-circle" viewBox="0 0 200 70" preserveAspectRatio="none" aria-hidden="true"><path d="M100 5 C 150 3, 196 12, 197 34 C 198 57, 140 67, 92 66 C 45 65, 4 56, 3 33 C 2 12, 60 4, 108 6" fill="none" stroke="#E8322A" stroke-width="3.5" stroke-linecap="round"/></svg></span></div>`}<p style="margin:8px 0 0"><b>${HARGA} membuka semua Premium di aplikasi ini.</b></p><p class="mut" style="margin:2px 0 0">Sekali bayar · tanpa langganan · tanpa kedaluwarsa</p>${PROMO_AKTIF?`<div class="promonote"><b>Promo sampai ${PROMO_SAMPAI}.</b> Setelah tanggal itu, harga Premium menjadi <b>${HARGA_ASLI}</b>.</div>`:""}
+  <ul class="feat"><li>${ic("check")}<span>Bank penuh ${Q.length} soal terklasifikasi: TWK ${nQ("TWK")}, TIU ${nQ("TIU")}, TKP ${nQ("TKP")} (${TOPICS.length} topik)</span></li><li>${ic("check")}<span>Latihan acak, per subtes, dan per topik tanpa batas</span></li><li>${ic("check")}<span>Latihan per sesi per subtes (maksimal 50 soal per sesi, pilih lewat kartu sesi)</span></li><li>${ic("check")}<span>Simulasi CAT A–D 110 soal / 100 menit + Simulasi Mini tanpa batas</span></li><li>${ic("check")}<span>Pembahasan lengkap semua soal</span></li><li>${ic("check")}<span>${TRICKS.length+TRIK_MODEL.length+STRATEGI450.length} kartu Trik Cepat (${TRICKS.length} per topik + ${TRIK_MODEL.length} per model soal + ${STRATEGI450.length} Strategi Skor 450+) + ${TEKNIK.length} Teknik Cepat + Cara Menghafal &amp; rencana 14 hari</span></li></ul>
+  <div class="disc" style="margin-bottom:0"><b>Jujur:</b> Soal Figural (gambar): pilot 15 soal tersedia di latihan; Simulasi Penuh (CAT) masih tanpa Figural. Yang kamu beli adalah ${Q.length} soal di atas. Ini alat latihan, bukan soal resmi BKN, dan tidak menjamin kelulusan.</div></div>
+  <div class="card"><p style="margin:0"><b>Tombol WhatsApp di bawah ini untuk MEMBELI, bukan untuk mengaktifkan.</b> Alurnya: ketuk tombol itu → bayar ke admin → admin mengirim kode → masukkan kode itu di kolom kode di Langkah 3 di bawah, lalu ketuk AKTIFKAN.</p>
+  <button class="btn yel mega" id="wabuy">BELI VIA WHATSAPP — ${HARGA}</button>
+  <p class="mut small" style="text-align:center;margin:0">${PROMO_AKTIF?("Harga peluncuran "+HARGA+" (dari "+HARGA_ASLI+") · promo sampai "+PROMO_SAMPAI):("Harga Premium "+HARGA+" · sekali bayar, tanpa langganan")}</p>
+  <div id="wamsg"></div></div>
   ${mascotHTML(FBST.user?"Kode dimasukkan di sini. Ketik atau tempel kodemu, lalu ketuk <b>AKTIFKAN</b>.":"Satu langkah lagi: masuk atau buat akun dulu di atas, baru masukkan kodemu di sini.")}
-  <h2>${prem?"Coba kode lain / ganti kode":"Langkah 2 — Sudah punya kode?"}</h2>
+  <h2>${prem?"Coba kode lain / ganti kode":"Langkah 3 \u2014 Tukar kode aktivasi"}</h2>
   <div class="card">${FBST.user?"":`<div class="msg info" style="margin:0 0 10px"><b>Masuk / buat akun dulu, lalu masukkan kode.</b> Kolom kode di bawah aktif setelah kamu masuk ke akun (Langkah 1 di atas), supaya kodemu tercatat atas nama akunmu dan tidak bisa dipakai orang lain.</div>`}<label class="mut" for="code" style="font-weight:600">Kode aktivasi Premium (format XXXX-XXXX)</label>
   <input class="codein" id="code" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX"${FBST.user?"":" disabled"}>
   <p class="mut small" style="margin:0">Tempel kode di sini — spasi dan tanda hubung akan dibersihkan otomatis dan huruf menjadi kapital. Cara paling aman: <b>salin kode lalu tempel</b>, jangan ketik manual. 1 kode = 1 pembeli, maksimal 2 akun; mohon jangan dibagikan.</p>
@@ -2711,14 +2737,6 @@ function premiumPage(note){
   <button class="btn" id="deact"><span class="grow" style="text-align:center"><b>Nonaktifkan Premium di perangkat ini</b></span></button>
   <div id="dmsg"></div>
   <button class="btn pri" id="go">Mulai latihan</button>`:(prem?`<button class="btn pri" id="go">Mulai latihan</button>`:"")}
-  <div class="card">${PROMO_AKTIF?`<span class="sticker">HARGA PELUNCURAN</span><div class="price-row" style="margin-top:12px"><span class="price-old">${HARGA_ASLI}</span><span class="price-wrap"><span class="price">${HARGA}</span><svg class="scribble-circle" viewBox="0 0 200 70" preserveAspectRatio="none" aria-hidden="true"><path d="M100 5 C 150 3, 196 12, 197 34 C 198 57, 140 67, 92 66 C 45 65, 4 56, 3 33 C 2 12, 60 4, 108 6" fill="none" stroke="#E8322A" stroke-width="3.5" stroke-linecap="round"/></svg></span><span class="savebadge">HEMAT 76% · Rp65.000</span></div>`:`<span class="sticker">HARGA PREMIUM</span><div class="price-row" style="margin-top:12px"><span class="price-wrap"><span class="price">${HARGA}</span><svg class="scribble-circle" viewBox="0 0 200 70" preserveAspectRatio="none" aria-hidden="true"><path d="M100 5 C 150 3, 196 12, 197 34 C 198 57, 140 67, 92 66 C 45 65, 4 56, 3 33 C 2 12, 60 4, 108 6" fill="none" stroke="#E8322A" stroke-width="3.5" stroke-linecap="round"/></svg></span></div>`}<p style="margin:8px 0 0"><b>${HARGA} membuka semua Premium di aplikasi ini.</b></p><p class="mut" style="margin:2px 0 0">Sekali bayar · tanpa langganan · tanpa kedaluwarsa</p>${PROMO_AKTIF?`<div class="promonote"><b>Promo sampai ${PROMO_SAMPAI}.</b> Setelah tanggal itu, harga Premium menjadi <b>${HARGA_ASLI}</b>.</div>`:""}
-  <ul class="feat"><li>${ic("check")}<span>Bank penuh ${Q.length} soal terklasifikasi: TWK ${nQ("TWK")}, TIU ${nQ("TIU")}, TKP ${nQ("TKP")} (${TOPICS.length} topik)</span></li><li>${ic("check")}<span>Latihan acak, per subtes, dan per topik tanpa batas</span></li><li>${ic("check")}<span>Latihan per sesi per subtes (maksimal 50 soal per sesi, pilih lewat kartu sesi)</span></li><li>${ic("check")}<span>Simulasi CAT A–D 110 soal / 100 menit + Simulasi Mini tanpa batas</span></li><li>${ic("check")}<span>Pembahasan lengkap semua soal</span></li><li>${ic("check")}<span>${TRICKS.length+TRIK_MODEL.length+STRATEGI450.length} kartu Trik Cepat (${TRICKS.length} per topik + ${TRIK_MODEL.length} per model soal + ${STRATEGI450.length} Strategi Skor 450+) + ${TEKNIK.length} Teknik Cepat + Cara Menghafal &amp; rencana 14 hari</span></li></ul>
-  <div class="disc" style="margin-bottom:0"><b>Jujur:</b> Soal Figural (gambar): pilot 15 soal tersedia di latihan; Simulasi Penuh (CAT) masih tanpa Figural. Yang kamu beli adalah ${Q.length} soal di atas. Ini alat latihan, bukan soal resmi BKN, dan tidak menjamin kelulusan.</div></div>
-  <h2>Belum punya kode? Beli dulu di sini</h2>
-  <div class="card"><p style="margin:0"><b>Tombol WhatsApp di bawah ini untuk MEMBELI, bukan untuk mengaktifkan.</b> Alurnya: ketuk tombol itu → bayar ke admin → admin mengirim kode → masukkan kode itu di kolom kode di atas, lalu ketuk “Aktifkan Premium”.</p>
-  <button class="btn yel mega" id="wabuy">BELI VIA WHATSAPP — ${HARGA}</button>
-  <p class="mut small" style="text-align:center;margin:0">${PROMO_AKTIF?("Harga peluncuran "+HARGA+" (dari "+HARGA_ASLI+") · promo sampai "+PROMO_SAMPAI):("Harga Premium "+HARGA+" · sekali bayar, tanpa langganan")}</p>
-  <div id="wamsg"></div></div>
   <p class="mut small" style="text-align:center;margin:18px 0 0">Siap Abdi · ${BUILD_STAMP} · Bila mengirim screenshot halaman ini, versi ini ikut terlihat agar admin tahu build yang kamu pakai.</p>`;
   document.getElementById("bk").onclick=home;
   const goBtn=document.getElementById("go");if(goBtn)goBtn.onclick=home;
@@ -2735,7 +2753,7 @@ function premiumPage(note){
   }
   document.getElementById("wabuy").onclick=()=>{
     const box=document.getElementById("wamsg");
-    if(!FEEDBACK){box.innerHTML=`<div class="msg info"><b>Pembelian via WhatsApp belum aktif.</b> Nomor WhatsApp bisnis MUGA STUDIO belum diisi, jadi tombol membeli ini belum bisa menghubungkanmu ke admin. Bila kamu sudah membeli dan menerima kode dari admin, masukkan kodemu di kolom kode di atas — aktivasi kode tetap berfungsi.</div>`;return}
+    if(!FEEDBACK){box.innerHTML=`<div class="msg info"><b>Pembelian via WhatsApp belum aktif.</b> Nomor WhatsApp bisnis MUGA STUDIO belum diisi, jadi tombol membeli ini belum bisa menghubungkanmu ke admin. Bila kamu sudah membeli dan menerima kode dari admin, masukkan kodemu di kolom kode di Langkah 3 di bawah — aktivasi kode tetap berfungsi.</div>`;return}
     const text=PROMO_AKTIF?("Halo MUGA STUDIO, saya mau beli Premium Siap Abdi (jalur CPNS) harga peluncuran "+HARGA+" (harga normal "+HARGA_ASLI+", promo sampai "+PROMO_SAMPAI+"). "+HARGA+" untuk membuka semua Premium. Saya sudah coba latihan gratisnya."):("Halo MUGA STUDIO, saya mau beli Premium Siap Abdi (jalur CPNS) seharga "+HARGA+". "+HARGA+" untuk membuka semua Premium. Saya sudah coba latihan gratisnya.");
     window.open("https://wa.me/"+FEEDBACK+"?text="+encodeURIComponent(text),"_blank","noopener");
   };
@@ -2825,12 +2843,13 @@ function bindExit(fn){const b=document.getElementById("qx");b.onclick=()=>{if(b.
 function showQ(){
   const it=L.list[L.i],q=it.q;L.ans=null;
   app.innerHTML=`${qbarHTML("Soal "+(L.i+1)+" / "+L.list.length)}
-  ${mascotHTML("Pilih satu jawaban ya. Kalau ragu, ketuk <b>LIHAT JAWABAN</b> di bawah soal.")}
+  ${mascotHTML("Pilih satu jawaban ya. Kalau ragu, kamu boleh mengintip lewat <b>LIHAT JAWABAN</b> di bawah soal \u2014 tapi soal yang diintip <b>nilainya 0</b>.")}
   <div class="qcard"><div class="qmeta"><span class="tag">${q.k}</span><span class="tag">${esc(q.tp)}</span></div>
   <p class="q">${esc(q.q)}</p>${figStemHTML(q,64)}
   <p class="howto">Ketuk satu jawaban, lalu ketuk LANJUT.</p>
   <div class="opts">${it.o.map((o,j)=>`<button class="opt" data-j="${j}"><span class="l">${String.fromCharCode(65+j)}</span>${o.fig?`<span class="figwrap">${renderFigural(o.fig,86)}</span>`:`<span>${esc(o.t)}</span>`}</button>`).join("")}</div></div>
   <button class="btn" id="peek">LIHAT JAWABAN</button>
+  <p class="mut small" style="margin:2px 0 10px">Hati-hati: mengintip jawaban membuat soal ini <b>bernilai 0</b> \u2014 kunci dan pembahasan langsung terbuka, dan soal ini tidak dihitung poinnya.</p>
   <div id="fb"></div>
   <button class="btn pri mega" id="nx">${L.i+1<L.list.length?"LANJUT":"LIHAT HASIL"}</button>`;
   document.getElementById("qprog").style.width=((L.i+1)/L.list.length*100)+"%";
@@ -2844,7 +2863,7 @@ function nextLat(){
   if(!L)return;
   if(L.ans===null){
     const fb=document.getElementById("fb");
-    if(fb){fb.innerHTML=`<div class="msg info"><b>Pilih satu jawaban dulu ya.</b> Ketuk jawaban yang menurutmu benar — atau ketuk LIHAT JAWABAN untuk melihat kunci dan pembahasannya.</div>`;fb.scrollIntoView({block:"nearest"})}
+    if(fb){fb.innerHTML=`<div class="msg info"><b>Pilih satu jawaban dulu ya.</b> Ketuk jawaban yang menurutmu benar — atau ketuk LIHAT JAWABAN untuk melihat kunci dan pembahasannya (soal itu akan bernilai 0).</div>`;fb.scrollIntoView({block:"nearest"})}
     return;
   }
   if(L.i+1<L.list.length){
@@ -2854,7 +2873,7 @@ function nextLat(){
 }
 function bindTrk(tr,trOpen){
   const b=document.getElementById("trk");if(!b)return;
-  b.onclick=()=>{const box=document.getElementById("trkbox");if(!trOpen){box.innerHTML=`<div class="msg info">Kartu trik ini bagian dari Premium. Contoh gratis: ${FREE_TRICK_TOPIC}. <button class="lnk" id="trkgo" style="padding:4px 2px;min-height:36px">Buka Premium ${HARGA}</button></div>`;document.getElementById("trkgo").onclick=()=>premiumPage("Semua kartu Trik Cepat adalah fitur Premium.");return}box.innerHTML=trickCardHTML(tr)};
+  b.onclick=()=>{if(!trOpen)return premiumPage("Kartu Trik Cepat ini adalah fitur Premium. Contoh gratis: "+FREE_TRICK_TOPIC+".");const box=document.getElementById("trkbox");box.innerHTML=trickCardHTML(tr)};
 }
 function peekLat(){
   if(!L||L.ans!==null)return;
