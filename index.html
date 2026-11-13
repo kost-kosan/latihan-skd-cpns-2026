@@ -369,6 +369,32 @@ h2::before{content:counter(seksi,decimal-leading-zero) " / ";color:var(--teal)}
 .price-wrap{position:relative;display:inline-block;padding:3px 10px 4px 2px}
 .scribble-circle{position:absolute;left:-7px;top:-7px;width:calc(100% + 12px);height:calc(100% + 13px);pointer-events:none}
 @media (prefers-reduced-motion:reduce){.btn:active,.opt:active,.sesscard:active,.big:active,.chip:active{transform:none}}
+
+/* ================= BUILD P21 — RAPIKAN DENGAN DROPDOWN =================
+   Daftar panjang dilipat jadi dropdown: header = tombol besar gaya 3D
+   (sejiwa .btn P20) dengan label jelas + jumlah isi + chevron yang
+   berputar saat terbuka. Semua dropdown tertutup secara default. */
+.dd21{margin:12px 0}
+.ddh{display:flex;align-items:center;gap:12px;width:100%;box-sizing:border-box;cursor:pointer;list-style:none;-webkit-tap-highlight-color:transparent;border:3px solid var(--bd);border-radius:16px;background:var(--face);color:var(--ink);padding:14px 16px;min-height:66px;box-shadow:0 6px 0 var(--btnbase),inset 0 3px 0 rgba(255,255,255,.55),inset 0 -4px 0 rgba(42,42,36,.08);font-family:"Space Grotesk",sans-serif;text-align:left}
+.ddh::-webkit-details-marker{display:none}
+.ddh:active{transform:translateY(4px);box-shadow:0 2px 0 var(--btnbase),inset 0 2px 0 rgba(255,255,255,.5)}
+.ddh:focus-visible,.subdd>summary:focus-visible,.topdd>summary:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.ddh .grow{flex:1;min-width:0}
+.ddh b{font-size:1.1rem;line-height:1.25}
+.ddh .ddsub{display:block;font-size:.86rem;font-weight:600;color:var(--mut);margin-top:2px;line-height:1.4}
+.ddchev{flex:none;width:38px;height:38px;border:2.5px solid var(--bd);border-radius:12px;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700;line-height:1;box-shadow:0 3px 0 var(--btnbase);transition:transform .22s ease}
+.dd21[open ]>.ddh .ddchev{transform:rotate(180deg)}
+.ddbody{padding:6px 2px 2px;animation:ddin .22s ease-out}
+@keyframes ddin{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+/* header Belajar Cepat (subdd/topdd) dinaikkan jadi tombol 3D yang sama */
+.subdd,.topdd{border:none;background:transparent;box-shadow:none;padding:0;border-radius:0}
+.subdd>summary,.topdd>summary{display:flex;align-items:center;gap:10px;border:3px solid var(--bd);border-radius:16px;background:var(--face);color:var(--ink);padding:14px 16px;min-height:64px;box-shadow:0 6px 0 var(--btnbase),inset 0 3px 0 rgba(255,255,255,.55),inset 0 -4px 0 rgba(42,42,36,.08);font-family:"Space Grotesk",sans-serif;font-size:1.08rem;-webkit-tap-highlight-color:transparent}
+.subdd>summary:active,.topdd>summary:active{transform:translateY(4px);box-shadow:0 2px 0 var(--btnbase),inset 0 2px 0 rgba(255,255,255,.5)}
+.subdd>summary::after,.topdd>summary::after{content:"\25BE";float:none;margin-left:auto;flex:none;width:34px;height:34px;border:2.5px solid var(--bd);border-radius:11px;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.05rem;font-weight:700;line-height:1;box-shadow:0 3px 0 var(--btnbase);transition:transform .22s ease}
+.subdd[open ]>summary::after,.topdd[open ]>summary::after{content:"\25BE";transform:rotate(180deg)}
+.topdd>summary{min-height:58px;padding:12px 14px;font-size:1rem;border-radius:15px}
+.subdd>.ddin2,.topdd>.inti{animation:ddin .22s ease-out}
+@media (prefers-reduced-motion:reduce){.ddbody{animation:none}.ddchev,.subdd>summary::after,.topdd>summary::after{transition:none}.ddh:active,.subdd>summary:active,.topdd>summary:active{transform:none}}
 </style>
 </head>
 <body>
@@ -2014,7 +2040,7 @@ const PROMO_SAMPAI="31 Desember 2026";
    dan semua tampilan coret/promo hilang — tidak perlu update manual. */
 const PROMO_AKTIF=Date.now()<=new Date(2026,11,31,23,59,59).getTime();
 const HARGA=PROMO_AKTIF?"Rp20.000":HARGA_ASLI;
-const BUILD_STAMP="Build P20 · Bank 1.500 soal · 91 kartu trik · 13 Nov 2026";
+const BUILD_STAMP="Build P21 · Bank 1.500 soal · 91 kartu trik · 13 Nov 2026";
 const KISI={TWK:["Pancasila, UUD 1945, NKRI, Bhinneka Tunggal Ika","Nasionalisme, integritas, bela negara","Bahasa negara (Bahasa Indonesia)","Sejarah nasional adalah konten di dalam 5 aspek di atas (interpretasi) — bukan aspek ke-6"],TIU:["Verbal: analogi (termasuk latihan kosakata sinonim/antonim sebagai sub-jenis analogi — interpretasi, bukan kategori resmi Kepmen)","Verbal: silogisme (menarik kesimpulan dari dua pernyataan)","Verbal: penalaran analitis","Numerik: berhitung, deret angka, perbandingan kuantitatif, soal cerita","Figural (soal gambar): pilot 15 soal tersedia di latihan TIU (analogi, ketidaksamaan, serial); Simulasi CAT belum memuat soal figural"],TKP:["Pelayanan publik, jejaring kerja","Sosial budaya, teknologi informasi dan komunikasi","Profesionalisme, anti radikalisme"]};
 const NAMA={TWK:"Tes Wawasan Kebangsaan",TIU:"Tes Intelegensia Umum",TKP:"Tes Karakteristik Pribadi"};
 const PG={TWK:65,TIU:80,TKP:166};
@@ -2385,7 +2411,7 @@ function home(){
   <div class="subcards">${["TWK","TIU","TKP"].map(k=>`<div class="subcard"><div class="stop"><span class="subcode" style="background:${SUBC[k]}">${k}</span><div><h3>${k} — ${esc(NAMA[k])}</h3><p class="sdesc">${nQ(k)} soal di bank · 10 soal acak tiap latihan</p></div></div><button class="btn pri mega" data-k="${k}">MULAI LATIHAN</button></div>`).join("")}</div>
   <h2>Latihan per sesi ${prem?"":"<span class=\"locktag\">PREMIUM</span>"}</h2>
   <p class="mut small" style="margin:0 0 4px">Semua soal bank dibagi per sesi (maksimal 50 soal per sesi), tanpa pengulangan antar-sesi. Kerjakan satu sesi penuh dengan pembahasan per soal.</p>
-  ${["TWK","TIU","TKP"].map(k=>{const sess=getSessions(k);return `<div class="sessbox"><label><b>${k}</b> \u2014 ${esc(NAMA[k])} \u00B7 ${nQ(k)} soal \u00B7 ${sess.length} sesi</label><p class="mut small" style="margin:0 0 10px">Ketuk satu kartu sesi untuk langsung mulai sesi itu.</p><div class="sessgrid">${sess.map(s=>{const ls=lastScore(s.key);return `<button class="sesscard" data-sk="${k}" data-letter="${s.letter}"><span class="sl">Sesi ${s.letter}</span><span class="sc">${s.count} soal</span>${ls!==null?`<span class="ss">Terakhir: ${ls}%</span>`:""}</button>`}).join("")}</div><div class="sessmsg" id="sessmsg-${k}"></div></div>`}).join("")}
+  ${["TWK","TIU","TKP"].map(k=>{const sess=getSessions(k);return `<details class="dd21"><summary class="ddh"><span class="grow"><b>${k} \u2014 ${esc(NAMA[k])}</b><span class="ddsub">${nQ(k)} soal \u00B7 ${sess.length} sesi (A\u2013J) \u00B7 ketuk untuk membuka</span></span><span class="ddchev" aria-hidden="true">\u25BE</span></summary><div class="ddbody"><p class="mut small" style="margin:2px 0 10px">Ketuk satu kartu sesi untuk langsung mulai sesi itu.</p><div class="sessgrid">${sess.map(s=>{const ls=lastScore(s.key);return `<button class="sesscard" data-sk="${k}" data-letter="${s.letter}"><span class="sl">Sesi ${s.letter}</span><span class="sc">${s.count} soal</span>${ls!==null?`<span class="ss">Terakhir: ${ls}%</span>`:""}</button>`}).join("")}</div><div class="sessmsg" id="sessmsg-${k}"></div></div></details>`}).join("")}
   <h2>Simulasi ujian</h2>
   <div class="sessbox"><label for="catSel"><b>Simulasi CAT \u2014 110 soal / 100 menit</b><br><span class="mut small">TWK 30 \u00B7 TIU 35 \u00B7 TKP 45 \u00B7 passing grade TWK 65 \u00B7 TIU 80 \u00B7 TKP 166 (acuan persiapan dari seleksi 2024) \u00B7 skor &amp; passing grade per subtes</span> ${prem?"":"<span class=\"locktag\">PREMIUM</span>"}</label><div class="sessrow"><select class="sesssel" id="catSel" aria-label="Pilih simulasi CAT"><option value="">Pilih simulasi CAT...</option>${CAT_LETTERS.map(Lt=>`<option value="${Lt}">Simulasi CAT ${Lt} \u2014 110 soal / 100 menit${lastSuffix("CAT-"+Lt)}</option>`).join("")}</select><button class="btn pri sessgo" id="catGo">MULAI SIMULASI</button></div><div class="sessmsg" id="catmsg"></div><p class="mut small" style="margin:10px 0 0">Soal antar-simulasi dapat berulang karena diambil dari bank ${Q.length} soal yang sama.</p></div>
   <p class="mut small" style="margin:-4px 0 6px 2px">Label jujur: <b>Simulasi v1 tanpa Figural</b> (TIU dihitung dari topik verbal, numerik, dan logika).</p>
@@ -2465,7 +2491,7 @@ function installPage(){
 /* ================= TOPIK ================= */
 function topics(){
   const prem=isPremium();
-  const g=k=>{const ts=TOPICS.filter(t=>Q.some(q=>q.k===k&&q.tp===t));return `<h2>${k} \u2014 ${NAMA[k]}</h2><div class="chips2">${ts.map(t=>{const free=t===FREE_TOPIC;return `<button class="chip${free?" free":""}" data-t="${esc(t)}">${esc(t)} <small>${byTopic(t).length} soal</small>${free?` <span class="sticker">GRATIS</span>`:prem?"":` <span class="locktag">PREMIUM</span>`}</button>`}).join("")}</div>${ts.filter(t=>CATATAN_TOPIK[t]).map(t=>`<p class="mut small" style="margin:8px 0 0"><b>${esc(t)}:</b> ${esc(CATATAN_TOPIK[t])}</p>`).join("")}`};
+  const g=k=>{const ts=TOPICS.filter(t=>Q.some(q=>q.k===k&&q.tp===t));return `<details class="dd21"><summary class="ddh"><span class="grow"><b>${k} \u2014 ${NAMA[k]}</b><span class="ddsub">${ts.length} topik \u00B7 ketuk untuk membuka</span></span><span class="ddchev" aria-hidden="true">\u25BE</span></summary><div class="ddbody"><div class="chips2">${ts.map(t=>{const free=t===FREE_TOPIC;return `<button class="chip${free?" free":""}" data-t="${esc(t)}">${esc(t)} <small>${byTopic(t).length} soal</small>${free?` <span class="sticker">GRATIS</span>`:prem?"":` <span class="locktag">PREMIUM</span>`}</button>`}).join("")}</div>${ts.filter(t=>CATATAN_TOPIK[t]).map(t=>`<p class="mut small" style="margin:8px 0 0"><b>${esc(t)}:</b> ${esc(CATATAN_TOPIK[t])}</p>`).join("")}</div></details>`};
   app.innerHTML=`<button class="back" id="bk">\u2039 Kembali</button><h1>Latihan per topik</h1><p class="mut">Pilih satu topik. Soal diacak \u2014 termasuk urutan pilihannya \u2014 10 per sesi, lengkap dengan pembahasan.</p>${["TWK","TIU","TKP"].map(g).join("")}
   <div class="disc" style="margin-top:18px">Tiap topik juga punya triknya sendiri di halaman <b>Belajar Cepat</b> dari beranda \u2014 tersusun per subtes, lalu per topik.</div>`;
   document.getElementById("bk").onclick=home;
@@ -2494,7 +2520,7 @@ function trikPage(){
   const prem=isPremium();
   const topicK={};Q.forEach(q=>{if(!(q.tp in topicK))topicK[q.tp]=q.k});
   const drop=(x,sub)=>{const free=x.tp===FREE_TRICK_TOPIC;
-    if(prem||free)return `<details class="topdd"${free?" open":""}><summary>${esc(x.t)}</summary>${trickBodyHTML(x)}</details>`;
+    if(prem||free)return `<details class="topdd"><summary>${esc(x.t)}</summary>${trickBodyHTML(x)}</details>`;
     return lockedRowHTML(x.t,sub)};
   const subGroup=k=>{
     const trs=TRICKS.filter(x=>topicK[x.tp]===k);
@@ -2504,7 +2530,7 @@ function trikPage(){
       const ms=TRIK_MODEL.filter(m=>m.tp===x.tp);
       return drop(x,"Topik "+k+": "+x.tp)+(ms.length?`<p style="margin:14px 0 2px"><b>Trik per model soal — ${esc(x.tp)}</b> <span class="mut small">${ms.length} model: cara khusus untuk tiap bentuk soal di topik ini</span></p>${ms.map(m=>drop(m,"Model soal "+k+": "+x.tp)).join("")}`:"");
     };
-    return `<details class="subdd"${k==="TIU"?" open":""}><summary><b>${k}</b> &nbsp;${esc(NAMA[k])} &nbsp;<span class="mut small">${trs.length} topik · ${nModel} kartu model</span></summary>
+    return `<details class="subdd"><summary><b>${k}</b> &nbsp;${esc(NAMA[k])} &nbsp;<span class="mut small">${trs.length} topik · ${nModel} kartu model</span></summary>
     <p class="mut small" style="margin:10px 0 2px">Ketuk satu topik untuk membuka triknya. Di bawah tiap topik ada trik per model soal: cara khusus untuk tiap bentuk soal di topik itu, langkah demi langkah, supaya menjawab lebih cepat.</p>
     ${trs.map(topicBlock).join("")}
     ${tes.length?`<p style="margin:14px 0 2px"><b>Teknik khusus ${k}</b> <span class="mut small">\u2014 cara cepat untuk model soal ${k}</span></p>${tes.map(x=>drop(x,"Teknik cepat "+k)).join("")}`:""}
@@ -2533,15 +2559,16 @@ function hafalPage(){
   const done=lsGet("skd-plan14",[]);
   app.innerHTML=`<button class="back" id="bk">\u2039 Kembali</button><h1>Cara Menghafal Materi Kisi-kisi</h1>
   <p class="mut">Untuk materi yang memang harus dihafal \u2014 terutama TWK (Pancasila, pasal UUD, tanggal sejarah). TIU dan TKP tidak dihafal, dilatih.</p>
-  ${prem?HAFAL.map(trickCardHTML).join(""):HAFAL.map(x=>lockedRowHTML(x.t,"")).join("")}
+  <details class="dd21"><summary class="ddh"><span class="grow"><b>Teknik hafalan</b><span class="ddsub">${HAFAL.length} teknik \u00B7 ketuk untuk membuka</span></span><span class="ddchev" aria-hidden="true">\u25BE</span></summary><div class="ddbody">${prem?HAFAL.map(trickCardHTML).join(""):HAFAL.map(x=>lockedRowHTML(x.t,"")).join("")}</div></details>
   <h2>Rencana hafalan 14 hari</h2>
   <p class="mut">Mengikuti spaced repetition +1 / +3 / +7. Waktu \u00B145\u201360 menit/hari. Hari 7 dan 13 adalah hari uji diri. ${prem?"Ketuk satu hari untuk menandainya selesai.":"Rencana lengkapnya terbuka di Premium."}</p>
-  ${prem?PLAN14.map((d,i)=>`<button class="day${done[i]?" done":""}" data-d="${i}"><span class="box">${done[i]?ic("check"):""}</span><span class="dt"><b>Hari ${i+1}</b> \u00B7 Baru: ${esc(d.baru)}<br><span class="mut small">Ulang: ${esc(d.ulang)} \u00B7 Latihan: ${esc(d.lat)}</span></span></button>`).join(""):PLAN14.map((d,i)=>lockedRowHTML("Hari "+(i+1),"Rencana hafalan Premium")).join("")}
+  <details class="dd21" id="plan14dd"${window.__planOpen?" open":""}><summary class="ddh"><span class="grow"><b>Checklist rencana 14 hari</b><span class="ddsub">14 hari \u00B7 ketuk untuk membuka</span></span><span class="ddchev" aria-hidden="true">\u25BE</span></summary><div class="ddbody">${prem?PLAN14.map((d,i)=>`<button class="day${done[i]?" done":""}" data-d="${i}"><span class="box">${done[i]?ic("check"):""}</span><span class="dt"><b>Hari ${i+1}</b> \u00B7 Baru: ${esc(d.baru)}<br><span class="mut small">Ulang: ${esc(d.ulang)} \u00B7 Latihan: ${esc(d.lat)}</span></span></button>`).join(""):PLAN14.map((d,i)=>lockedRowHTML("Hari "+(i+1),"Rencana hafalan Premium")).join("")}</div></details>
   <div class="disc"><b>Aturan rencana ini:</b> bila satu bab masih gagal di ulangan +7, jangan lanjut ke bab baru \u2014 ulangi siklus +1/+3/+7 untuk bab itu saja. Pahami \u201Cruh\u201D tiap pilar negara; yang dihafal adalah garis waktu besar, pasal kunci beserta isinya, dan kata kunci tiap sila.</div>
   ${prem?"":`<button class="btn yel" id="goprem"><span class="grow" style="text-align:center">Buka Cara Menghafal + rencana 14 hari \u2014 Premium ${HARGA}</span></button>`}`;
   document.getElementById("bk").onclick=home;
   app.querySelectorAll("[data-lock]").forEach(b=>b.onclick=()=>premiumPage("Halaman Cara Menghafal adalah fitur Premium."));
   app.querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>{const arr=lsGet("skd-plan14",[]);const i=+b.dataset.d;arr[i]=!arr[i];lsSet("skd-plan14",arr);hafalPage()});
+  const pdd=document.getElementById("plan14dd");if(pdd)pdd.addEventListener("toggle",()=>{window.__planOpen=pdd.open});
   const gp=document.getElementById("goprem");if(gp)gp.onclick=()=>premiumPage();
   scrollTop();
 }
