@@ -2052,7 +2052,7 @@ const PROMO_SAMPAI="31 Desember 2026";
    dan semua tampilan coret/promo hilang — tidak perlu update manual. */
 const PROMO_AKTIF=Date.now()<=new Date(2026,11,31,23,59,59).getTime();
 const HARGA=PROMO_AKTIF?"Rp20.000":HARGA_ASLI;
-const BUILD_STAMP="Build P23 · Bank 1.500 soal · 91 kartu trik · 13 Nov 2026";
+const BUILD_STAMP="Build P24 · Bank 1.500 soal · 91 kartu trik · 13 Nov 2026";
 const KISI={TWK:["Pancasila, UUD 1945, NKRI, Bhinneka Tunggal Ika","Nasionalisme, integritas, bela negara","Bahasa negara (Bahasa Indonesia)","Sejarah nasional adalah konten di dalam 5 aspek di atas (interpretasi) — bukan aspek ke-6"],TIU:["Verbal: analogi (termasuk latihan kosakata sinonim/antonim sebagai sub-jenis analogi — interpretasi, bukan kategori resmi Kepmen)","Verbal: silogisme (menarik kesimpulan dari dua pernyataan)","Verbal: penalaran analitis","Numerik: berhitung, deret angka, perbandingan kuantitatif, soal cerita","Figural (soal gambar): pilot 15 soal tersedia di latihan TIU (analogi, ketidaksamaan, serial); Simulasi CAT belum memuat soal figural"],TKP:["Pelayanan publik, jejaring kerja","Sosial budaya, teknologi informasi dan komunikasi","Profesionalisme, anti radikalisme"]};
 const NAMA={TWK:"Tes Wawasan Kebangsaan",TIU:"Tes Intelegensia Umum",TKP:"Tes Karakteristik Pribadi"};
 const PG={TWK:65,TIU:80,TKP:166};
@@ -2473,6 +2473,14 @@ function acctMarkerHTML(){
   else t="Belum masuk akun \u2014 ketuk untuk masuk / buat akun Premium";
   return `<button class="btn" id="acctmark"><span class="grow"><b>Akun Premium</b><br><span class="mut small">${t}</span></span><span class="arr">\u203A</span></button>`;
 }
+/* Tombol keluar langsung di Beranda (P24) — hanya tampil saat sudah masuk.
+   Memakai logika signOut yang sama dengan tombol keluar di halaman Premium;
+   setelah keluar, listener auth me-render ulang Beranda ke keadaan belum masuk. */
+function homeLogoutHTML(){
+  if(!FBST.user)return "";
+  return `<button class="btn" id="homelogout" style="margin-top:10px"><span class="grow" style="text-align:center"><b>Keluar dari akun</b><br><span class="mut small">Keluar dari perangkat ini saja — Premium tetap aman di akunmu. Untuk pindah ke PC atau perangkat lain, cukup masuk di sana dengan email dan password yang sama.</span></span></button>`;
+}
+
 function acctCardHTML(){
   if(FBST.status==="failed")return `<div class="card"><h3 style="margin:0 0 6px">Akun Premium</h3><div class="msg info" style="margin:0"><b>Butuh internet untuk memeriksa Premium.</b> Bagian akun dan penukaran kode perlu koneksi internet. Latihan gratis tetap bisa dipakai seperti biasa \u2014 coba lagi saat ada internet.</div></div>`;
   if(FBST.user)return `<div class="card"><h3 style="margin:0 0 6px">Akun kamu</h3>
@@ -2512,6 +2520,7 @@ function home(){
   <header class="hd"><div class="logo">SA</div><div class="grow"><h1>Siap Abdi</h1><p class="mut" style="margin:0">Latihan Soal CPNS, TNI, Polri &amp; BUMN</p></div>${themeBtnHTML()}</header>
   ${mascotHTML("Halo! Ketuk <b>MULAI LATIHAN</b> di tombol besar di bawah ini untuk mulai. Pelajaran dan sesi ada di bawahnya.")}
   ${acctMarkerHTML()}
+  ${homeLogoutHTML()}
   <button class="big" id="q10"><span>Mulai Latihan</span><small>10 soal acak dari semua topik — langsung mulai, tidak perlu pilih-pilih dulu${prem?"":" · memakai jatah gratis hari ini"}</small></button>
   <h2 style="margin-top:6px">Pilih jalur</h2>
   <svg class="scribble" viewBox="0 0 150 11" preserveAspectRatio="none" aria-hidden="true"><path d="M3 7 C 35 3, 62 10, 92 5 S 138 4, 147 6" fill="none" stroke="#E8322A" stroke-width="3.2" stroke-linecap="round"/></svg>
@@ -2544,6 +2553,7 @@ function home(){
   const $=id=>document.getElementById(id);
   bindTheme();
   if($("acctmark"))$("acctmark").onclick=()=>premiumPage();
+  if($("homelogout"))$("homelogout").onclick=()=>{if(window.__fb)window.__fb.signOut().catch(()=>{})};
   if($("goprem"))$("goprem").onclick=()=>premiumPage();
   $("jalurcpns").onclick=()=>{const el=$("q10");if(el)el.scrollIntoView({behavior:"smooth",block:"start"})};
   $("q10").onclick=()=>startLatihan({mode:"ALL",label:"Latihan acak"});
