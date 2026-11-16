@@ -404,9 +404,13 @@ h2::before{content:counter(seksi,decimal-leading-zero) " / ";color:var(--teal)}
    tampak setengah terpotong. Samakan perilaku gulirnya dengan Simulasi:
    beri jarak gulir di atas kartu soal & kartu pembahasan sebesar tinggi bar
    lengket, dan tambah bantalan atas kartu soal agar batang soal selalu utuh. */
-html{scroll-padding-top:118px}
-.qcard{scroll-margin-top:118px;padding-top:24px}
-.fbcard{scroll-margin-top:118px}
+/* P28: offset dinaikkan dari 118px menjadi 132px (tinggi .qbar lengket + jarak
+   aman) dan .howto ikut diberi scroll-margin, supaya bar instruksi kuning tidak
+   terpotong setengah di tepi atas viewport sesudah menjawab. */
+html{scroll-padding-top:132px}
+.qcard{scroll-margin-top:132px;padding-top:24px}
+.fbcard{scroll-margin-top:132px}
+.howto{scroll-margin-top:132px}
 </style>
 </head>
 <body>
@@ -1191,7 +1195,7 @@ const f=(model,batang,opsi,kunci,bahas,topik)=>({k:"TIU",fig:{model:model,batang
 Q.push(
 f('analogi', [['O:B'], ['O:W'], ['Q:B']], [['Q:B'], ['Q:A'], ['Q:W'], ['O:W'], ['T:W']], 2, 'Aturan: isi dibalik, hitam menjadi putih, bentuk tetap. C persegi hitam menjadi persegi putih. Opsi lain: tidak berubah, isi abu-abu, bentuk lingkaran (menyalin B), bentuk segitiga.', 'Figural analogi'),
 f('analogi', [['T:B'], ['T:B90'], ['T:W180']], [['T:W90'], ['T:B270'], ['T:W180'], ['T:W270'], ['T:W']], 3, 'Aturan: segitiga diputar 90 derajat, isi tetap. C segitiga putih 180 derajat menjadi 270 derajat. Opsi lain: putaran ke 90 derajat, isi hitam, tidak berubah, putaran ke 0 derajat.', 'Figural analogi'),
-f('analogi', [['O:B'], ['Q:B'], ['O:W']], [['O:W'], ['Q:B'], ['T:W'], ['Q:A'], ['Q:W']], 4, 'Aturan: bentuk berubah lingkaran menjadi persegi, isi tetap. C lingkaran putih menjadi persegi putih. Opsi lain: tidak berubah, isi hitam, bentuk segitiga, isi abu-abu.', 'Figural analogi'),
+f('analogi', [['O:B'], ['Q:B'], ['O:W']], [['O:W'], ['Q:B'], ['T:W'], ['Q:A'], ['Q:W']], 4, 'Aturan: bentuk berubah lingkaran menjadi persegi, isi tetap. Lingkaran putih menjadi persegi putih. Opsi lain: tidak berubah, isi hitam, bentuk segitiga, isi abu-abu.', 'Figural analogi'),
 f('analogi', [['O:W', 'P:B'], ['O:W', 'P:W'], ['Q:W', 'P:B']], [['Q:W', 'P:B'], ['Q:W', 'P:W'], ['Q:B', 'P:W'], ['O:W', 'P:W'], ['Q:W', 'P:A']], 1, 'Aturan: hanya titik di dalam berubah hitam menjadi putih, bentuk luar tetap. C kotak putih berisi titik hitam menjadi kotak putih berisi titik putih. Opsi lain: tidak berubah, luar ikut hitam, luar jadi lingkaran (menyalin B), titik abu-abu.', 'Figural analogi'),
 f('analogi', [['O:B', 'Q:W'], ['Q:W', 'O:B'], ['D:W', 'T:B']], [['T:B', 'D:W'], ['D:W', 'T:B'], ['T:W', 'D:B'], ['D:B', 'T:W'], ['T:B', 'Q:W']], 0, 'Aturan: dua elemen bertukar luar-dalam, bentuk dan isi masing-masing tetap. C menjadi segitiga hitam di luar dan belah ketupat putih di dalam. Opsi lain: tidak ditukar, ditukar tapi isi dibalik, isi dibalik tanpa ditukar, dalam jadi persegi.', 'Figural analogi'),
 f('beda', [], [['O:B', 'Q:W'], ['Q:B', 'O:W'], ['O:W', 'Q:B'], ['Q:W', 'O:B'], ['O:W', 'Q:W']], 4, 'Aturan: empat gambar punya satu bentuk berwarna hitam. Hanya satu gambar yang tidak punya bentuk hitam (semuanya putih), jadi itu yang berbeda.', 'Figural ketidaksamaan'),
@@ -2052,7 +2056,7 @@ const PROMO_SAMPAI="31 Desember 2026";
    dan semua tampilan coret/promo hilang — tidak perlu update manual. */
 const PROMO_AKTIF=Date.now()<=new Date(2026,11,31,23,59,59).getTime();
 const HARGA=PROMO_AKTIF?"Rp20.000":HARGA_ASLI;
-const BUILD_STAMP="Build P27 · Bank 1.500 soal · 91 kartu trik · 13 Nov 2026";
+const BUILD_STAMP="Build P28 · Bank 1.500 soal · 91 kartu trik · 13 Nov 2026";
 const KISI={TWK:["Pancasila, UUD 1945, NKRI, Bhinneka Tunggal Ika","Nasionalisme, integritas, bela negara","Bahasa negara (Bahasa Indonesia)","Sejarah nasional adalah konten di dalam 5 aspek di atas (interpretasi) — bukan aspek ke-6"],TIU:["Verbal: analogi (termasuk latihan kosakata sinonim/antonim sebagai sub-jenis analogi — interpretasi, bukan kategori resmi Kepmen)","Verbal: silogisme (menarik kesimpulan dari dua pernyataan)","Verbal: penalaran analitis","Numerik: berhitung, deret angka, perbandingan kuantitatif, soal cerita","Figural (soal gambar): pilot 15 soal tersedia di latihan TIU (analogi, ketidaksamaan, serial); Simulasi CAT belum memuat soal figural"],TKP:["Pelayanan publik, jejaring kerja","Sosial budaya, teknologi informasi dan komunikasi","Profesionalisme, anti radikalisme"]};
 const NAMA={TWK:"Tes Wawasan Kebangsaan",TIU:"Tes Intelegensia Umum",TKP:"Tes Karakteristik Pribadi"};
 const PG={TWK:65,TIU:80,TKP:166};
@@ -2158,6 +2162,11 @@ function seededShuf(a,seedStr){
 /* ================= PENYIMPANAN LOKAL ================= */
 function lsGet(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
 function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+/* P28: status "sudah mengintip" (LIHAT JAWABAN) bersifat per soal dan hanya hidup
+   di memori selama soal itu tampil — tidak pernah disimpan global. Hapus flag
+   mengintip lama apa pun yang mungkin tersimpan di perangkat agar label salah
+   "JAWABAN SUDAH TERLIHAT" tidak menempel ke soal yang dijawab normal. */
+try{Object.keys(localStorage).filter(k=>/peek|intip/i.test(k)).forEach(k=>localStorage.removeItem(k))}catch(e){}
 function todayStr(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 function hist(){return lsGet("skd-hist",[])}
 function addHist(l,p){const h=hist();h.unshift({l,p,d:new Date().toLocaleDateString("id-ID",{day:"numeric",month:"short"})});lsSet("skd-hist",h.slice(0,5))}
@@ -2393,6 +2402,17 @@ function openConfirm(o){
 }
 /* ================= NAVIGASI UMUM ================= */
 function scrollTop(){window.scrollTo(0,0)}
+/* P28: sesudah menjawab/mengintip, gulir deterministik ke atas kartu soal dengan
+   offset = tinggi bar lengket (.qbar) + jarak aman, supaya batang soal dan bar
+   instruksi kuning (.howto) selalu tampil utuh di bawah bar lengket — tidak lagi
+   setengah terpotong di tepi atas viewport seperti saat mengandalkan
+   scrollIntoView ke tombol LANJUT. */
+function scrollAfterAnswer(){
+  const qc=document.querySelector(".qcard");if(!qc)return;
+  const qb=document.querySelector(".qbar");const off=(qb?qb.getBoundingClientRect().height:96)+12;
+  const y=qc.getBoundingClientRect().top+window.scrollY-off;
+  window.scrollTo(0,Math.max(0,y));
+}
 function themeBtnHTML(){const dark=document.documentElement.getAttribute("data-theme")==="dark"||(!document.documentElement.getAttribute("data-theme")&&window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches);return `<button class="iconbtn" id="thm" aria-label="Ganti mode terang/gelap">${ic(dark?"sun":"moon")}</button>`}
 function bindTheme(){const b=document.getElementById("thm");if(!b)return;b.onclick=()=>{const cur=document.documentElement.getAttribute("data-theme");const dark=cur==="dark"||(!cur&&window.matchMedia("(prefers-color-scheme: dark)").matches);const nx=dark?"light":"dark";document.documentElement.setAttribute("data-theme",nx);lsSet("skd-theme",nx);b.innerHTML=ic(nx==="dark"?"sun":"moon")}}
 (function(){const t=lsGet("skd-theme",null);if(t)document.documentElement.setAttribute("data-theme",t)})();
@@ -2881,7 +2901,7 @@ function qbarHTML(mid,rightHTML){
 }
 function bindExit(fn){const b=document.getElementById("qx");b.onclick=()=>{if(b.dataset.arm){fn()}else{b.dataset.arm="1";b.textContent="Yakin keluar?"}}}
 function showQ(){
-  const it=L.list[L.i],q=it.q;L.ans=null;
+  const it=L.list[L.i],q=it.q;L.ans=null;L.peeked=false; // P28: status mengintip selalu reset di setiap soal baru
   app.innerHTML=`${qbarHTML("Soal "+(L.i+1)+" / "+L.list.length)}
   ${mascotHTML("Pilih satu jawaban ya. Kalau ragu, kamu boleh mengintip lewat <b>LIHAT JAWABAN</b> di bawah soal \u2014 tapi soal yang diintip <b>nilainya 0</b>.")}
   <div class="qcard"><div class="qmeta"><span class="tag">${q.k}</span><span class="tag">${esc(q.tp)}</span></div>
@@ -2918,7 +2938,8 @@ function bindTrk(tr,trOpen){
 function peekLat(){
   if(!L||L.ans!==null)return;
   const it=L.list[L.i],q=it.q,best=Math.max(...it.o.map(o=>o.p));
-  L.ans=-1;L.mx[q.k]+=best;
+  L.ans=-1;L.peeked=true;L.mx[q.k]+=best;
+  if(L.quota)useFree(1); // P28: mengintip memakan 1 kuota, sama seperti menjawab (guard L.ans di atas mencegah hitung ganda)
   app.querySelectorAll(".opt").forEach((b,x)=>{b.disabled=true;if(it.o[x].p===best)b.classList.add("ok");else b.classList.add("dim")});
   const pk=document.getElementById("peek");if(pk){pk.disabled=true;pk.textContent="JAWABAN SUDAH TERLIHAT"}
   const tr=TRICKS.find(x=>x.tp===q.tp);
@@ -2926,7 +2947,7 @@ function peekLat(){
   document.getElementById("fb").innerHTML=`<div class="fbcard"><h3>Ini jawabannya — soal ini tidak dihitung poinnya</h3><p style="margin:0">${esc(q.e)}</p>
   ${tr?`<button class="btn" id="trk" style="margin-bottom:0"><span class="grow"><b>Trik Cepat topik ini:</b> ${esc(tr.t)}</span><span class="arr">${trOpen?"›":ic("lock","sm")}</span></button><div id="trkbox"></div>`:""}</div>`;
   bindTrk(tr,trOpen);
-  document.getElementById("nx").scrollIntoView({block:"nearest"});
+  scrollAfterAnswer();
 }
 function pickLat(j){
   if(L.ans!==null)return;L.ans=j;
@@ -2938,9 +2959,12 @@ function pickLat(j){
   const trOpen=isPremium()||q.tp===FREE_TRICK_TOPIC;
   document.getElementById("fb").innerHTML=`<div class="fbcard"><h3>Pembahasan \u2014 poin kamu: ${it.o[j].p} dari ${best}</h3><p style="margin:0">${esc(q.e)}</p>
   ${tr?`<button class="btn" id="trk" style="margin-bottom:0"><span class="grow"><b>Trik Cepat topik ini:</b> ${esc(tr.t)}</span><span class="arr">${trOpen?"\u203A":ic("lock","sm")}</span></button><div id="trkbox"></div>`:""}</div>`;
-  const pk=document.getElementById("peek");if(pk){pk.disabled=true;pk.textContent="JAWABAN SUDAH TERLIHAT"}
+  /* P28: soal yang dijawab NORMAL bukan soal yang diintip — tombol tetap
+     "LIHAT JAWABAN" dan aktif; label "JAWABAN SUDAH TERLIHAT" + nilai 0
+     hanya untuk soal yang benar-benar dibuka lewat peekLat(). */
+  const pk=document.getElementById("peek");if(pk&&!L.peeked){pk.disabled=false;pk.textContent="LIHAT JAWABAN"}
   bindTrk(tr,trOpen);
-  document.getElementById("nx").scrollIntoView({block:"nearest"});
+  scrollAfterAnswer();
 }
 function ringSvg(pct){return `<svg viewBox="0 0 120 120" width="150" height="150" role="img" aria-label="Skor ${pct} persen"><circle cx="60" cy="60" r="52" fill="none" stroke="var(--bd)" stroke-width="3"/><circle cx="60" cy="60" r="52" fill="none" stroke="var(--teal)" stroke-width="10" stroke-dasharray="${(pct*3.267).toFixed(1)} 400" transform="rotate(-90 60 60)"/><text x="60" y="68" text-anchor="middle" font-size="26" font-weight="700" fill="var(--ink)" font-family="Space Grotesk,sans-serif">${pct}%</text></svg>`}
 function finLat(){
