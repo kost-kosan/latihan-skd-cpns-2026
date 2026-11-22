@@ -19,7 +19,8 @@
 <meta name="description" content="Latihan soal SKD CPNS: 2.555 soal TWK, TIU, TKP + pembahasan, sesi per subtes (TWK A–Q, TIU A–R, TKP A–Q), simulasi CAT, 91 kartu trik. Rp20.000 sekali bayar. Bukan aplikasi resmi BKN.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"></noscript>
 <style>
 :root{
   --bg:#FBF4DF; --paper:#FFF6DE; --card:#FFFDF6; --ink:#2A2A24; --mut:#6E6A5B;
@@ -36,6 +37,10 @@
   --tap:48px;
   --sh-3d:0 9px 0 var(--btnbase); --sh-3d-sm:0 5px 0 var(--btnbase);
 }
+/* rangka loading: tampil sebelum JS merender aplikasi (perbaikan UI P41) */
+.skl{border-radius:12px;background:linear-gradient(90deg,#EFE7D3 25%,#F7F1E2 50%,#EFE7D3 75%);background-size:200% 100%;animation:sklpulse 1.4s linear infinite}
+@keyframes sklpulse{to{background-position:-200% 0}}
+@media (prefers-reduced-motion:reduce){.skl{animation:none}}
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     --bg:#111827; --paper:#1F2937; --card:#1B2536; --ink:#E9E6DC; --mut:#AAB4C0;
@@ -556,7 +561,7 @@ button.hchip:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--shc)
 </style>
 </head>
 <body>
-<main id="app"></main>
+<main id="app"><div style="max-width:640px;margin:0 auto;padding:16px 16px 96px"><div class="skl" style="height:54px;margin-bottom:12px"></div><div class="skl" style="height:170px;margin-bottom:12px"></div><div class="skl" style="height:48px"></div><p style="text-align:center;color:#6E6A5B;font-size:.85rem;margin-top:14px">Memuat Siap Abdi…</p></div><noscript><p style="text-align:center;padding:8px 16px 24px;line-height:1.6">Siap Abdi butuh JavaScript aktif. Aktifkan JavaScript di browser Anda, lalu muat ulang halaman ini.</p></noscript></main>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><radialGradient id="pupBody" cx="35%" cy="26%" r="85%"><stop offset="0%" stop-color="#FFEF9F"/><stop offset="55%" stop-color="#FFC914"/><stop offset="100%" stop-color="#EDA200"/></radialGradient><symbol id="puppet" viewBox="0 0 120 120"><ellipse cx="60" cy="110" rx="31" ry="5.5" fill="rgba(42,42,36,.18)"/><ellipse cx="41" cy="104" rx="11" ry="6" fill="#E8322A"/><ellipse cx="79" cy="104" rx="11" ry="6" fill="#E8322A"/><ellipse cx="19" cy="76" rx="8.5" ry="14" fill="#EDA200" transform="rotate(18 19 76)"/><ellipse cx="103" cy="50" rx="8" ry="14" fill="#EDA200" transform="rotate(-32 103 50)"/><ellipse cx="60" cy="68" rx="37" ry="35" fill="url(#pupBody)"/><ellipse cx="60" cy="81" rx="19" ry="14.5" fill="#FFF3C2" opacity=".85"/><path d="M29 43 A32 32 0 0 1 91 43 L91 46 L29 46 Z" fill="#E8322A"/><rect x="23" y="42" width="74" height="7.5" rx="3.75" fill="#C2241C"/><circle cx="60" cy="12" r="4" fill="#C2241C"/><ellipse cx="41" cy="52" rx="12" ry="6.5" fill="#FFFFFF" opacity=".32" transform="rotate(-16 41 52)"/><ellipse cx="46" cy="61" rx="9" ry="11" fill="#FFFFFF"/><ellipse cx="74" cy="61" rx="9" ry="11" fill="#FFFFFF"/><circle cx="47" cy="63" r="4.6" fill="#2A2A24"/><circle cx="75" cy="63" r="4.6" fill="#2A2A24"/><circle cx="48.7" cy="61" r="1.7" fill="#FFFFFF"/><circle cx="76.7" cy="61" r="1.7" fill="#FFFFFF"/><ellipse cx="60" cy="71" rx="3.1" ry="2.3" fill="#D98E00"/><ellipse cx="34" cy="75" rx="6" ry="4" fill="#FF9D94" opacity=".6"/><ellipse cx="86" cy="75" rx="6" ry="4" fill="#FF9D94" opacity=".6"/><path d="M51 77 Q60 86 69 77" fill="none" stroke="#2A2A24" stroke-width="3" stroke-linecap="round"/></symbol></defs></svg>
 <script>
 // MESIN + DEFINISI BANK. Data soal berada di blok-blok BANK-CHUNK setelah seluruh blok mesin
@@ -583,7 +588,7 @@ const PROMO_SAMPAI="31 Desember 2026";
    dan semua tampilan coret/promo hilang — tidak perlu update manual. */
 const PROMO_AKTIF=Date.now()<=new Date(2026,11,31,23,59,59).getTime();
 const HARGA=PROMO_AKTIF?"Rp20.000":HARGA_ASLI;
-const BUILD_STAMP="Build P40 · 2.555 soal CPNS + 262 soal contoh · 91 kartu trik · 21 Nov 2026";
+const BUILD_STAMP="Build P41 · 2.555 soal CPNS + 262 soal contoh · 91 kartu trik · 22 Nov 2026";
 const KISI={TWK:["Pancasila, UUD 1945, NKRI, Bhinneka Tunggal Ika","Nasionalisme, integritas, bela negara","Bahasa negara (Bahasa Indonesia)","Sejarah nasional adalah konten di dalam 5 aspek di atas (interpretasi) — bukan aspek ke-6"],TIU:["Verbal: analogi (termasuk latihan kosakata sinonim/antonim sebagai sub-jenis analogi — interpretasi, bukan kategori resmi Kepmen)","Verbal: silogisme (menarik kesimpulan dari dua pernyataan)","Verbal: penalaran analitis","Numerik: berhitung, deret angka, perbandingan kuantitatif, soal cerita","Figural (soal gambar): pilot 45 soal tersedia di latihan TIU (analogi, ketidaksamaan, serial); Simulasi CAT belum memuat soal figural"],TKP:["Pelayanan publik, jejaring kerja","Sosial budaya, teknologi informasi dan komunikasi","Profesionalisme, anti radikalisme"]};
 const NAMA={TWK:"Tes Wawasan Kebangsaan",TIU:"Tes Intelegensia Umum",TKP:"Tes Karakteristik Pribadi"};
 const PG={TWK:65,TIU:80,TKP:166};
