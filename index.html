@@ -578,8 +578,8 @@ const f=(model,batang,opsi,kunci,bahas,topik)=>({k:"TIU",fig:{model:model,batang
 <script>
 "use strict";
 /* ================= KONFIG ================= */
-// Nomor WhatsApp bisnis (format 628xxxxxxxxxx). MASIH KOSONG — menunggu Direktur.
-// Selama kosong, tombol beli menampilkan pesan jujur bahwa pembelian via WA belum aktif.
+// Nomor WhatsApp bisnis (format 628xxxxxxxxxx). Terisi 6285878782553 — konfirmasi Direktur sebagai nomor jualan masih menunggu.
+// P43 (arahan Direktur 23 Nov 09:39): tombol WA TETAP TAMPIL — cara lama dibiarkan, Lynk.id hanya ditambah. Handler wabuy tetap ada, jangan hapus.
 const FEEDBACK="6285878782553";
 const HARGA_ASLI="Rp85.000";
 const PROMO_SAMPAI="31 Desember 2026";
@@ -588,7 +588,7 @@ const PROMO_SAMPAI="31 Desember 2026";
    dan semua tampilan coret/promo hilang — tidak perlu update manual. */
 const PROMO_AKTIF=Date.now()<=new Date(2026,11,31,23,59,59).getTime();
 const HARGA=PROMO_AKTIF?"Rp20.000":HARGA_ASLI;
-const BUILD_STAMP="Build P42 · 2.555 soal CPNS + 262 soal contoh · 91 kartu trik · 23 Nov 2026";
+const BUILD_STAMP="Build P43 · 2.555 soal CPNS + 262 soal contoh · 91 kartu trik · 23 Nov 2026";
 const KISI={TWK:["Pancasila, UUD 1945, NKRI, Bhinneka Tunggal Ika","Nasionalisme, integritas, bela negara","Bahasa negara (Bahasa Indonesia)","Sejarah nasional adalah konten di dalam 5 aspek di atas (interpretasi) — bukan aspek ke-6"],TIU:["Verbal: analogi (termasuk latihan kosakata sinonim/antonim sebagai sub-jenis analogi — interpretasi, bukan kategori resmi Kepmen)","Verbal: silogisme (menarik kesimpulan dari dua pernyataan)","Verbal: penalaran analitis","Numerik: berhitung, deret angka, perbandingan kuantitatif, soal cerita","Figural (soal gambar): pilot 45 soal tersedia di latihan TIU (analogi, ketidaksamaan, serial); Simulasi CAT belum memuat soal figural"],TKP:["Pelayanan publik, jejaring kerja","Sosial budaya, teknologi informasi dan komunikasi","Profesionalisme, anti radikalisme"]};
 const NAMA={TWK:"Tes Wawasan Kebangsaan",TIU:"Tes Intelegensia Umum",TKP:"Tes Karakteristik Pribadi"};
 const PG={TWK:65,TIU:80,TKP:166};
@@ -1418,7 +1418,13 @@ function premiumPage(note){
   ${chk&&!prem?`<p class="mut" style="margin:8px 0 0"><span class="spinrow"><span class="spin" aria-hidden="true"></span> Sedang memeriksa status Premium akunmu\u2026</span></p>`:""}
   </div>
   <h2>Cara beli</h2>
-  <div class="card"><ol style="margin:0;padding-left:22px;line-height:1.65">
+  <div class="card"><p style="margin:0 0 8px"><b>Cara 1 — Beli via Lynk.id (baru)</b></p><ol style="margin:0;padding-left:22px;line-height:1.65">
+  <li style="margin:0 0 8px">Tekan BELI VIA LYNK.ID di bawah.</li>
+  <li style="margin:0 0 8px">Bayar Rp20.000 di Lynk.id.</li>
+  <li style="margin:0 0 8px">Ambil kode di halaman klaim <a href="https://siap-abdi-lynkid.jogja.workers.dev/" target="_blank" rel="noopener">https://siap-abdi-lynkid.jogja.workers.dev/</a> setelah pembayaran terkonfirmasi — masukkan nomor order + email checkout.</li>
+  <li style="margin:0 0 8px">Masuk ke akunmu di halaman ini, tempel kode, tekan AKTIFKAN.</li>
+  <li style="margin:0">Premium langsung aktif — 1 kode = 1 pembeli, maksimal 2 akun.</li>
+  </ol><p style="margin:12px 0 8px"><b>Cara 2 — Beli via WhatsApp (cara lama)</b></p><ol style="margin:0;padding-left:22px;line-height:1.65">
   <li style="margin:0 0 8px">Tekan BELI VIA WHATSAPP — chat terbuka dan pesan sudah terisi.</li>
   <li style="margin:0 0 8px">Pembayaran via transfer Bank Mandiri. Detail pembayaran dikirim admin di chat WA.</li>
   <li style="margin:0 0 8px">Bayar, lalu kirim bukti bayar di chat yang sama.</li>
@@ -1426,7 +1432,7 @@ function premiumPage(note){
   <li style="margin:0">Masuk ke akunmu di halaman ini, tempel kode, tekan AKTIFKAN — Premium langsung aktif.</li>
   </ol></div>
   ${acctCardHTML()}
-  <h2>Langkah 2 — Beli lewat WhatsApp</h2>
+  <h2>Langkah 2 — Beli Premium</h2>
   <div class="card">${PROMO_AKTIF?`<span class="sticker">HARGA PELUNCURAN</span><div class="price-row" style="margin-top:12px"><span class="price-old">${HARGA_ASLI}</span><span class="price-wrap"><span class="price">${HARGA}</span><svg class="scribble-circle" viewBox="0 0 200 70" preserveAspectRatio="none" aria-hidden="true"><path d="M100 5 C 150 3, 196 12, 197 34 C 198 57, 140 67, 92 66 C 45 65, 4 56, 3 33 C 2 12, 60 4, 108 6" fill="none" stroke="#E8322A" stroke-width="3.5" stroke-linecap="round"/></svg></span><span class="savebadge">HEMAT 76% · Rp65.000</span></div>`:`<span class="sticker">HARGA PREMIUM</span><div class="price-row" style="margin-top:12px"><span class="price-wrap"><span class="price">${HARGA}</span><svg class="scribble-circle" viewBox="0 0 200 70" preserveAspectRatio="none" aria-hidden="true"><path d="M100 5 C 150 3, 196 12, 197 34 C 198 57, 140 67, 92 66 C 45 65, 4 56, 3 33 C 2 12, 60 4, 108 6" fill="none" stroke="#E8322A" stroke-width="3.5" stroke-linecap="round"/></svg></span></div>`}<p style="margin:8px 0 0"><b>${HARGA} membuka semua Premium di aplikasi ini.</b></p><p style="margin:8px 0 0"><b>Satu kode, empat jalur.</b> Satu kode Premium yang sama membuka <b>keempat jalur sekaligus</b> — CPNS lengkap (2.555 soal) plus soal contoh TNI, Polri, dan BUMN — masing-masing dengan pengalaman dan identitas latihannya sendiri. Tidak perlu kode terpisah per jalur.</p><p class="mut" style="margin:2px 0 0">Sekali bayar · tanpa langganan · tanpa kedaluwarsa</p>${PROMO_AKTIF?`<div class="promonote"><b>Promo sampai ${PROMO_SAMPAI}.</b> Setelah tanggal itu, harga Premium menjadi <b>${HARGA_ASLI}</b>.</div>`:""}
   <details class="dd21" style="margin:12px 0 0"><summary class="ddh"><span class="grow"><b>Lihat semua yang didapat</b><span class="ddsub">Bank soal, latihan, simulasi, trik &amp; lainnya — ketuk untuk membuka</span></span><span class="ddchev" aria-hidden="true">▾</span></summary><div class="ddbody"><ul class="feat"><li>${ic("check")}<span>Bank penuh: 2.555 soal CPNS + 262 soal contoh TNI/Polri/BUMN (pilot). Soal CPNS terklasifikasi: TWK ${nQ("TWK")}, TIU ${nQ("TIU")}, TKP ${nQ("TKP")} (${TOPICS.length} topik)</span></li><li>${ic("check")}<span>Latihan acak, per subtes, dan per topik tanpa batas</span></li><li>${ic("check")}<span>Latihan per sesi per subtes (maksimal 50 soal per sesi, pilih lewat kartu sesi)</span></li><li>${ic("check")}<span>Simulasi CAT A–D 110 soal / 100 menit + Simulasi Mini tanpa batas</span></li><li>${ic("check")}<span>Pembahasan lengkap semua soal</span></li><li>${ic("check")}<span>${TRICKS.length+TRIK_MODEL.length+STRATEGI450.length} kartu Trik Cepat (${TRICKS.length} per topik + ${TRIK_MODEL.length} per model soal + ${STRATEGI450.length} Strategi Skor 450+) + ${nTeknik()} Teknik Cepat + Cara Menghafal &amp; rencana 14 hari</span></li></ul>
   <div class="disc" style="margin-bottom:0"><b>Jujur:</b> Soal Figural (gambar): pilot 45 soal tersedia di latihan; Simulasi Penuh (CAT) masih tanpa Figural. Yang kamu beli adalah 2.555 soal CPNS + 262 soal contoh TNI/Polri/BUMN (pilot) di atas. Ini alat latihan, bukan soal resmi BKN, dan tidak menjamin kelulusan.</div></div></details></div>
