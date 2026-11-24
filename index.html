@@ -90,7 +90,8 @@ p{margin:0 0 10px}
 .btn .arr{font-weight:700;color:var(--mut)}
 .sticker{display:inline-block;background:var(--yel);color:#1F2937;border:2px solid #1F2937;border-radius:4px;padding:1px 9px;font-family:"Space Grotesk",system-ui,sans-serif;font-weight:700;font-size:.78rem;letter-spacing:.03em;transform:rotate(-1.2deg);box-shadow:var(--sh-sm)}
 .tag{display:inline-block;font-size:.8rem;font-weight:700;background:var(--teal-t);color:var(--teal);border:2px solid var(--bd);border-radius:4px;padding:1px 9px;font-family:"Space Grotesk",system-ui,sans-serif}
-.locktag{display:inline-block;font-size:.75rem;font-weight:700;background:var(--ink);color:var(--bg);border-radius:4px;padding:2px 8px;font-family:"Space Grotesk",system-ui,sans-serif;letter-spacing:.04em}
+.locktag{display:inline-block;font-size:.75rem;font-weight:700;background:var(--ink);color:var(--bg);border-radius:4px;padding:2px 8px;font-family:"Space Grotesk",system-ui,sans-serif;letter-spacing:.04em;white-space:nowrap}
+.chip .sticker{white-space:nowrap}
 /* ---------- home ---------- */
 .hd{display:flex;gap:12px;align-items:flex-start;margin:2px 0 14px}
 .logo{width:54px;height:54px;flex:none;border-radius:6px;border:3px solid var(--bd);display:flex;align-items:center;justify-content:center;font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:1.05rem;color:#fff;background:var(--teal);box-shadow:var(--sh-sm)}
@@ -373,8 +374,7 @@ h2::before{content:counter(seksi,decimal-leading-zero) " / ";color:var(--teal)}
 .sesscard .ss{font-size:.82rem;font-weight:700;color:var(--teal)}
 /* --- coretan tangan --- */
 .scribble{display:block;width:150px;height:11px;margin:0 0 6px}
-.price-wrap{position:relative;display:inline-block;padding:3px 10px 4px 2px}
-.scribble-circle{position:absolute;left:-7px;top:-7px;width:calc(100% + 12px);height:calc(100% + 13px);pointer-events:none}
+/* P45.1: elips merah di sekeliling harga dihapus — terbaca seperti marka edit */
 @media (prefers-reduced-motion:reduce){.btn:active,.opt:active,.sesscard:active,.big:active,.chip:active{transform:none}}
 
 /* ================= BUILD P21 — RAPIKAN DENGAN DROPDOWN =================
@@ -671,7 +671,7 @@ h1{font-family:"Fraunces",Georgia,serif}
 /* --- kartu premium --- */
 .p45-prem{margin-top:12px;background:var(--gold);border-radius:var(--r);padding:18px;box-shadow:var(--shadow);color:var(--navy)}
 .p45-kicker{font-size:11px;font-weight:700;letter-spacing:.14em}
-.p45-prem h4{font-family:"Fraunces",Georgia,serif;font-size:22px;margin-top:6px;color:var(--navy)}
+.p45-prem h4{font-family:"Fraunces",Georgia,serif;font-size:22px;margin-top:6px;color:var(--navy);text-wrap:balance}
 .p45-prem p{font-size:13px;line-height:1.55;margin-top:5px;color:#3D2F14}
 .p45-price{font-family:"Fraunces",Georgia,serif;font-size:26px;font-weight:700;margin-top:10px;color:var(--navy)}
 .p45-price small{font-family:"Space Grotesk",sans-serif;font-size:12px;font-weight:500;color:#3D2F14}
@@ -690,6 +690,18 @@ h1{font-family:"Fraunces",Georgia,serif}
 .p45-mode-card.sel{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold),var(--shadow)}
 .p45-mode-card.sel .p45-picked{display:inline-block;margin-top:7px;font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--gold-deep);background:#F3E7C8;border-radius:999px;padding:3px 8px}
 .p45-fine-note{font-size:12px;color:var(--p45-muted);text-align:center;margin-top:10px;line-height:1.5}
+/* P45.1 (F2/F5): seksi Gratis vs Premium di grid mode + pembeda kartu pilot */
+.p45-mode-sec{margin-top:18px}
+.p45-mode-sec-h{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin:0 0 4px;color:var(--p45-card-text)}
+.p45-mode-sec-sub{font-size:12px;color:var(--p45-muted);margin:0 0 10px;line-height:1.5}
+.p45-mode-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.08em;border-radius:999px;padding:3px 8px;white-space:nowrap}
+.p45-mode-badge-free{background:#E6F2F0;color:#0F766E}
+.p45-mode-badge-prem{background:#101B2D;color:#C5A46D}
+.p45-mode-card .p45-mode-badge{margin-bottom:7px}
+.p45-jalur-pilot{border-style:dashed;background:#FBF6E9}
+.p45-sec-note{font-size:12px;color:var(--p45-muted);margin-top:10px;line-height:1.55}
+.p45-topic-sec{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--p45-card-text);margin:12px 0 8px}
+.p45-topic-sec:first-child{margin-top:2px}
 /* --- layar Hasil --- */
 .p45-result-hero{padding:26px 0 8px;text-align:center}
 .p45-score-ring{width:148px;height:148px;margin:0 auto}
@@ -771,7 +783,7 @@ const PROMO_SAMPAI="31 Desember 2026";
    dan semua tampilan coret/promo hilang — tidak perlu update manual. */
 const PROMO_AKTIF=Date.now()<=new Date(2026,11,31,23,59,59).getTime();
 const HARGA=PROMO_AKTIF?"Rp20.000":HARGA_ASLI;
-const BUILD_STAMP="Build P45 · 2.555 soal CPNS + 262 soal contoh · 91 kartu trik · 23 Nov 2026";
+const BUILD_STAMP="Build P45.1 · 2.555 soal CPNS + 262 soal contoh · 91 kartu trik · 24 Nov 2026";
 const KISI={TWK:["Pancasila, UUD 1945, NKRI, Bhinneka Tunggal Ika","Nasionalisme, integritas, bela negara","Bahasa negara (Bahasa Indonesia)","Sejarah nasional adalah konten di dalam 5 aspek di atas (interpretasi) — bukan aspek ke-6"],TIU:["Verbal: analogi (termasuk latihan kosakata sinonim/antonim sebagai sub-jenis analogi — interpretasi, bukan kategori resmi Kepmen)","Verbal: silogisme (menarik kesimpulan dari dua pernyataan)","Verbal: penalaran analitis","Numerik: berhitung, deret angka, perbandingan kuantitatif, soal cerita","Figural (soal gambar): pilot 45 soal tersedia di latihan TIU (analogi, ketidaksamaan, serial); Simulasi CAT belum memuat soal figural"],TKP:["Pelayanan publik, jejaring kerja","Sosial budaya, teknologi informasi dan komunikasi","Profesionalisme, anti radikalisme"]};
 const NAMA={TWK:"Tes Wawasan Kebangsaan",TIU:"Tes Intelegensia Umum",TKP:"Tes Karakteristik Pribadi"};
 const PG={TWK:65,TIU:80,TKP:166};
@@ -1020,7 +1032,7 @@ function trendBlockHTML(){
 }
 /* ---- kartu Premium (dipakai Beranda + Hasil) ---- */
 function premCardHTML(){
-  if(isPremium())return '<div class="p45-prem p45-prem-on"><div class="p45-kicker">SIAP ABDI PREMIUM · AKTIF</div><h4>Semua fitur sudah terbuka.</h4><p>Bank '+nCPNS()+' soal CPNS + 262 soal contoh TNI/Polri/BUMN, latihan tanpa batas, dan Simulasi CAT A–D.</p><button class="p45-btn-gold" id="goprem">Lihat akun Premium</button></div>';
+  if(isPremium())return '<div class="p45-prem p45-prem-on"><div class="p45-kicker">SIAP ABDI PREMIUM · AKTIF</div><h4>Semua fitur sudah terbuka.</h4><p>Bank '+nCPNS()+' soal CPNS + 262 soal contoh TNI/Polri/BUMN, latihan tanpa batas, dan Simulasi CAT A–D.</p><button class="p45-btn-gold" id="goprem">Lihat akun</button></div>';
   return '<div class="p45-prem"><div class="p45-kicker">SIAP ABDI PREMIUM</div><h4>Buka semua soal + Simulasi CAT.</h4><p>2.555 soal CPNS + 262 contoh pilot + 91 kartu trik + Simulasi CAT A–D.</p><div class="p45-price">'+HARGA+' <small>sekali bayar · '+(PROMO_AKTIF?"s.d. 31 Des 2026":"tanpa langganan")+'</small></div><button class="p45-btn-line" id="goprem">Aktifkan Premium</button></div>';
 }
 /* P45: membuka kartu trik per model/topik tercatat sebagai "dibaca" (misi
@@ -1424,13 +1436,17 @@ window.__fbAuthChanged=async function(u){
   if(invalidLinkNote){invalidLinkNote=false;premiumPage("Tautan aktivasi tidak bisa dipakai: kode di tautan tidak cocok — mungkin ada huruf yang terpotong saat tautan disalin. Ambil tautan baru dari halaman klaim, atau masukkan kode secara manual di kolom kode di bawah.");}
   if(pendingLinkNote){const n=pendingLinkNote;pendingLinkNote="";premiumPage(n);}
 };
+/* P45.1 (F7): tidak ada "akun Premium" — yang ada akun (email + kode). Status
+   "memeriksa" yang lama (>8 dtk, karena masuk tanpa email belum diaktifkan di
+   server) diberi teks jujur + jalan keluar, bukan spinner tanpa ujung. */
+let __chkSince=Date.now();
 function acctMarkerHTML(){
   let t;
-  if(premiumChecking())t="Akun: memeriksa status Premium\u2026";
+  if(premiumChecking())t=(Date.now()-__chkSince>8000)?"Masih memeriksa status Premium\u2026 bila terus berputar, ketuk untuk info akun \u2014 latihan gratis tetap bisa dipakai.":"Akun: memeriksa status Premium\u2026";
   else if(FBST.user)t=(FBST.user.email?("Masuk sebagai "+esc(FBST.user.email)):("Akun perangkat ini (tanpa email)"))+" \u00B7 "+(FBST.premium?"Premium aktif":"Belum Premium")+" \u2014 ketuk untuk akun &amp; kode";
-  else if(FBST.status==="failed")t="Akun Premium butuh internet \u2014 ketuk untuk info akun";
-  else t="Belum masuk akun \u2014 ketuk untuk masuk / buat akun Premium";
-  return `<button class="btn" id="acctmark"><span class="grow"><b>Akun Premium</b><br><span class="mut small">${t}</span></span><span class="arr">\u203A</span></button>`;
+  else if(FBST.status==="failed")t="Akun butuh internet \u2014 ketuk untuk info akun";
+  else t="Belum masuk akun \u2014 ketuk untuk masuk / buat akun";
+  return `<button class="btn" id="acctmark"><span class="grow"><b>Akun</b><br><span class="mut small">${t}</span></span><span class="arr">\u203A</span></button>`;
 }
 /* Tombol keluar langsung di Beranda (P24) — hanya tampil saat sudah masuk.
    Memakai logika signOut yang sama dengan tombol keluar di halaman Premium;
@@ -1441,7 +1457,7 @@ function homeLogoutHTML(){
 }
 
 function acctCardHTML(){
-  if(FBST.status==="failed")return `<div class="card"><h3 style="margin:0 0 6px">Akun Premium</h3><div class="msg info" style="margin:0"><b>Butuh internet untuk memeriksa Premium.</b> Bagian akun dan penukaran kode perlu koneksi internet. Latihan gratis tetap bisa dipakai seperti biasa \u2014 coba lagi saat ada internet.</div></div>`;
+  if(FBST.status==="failed")return `<div class="card"><h3 style="margin:0 0 6px">Akun</h3><div class="msg info" style="margin:0"><b>Butuh internet untuk memeriksa Premium.</b> Bagian akun dan penukaran kode perlu koneksi internet. Latihan gratis tetap bisa dipakai seperti biasa \u2014 coba lagi saat ada internet.</div></div>`;
   if(FBST.user)return `<div class="card"><h3 style="margin:0 0 6px">Akun kamu</h3>
   <p style="margin:0">${FBST.user.email?("Masuk sebagai <b>"+esc(FBST.user.email)+"</b>"):("Akun perangkat ini <b>(tanpa email)</b>")}</p>
   <p style="margin:6px 0 0">Status Premium akun ini: <b>${FBST.profileKnown?(FBST.premium?"AKTIF":"BELUM AKTIF"):"memeriksa\u2026"}</b></p>
@@ -1510,9 +1526,9 @@ function home(){
   const streakLbl=streak===0?"<b>Belum ada streak</b><br>Jawab 1 soal hari ini<br>untuk memulai.":(streak>=7?"<b>7 hari beruntun</b><br>Seminggu penuh —<br>pertahankan ritmemu.":"<b>"+streak+" hari beruntun</b><br>Besok hari ke-"+(streak+1)+" —<br>jangan putus.");
   const contHTML=cont&&contQ?`<div class="p45-continue"><span class="p45-tag">${esc(contQ.k)} · ${esc((contQ.tp||"").toUpperCase())}</span><h4>${esc(contQ.q)}</h4><p>Sesi ${contTotal} soal · tersisa ${Math.max(0,contTotal-(cont.i||0)-1)} soal di sesi ini.</p><div class="p45-bar"><i style="width:${contTotal?Math.round(contAnswered/contTotal*100):0}%"></i></div><div class="p45-row"><span class="p45-prog">Soal ${Math.min((cont.i||0)+1,contTotal)} dari ${contTotal}</span><button class="p45-btn-gold" id="contgo">Lanjutkan</button></div><span class="p45-wm" aria-hidden="true">${esc(contQ.k)}</span></div>`
   :`<div class="p45-continue p45-continue-empty"><h4>Belum ada sesi yang berjalan</h4><p>Mulai latihan pertamamu — 10 soal acak, gratis hari ini.</p><div class="p45-row"><span class="p45-prog">${todayN} soal dijawab hari ini</span><button class="p45-btn-gold" id="contgo">Mulai Latihan</button></div></div>`;
-  const jalurRow=function(nama,sub,badge,badgeCls,answered,totalN){
+  const jalurRow=function(nama,sub,badge,badgeCls,answered,totalN,cls){
     const pct=totalN?Math.min(100,Math.round(answered/totalN*100)):0;
-    return `<button class="p45-jalur" data-jalur="${nama}"><span class="p45-jtop"><span class="p45-jname">${nama}<small>${sub}</small></span><span class="p45-badge ${badgeCls}">${badge}</span></span><span class="p45-bar"><i style="width:${pct}%"></i></span><span class="p45-jmeta"><span>${answered?answered.toLocaleString("id-ID")+" dari "+totalN.toLocaleString("id-ID")+" soal":"Belum dimulai"}</span><span>${pct}% selesai</span></span></button>`;
+    return `<button class="p45-jalur${cls?" "+cls:""}" data-jalur="${nama}"><span class="p45-jtop"><span class="p45-jname">${nama}<small>${sub}</small></span><span class="p45-badge ${badgeCls}">${badge}</span></span><span class="p45-bar"><i style="width:${pct}%"></i></span><span class="p45-jmeta"><span>${answered?answered.toLocaleString("id-ID")+" dari "+totalN.toLocaleString("id-ID")+" soal":"Belum dimulai"}</span><span>${pct}% selesai</span></span></button>`;
   };
   const misiRow=function(icon,title,sub,barPct,right,done){
     return `<div class="p45-q"><div class="p45-qi">${ic(icon)}</div><div class="p45-qt"><b>${title}</b><span>${sub}</span><div class="p45-qbar"><i style="width:${barPct}%"></i></div></div><span class="p45-done">${done?"Selesai":right}</span></div>`;
@@ -1546,15 +1562,16 @@ function home(){
   <div class="p45-sec">
     <h3 class="p45-h">Lanjutkan latihan</h3>
     ${contHTML}
-    ${cont?`<button class="p45-textlink" id="modego">Pilih mode latihan lain</button>`:""}
+    <button class="p45-textlink" id="modego">Pilih mode latihan lain</button>
   </div>
   <div class="p45-sec">
     <h3 class="p45-h">Jalur latihan</h3>
     <p class="p45-hint">Pilih jalur, progresmu tersimpan per jalur.</p>
     ${jalurRow("CPNS","Latihan SKD lengkap + Figural","LENGKAP · 2.555","p45-badge-gold",cpnsAnswered,2555)}
-    ${jalurRow("TNI","Soal contoh jalur TNI","PILOT · "+nQ("TNI")+" soal","p45-badge-grey",(p.byK["TNI"]||{}).a||0,nQ("TNI"))}
-    ${jalurRow("POLRI","Soal contoh jalur Polri","PILOT · "+nQ("POLRI")+" soal","p45-badge-grey",(p.byK["POLRI"]||{}).a||0,nQ("POLRI"))}
-    ${jalurRow("BUMN","Soal contoh jalur BUMN","PILOT · "+nQ("BUMN")+" soal","p45-badge-grey",(p.byK["BUMN"]||{}).a||0,nQ("BUMN"))}
+    ${jalurRow("TNI","Soal contoh jalur TNI · PILOT — bukan bank penuh","PILOT · "+nQ("TNI")+" soal","p45-badge-grey",(p.byK["TNI"]||{}).a||0,nQ("TNI"),"p45-jalur-pilot")}
+    ${jalurRow("POLRI","Soal contoh jalur Polri · PILOT — bukan bank penuh","PILOT · "+nQ("POLRI")+" soal","p45-badge-grey",(p.byK["POLRI"]||{}).a||0,nQ("POLRI"),"p45-jalur-pilot")}
+    ${jalurRow("BUMN","Soal contoh jalur BUMN · PILOT — bukan bank penuh","PILOT · "+nQ("BUMN")+" soal","p45-badge-grey",(p.byK["BUMN"]||{}).a||0,nQ("BUMN"),"p45-jalur-pilot")}
+    <p class="p45-sec-note"><b>PILOT = soal contoh.</b> Jalur TNI, Polri, dan BUMN berisi 85–90 soal contoh orisinal per jalur — bukan bank soal penuh seperti CPNS (2.555 soal). Bukan soal resmi, bukan bocoran.</p>
   </div>
   <div class="p45-sec">
     <h3 class="p45-h">Misi hari ini</h3>
@@ -1590,28 +1607,34 @@ function modePage(){
   const prem=isPremium();
   const raguN=raguList().length;
   const figTot=FIG_TOPICS.reduce(function(a,tp){return a+byTopic(tp).length},0);
+  /* P45.1 (F2a): Gratis vs Premium dipisah — lencana di tiap kartu + gembok di
+     kartu Premium. Jujur soal kuota: Latihan 25 soal memberi 10 soal pertama
+     gratis (jatah harian yang sama), sisanya butuh Premium. */
   const modes=[
-    {id:"l10",ic:"shuffle",t:"Latihan 10 soal",s:"Bebas, tanpa waktu"},
-    {id:"l25",ic:"list",t:"Latihan 25 soal",s:"Sesi panjang"},
-    {id:"mini",ic:"clock",t:"Simulasi Mini",s:"24 soal · 22 menit"},
-    {id:"cat",ic:"crown",t:"Simulasi CAT",s:"110 soal · 100 menit"},
-    {id:"twk",ic:"",t:"TWK",s:nQ("TWK")+" soal"},
-    {id:"tiu",ic:"",t:"TIU",s:nQ("TIU")+" soal"},
-    {id:"tkp",ic:"",t:"TKP",s:nQ("TKP")+" soal"},
-    {id:"fig",ic:"fig",t:"Figural",s:figTot+" soal"},
-    {id:"ragu",ic:"",t:"Soal Ragu",s:raguN?raguN+" soal ditandai":"Belum ada yang ditandai"}
+    {id:"l10",ic:"shuffle",t:"Latihan 10 soal",s:"Bebas, tanpa waktu",g:"free"},
+    {id:"l25",ic:"list",t:"Latihan 25 soal",s:"25 soal · 10 pertama gratis, sisanya Premium",g:"prem"},
+    {id:"mini",ic:"clock",t:"Simulasi Mini",s:"24 soal · 22 menit",g:"free"},
+    {id:"cat",ic:"crown",t:"Simulasi CAT",s:"110 soal · 100 menit",g:"prem"},
+    {id:"twk",ic:"",t:"TWK",s:nQ("TWK")+" soal",g:"free"},
+    {id:"tiu",ic:"",t:"TIU",s:nQ("TIU")+" soal",g:"free"},
+    {id:"tkp",ic:"",t:"TKP",s:nQ("TKP")+" soal",g:"free"},
+    {id:"fig",ic:"fig",t:"Figural",s:figTot+" soal",g:"prem"},
+    {id:"ragu",ic:"",t:"Soal Ragu",s:raguN?raguN+" soal ditandai":"Belum ada yang ditandai",g:"free"}
   ];
+  const modeCardHTML=function(m){return `<button class="p45-mode-card${m.id===sel?" sel":""}" data-m="${m.id}"><span class="p45-mode-badge ${m.g==="free"?"p45-mode-badge-free":"p45-mode-badge-prem"}">${m.g==="free"?"GRATIS":ic("lock","sm")+" PREMIUM"}</span><span class="p45-mi">${m.ic?ic(m.ic):letterFor(m.id)}</span><b>${m.t}</b><span>${m.s}</span>${m.id===sel?`<span class="p45-picked">TERPILIH</span>`:""}</button>`};
   const startLabel={l10:"Mulai Latihan — 10 Soal",l25:"Mulai Latihan — 25 Soal",mini:"Mulai Simulasi Mini",cat:"Pilih Simulasi CAT",twk:"Mulai Latihan TWK — 10 Soal",tiu:"Mulai Latihan TIU — 10 Soal",tkp:"Mulai Latihan TKP — 10 Soal",fig:"Mulai Latihan Figural",ragu:"Mulai Latihan Soal Ragu"};
   const letterFor=function(id){return id==="twk"?"A":id==="tiu"?"B":id==="tkp"?"C":"?"};
   let sel="l10";
   app.innerHTML=`<button class="back" id="bk">‹ Kembali</button>
   <div class="p45-sec" style="padding-top:6px"><h3 class="p45-h" style="font-size:22px">Pilih mode latihan</h3>
   <p class="p45-hint">Satu ketuk untuk memilih. Kartu terpilih ditandai border emas.</p>
-  <div class="p45-mode-grid">${modes.map(function(m){return `<button class="p45-mode-card${m.id===sel?" sel":""}" data-m="${m.id}"><span class="p45-mi">${m.ic?ic(m.ic):letterFor(m.id)}</span><b>${m.t}</b><span>${m.s}</span>${m.id===sel?`<span class="p45-picked">TERPILIH</span>`:""}</button>`}).join("")}</div>
+  <div class="p45-mode-sec"><p class="p45-mode-sec-h">Gratis</p><p class="p45-mode-sec-sub">Bisa dipakai hari ini — 10 soal gratis per hari + Simulasi Mini 1x.</p><div class="p45-mode-grid">${modes.filter(function(m){return m.g==="free"}).map(modeCardHTML).join("")}</div></div>
+  <div class="p45-mode-sec"><p class="p45-mode-sec-h">Premium</p><p class="p45-mode-sec-sub">Terbuka semua setelah Premium aktif — ${HARGA} sekali bayar, s.d. 31 Des 2026.</p><div class="p45-mode-grid">${modes.filter(function(m){return m.g==="prem"}).map(modeCardHTML).join("")}</div>${prem?"":`<button class="p45-btn-line p45-btn-block" id="modeprem" style="margin-top:12px">Buka Premium — ${HARGA} sekali bayar</button>`}</div>
   <div style="margin-top:16px"><button class="p45-btn-gold p45-btn-block" id="modestart">${startLabel[sel]}</button></div>
   <p class="p45-fine-note">Gratis 10 soal latihan per hari · Simulasi Mini 1x gratis · selebihnya Premium.</p>
   <div id="modemsg" aria-live="polite"></div></div>`;
   document.getElementById("bk").onclick=home;
+  const mp=document.getElementById("modeprem");if(mp)mp.onclick=()=>premiumPage();
   const cards=Array.prototype.slice.call(app.querySelectorAll(".p45-mode-card"));
   const startBtn=document.getElementById("modestart");
   const msgBox=document.getElementById("modemsg");
@@ -1669,7 +1692,7 @@ function cpnsPage(){
     <button class="mode" id="simmini"><span class="grow2"><h3>Simulasi Mini</h3><p>24 soal / 22 menit \u00B7 TWK 6 \u00B7 TIU 8 \u00B7 TKP 10</p></span>${prem?`<span class="locktag" style="background:var(--acc);color:var(--acc-fg)">TANPA BATAS</span>`:`<span class="badge" style="background:#E2A51D;color:#1B1712">${fs.miniUsed?"SUDAH DIPAKAI":"GRATIS 1x"}</span>`}</button>
     <button class="mode" id="catcard"><span class="grow2"><h3>Simulasi CAT</h3><p>110 soal / 100 menit \u00B7 tanpa Figural</p></span>${prem?"":`<span class="locktag">PREMIUM</span>`}</button>
   </div>
-  <details class="dd21" id="catdd"><summary class="ddh"><span class="grow"><b>Simulasi CAT A\u2013D</b><span class="ddsub">110 soal \u00B7 100 menit \u00B7 4 paket simulasi (A, B, C, D) \u00B7 ketuk untuk membuka</span></span><span class="ddchev" aria-hidden="true">\u25BE</span></summary><div class="ddbody"><div class="sessbox"><label for="catSel"><b>Simulasi CAT \u2014 110 soal / 100 menit</b><br><span class="mut small">TWK 30 \u00B7 TIU 35 \u00B7 TKP 45 \u00B7 passing grade TWK 65 \u00B7 TIU 80 \u00B7 TKP 166 (acuan persiapan dari seleksi 2024) \u00B7 skor &amp; passing grade per subtes</span> ${prem?"":"<span class=\"locktag\">PREMIUM</span>"}</label><div class="sessrow"><select class="sesssel" id="catSel" aria-label="Pilih simulasi CAT"><option value="">Pilih simulasi CAT...</option>${CAT_LETTERS.map(Lt=>`<option value="${Lt}">Simulasi CAT ${Lt} \u2014 110 soal / 100 menit${lastSuffix("CAT-"+Lt)}</option>`).join("")}</select><button class="btn pri sessgo" id="catGo">MULAI SIMULASI</button></div><div class="sessmsg" id="catmsg"></div><p class="mut small" style="margin:10px 0 0">Soal antar-simulasi dapat berulang karena diambil dari bank ${nCPNS()} soal yang sama.</p></div>
+  <details class="dd21" id="catdd"><summary class="ddh"><span class="grow"><b>Simulasi CAT A\u2013D</b>${prem?"":` <span class="locktag">PREMIUM</span>`}<span class="ddsub">110 soal \u00B7 100 menit \u00B7 4 paket simulasi (A, B, C, D) \u00B7 ketuk untuk membuka</span></span><span class="ddchev" aria-hidden="true">\u25BE</span></summary><div class="ddbody"><div class="sessbox"><label for="catSel"><b>Simulasi CAT \u2014 110 soal / 100 menit</b><br><span class="mut small">TWK 30 \u00B7 TIU 35 \u00B7 TKP 45 \u00B7 passing grade TWK 65 \u00B7 TIU 80 \u00B7 TKP 166 (acuan persiapan dari seleksi 2024) \u00B7 skor &amp; passing grade per subtes</span> ${prem?"":"<span class=\"locktag\">PREMIUM</span>"}</label><div class="sessrow"><select class="sesssel" id="catSel" aria-label="Pilih simulasi CAT"><option value="">Pilih simulasi CAT...</option>${CAT_LETTERS.map(Lt=>`<option value="${Lt}">Simulasi CAT ${Lt} \u2014 110 soal / 100 menit${lastSuffix("CAT-"+Lt)}</option>`).join("")}</select><button class="btn pri sessgo" id="catGo">MULAI SIMULASI</button></div><div class="sessmsg" id="catmsg"></div><p class="mut small" style="margin:10px 0 0">Soal antar-simulasi dapat berulang karena diambil dari bank ${nCPNS()} soal yang sama.</p></div>
   <p class="mut small" style="margin:10px 0 0">Label jujur: <b>Simulasi v1 tanpa Figural</b> (TIU dihitung dari topik verbal, numerik, dan logika).</p></div></details>
   <span class="sectlabel">FIGURAL</span>
   <div class="modes" style="grid-template-columns:1fr">
@@ -1792,8 +1815,11 @@ function installPage(){
 function topics(){
   window.__ret=()=>topics();
   const prem=isPremium();
-  const g=k=>{const ts=TOPICS.filter(t=>Q.some(q=>q.k===k&&q.tp===t));return `<details class="dd21"><summary class="ddh"><span class="grow"><b>${k} \u2014 ${NAMA[k]}</b><span class="ddsub">${ts.length} topik \u00B7 ketuk untuk membuka</span></span><span class="ddchev" aria-hidden="true">\u25BE</span></summary><div class="ddbody"><div class="chips2">${ts.map(t=>{const free=t===FREE_TOPIC;return `<button class="chip${free?" free":""}" data-t="${esc(t)}">${esc(t)} <small>${byTopic(t).length} soal</small>${free?` <span class="sticker">GRATIS</span>`:prem?"":` <span class="locktag">PREMIUM</span>`}</button>`}).join("")}</div>${ts.filter(t=>CATATAN_TOPIK[t]).map(t=>`<p class="mut small" style="margin:8px 0 0"><b>${esc(t)}:</b> ${esc(CATATAN_TOPIK[t])}</p>`).join("")}</div></details>`};
-  app.innerHTML=`<button class="back" id="bk">\u2039 Kembali</button><h1>Latihan per topik</h1><p class="mut">Pilih satu topik. Soal diacak \u2014 termasuk urutan pilihannya \u2014 10 per sesi, lengkap dengan pembahasan.</p>${["TWK","TIU","TKP"].map(g).join("")}
+  /* P45.1 (F2b): topik Gratis dan Premium dipisah jadi dua seksi di tiap subtes —
+     topik gratis (Sinonim dan antonim) tidak lagi terkubur di tengah daftar. */
+  const chipHTML=t=>{const free=t===FREE_TOPIC;return `<button class="chip${free?" free":""}" data-t="${esc(t)}">${esc(t)} <small>${byTopic(t).length} soal</small>${free?` <span class="sticker">GRATIS</span>`:prem?"":` <span class="locktag">PREMIUM</span>`}</button>`};
+  const g=k=>{const ts=TOPICS.filter(t=>Q.some(q=>q.k===k&&q.tp===t));const freeTs=ts.filter(t=>t===FREE_TOPIC);const premTs=ts.filter(t=>t!==FREE_TOPIC);return `<details class="dd21"><summary class="ddh"><span class="grow"><b>${k} \u2014 ${NAMA[k]}</b><span class="ddsub">${ts.length} topik \u00B7 ${freeTs.length} gratis · ${premTs.length} Premium \u00B7 ketuk untuk membuka</span></span><span class="ddchev" aria-hidden="true">\u25BE</span></summary><div class="ddbody">${freeTs.length?`<p class="p45-topic-sec">Gratis</p><div class="chips2">${freeTs.map(chipHTML).join("")}</div>`:`<p class="p45-topic-sec">Gratis</p><p class="mut small" style="margin:4px 0 8px">Tidak ada topik gratis di subtes ini \u2014 contoh gratis ada di TIU: Sinonim dan antonim.</p>`}<p class="p45-topic-sec">Premium${prem?"":` <span class="locktag">PREMIUM</span>`}</p><div class="chips2">${premTs.map(chipHTML).join("")}</div>${ts.filter(t=>CATATAN_TOPIK[t]).map(t=>`<p class="mut small" style="margin:8px 0 0"><b>${esc(t)}:</b> ${esc(CATATAN_TOPIK[t])}</p>`).join("")}</div></details>`};
+  app.innerHTML=`<button class="back" id="bk">\u2039 Kembali</button><h1>Latihan per topik</h1><p class="mut">Pilih satu topik. Soal diacak \u2014 termasuk urutan pilihannya \u2014 10 per sesi, lengkap dengan pembahasan. Topik gratis dan Premium dipisah di tiap subtes.</p>${["TWK","TIU","TKP"].map(g).join("")}
   <div class="disc" style="margin-top:18px">Tiap topik juga punya triknya sendiri di halaman <b>Belajar Cepat</b> \u2014 buka dari bagian <b>Belajar</b> di beranda atau tab <b>Trik</b> di bawah \u2014 tersusun per subtes, lalu per topik.</div>`;
   document.getElementById("bk").onclick=cpnsPage;
   app.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{const t=b.dataset.t;if(t!==FREE_TOPIC&&!isPremium())return premiumPage("Topik \u201C"+t+"\u201D adalah fitur Premium. Latihan soal topik "+FREE_TOPIC+" gratis penuh.");startLatihan({mode:"TOPIC",topic:t,label:"Topik: "+t})});
@@ -1868,10 +1894,11 @@ function trikPage(){
   const umum=TEKNIK.filter((x,i)=>TEKNIK_SUB[i]==="ALL");
   app.innerHTML=`<button class="back" id="bk">\u2039 Kembali</button><h1>Belajar Cepat</h1>
   <p class="mut">Trik tersusun per subtes, per topik, lalu per model soal: buka subtesnya, ketuk topiknya, lalu ikuti langkah mengerjakan model soal itu satu per satu. Total ${TRICKS.length+TRIK_MODEL.length+STRATEGI450.length} kartu trik: ${TRICKS.length} kartu per topik + ${TRIK_MODEL.length} kartu per model soal + ${STRATEGI450.length} kartu Strategi Skor 450+. Ini teknik menjawab \u2014 bukan bocoran soal \u2014 dan tidak menjamin kelulusan. Contoh gratis: topik <b>${FREE_TRICK_TOPIC}</b> di subtes TIU (termasuk kartu per modelnya).</p>
-  <details class="subdd" open><summary><b>Semua subtes</b> &nbsp;Teknik saat ujian &nbsp;<span class="mut small">${umum.length} teknik</span></summary>
-  <p class="mut small" style="margin:10px 0 2px">Teknik umum untuk dipakai saat simulasi dan ujian di semua subtes. Latih di Simulasi Penuh sampai jadi kebiasaan.</p>
+  ${(()=>{const ft=TRICKS.filter(x=>x.tp===FREE_TRICK_TOPIC);const fm=TRIK_MODEL.filter(x=>x.tp===FREE_TRICK_TOPIC);if(!ft.length&&!fm.length)return "";return `<details class="subdd" open><summary><b>Gratis — contoh</b> &nbsp;${esc(FREE_TRICK_TOPIC)} &nbsp;<span class="mut small">${ft.length+fm.length} kartu · terbuka tanpa Premium</span></summary><p class="mut small" style="margin:10px 0 2px">Contoh gratis: kartu trik topik Deret angka beserta trik per model soalnya — terbuka penuh di sini, tanpa perlu Premium.</p>${ft.map(x=>`<details class="topdd" open><summary>${esc(x.t)}</summary>${trickBodyHTML(x)}</details>`).join("")}${fm.length?`<p style="margin:14px 0 2px"><b>Trik per model soal — ${esc(FREE_TRICK_TOPIC)}</b></p>${fm.map(m=>`<details class="topdd"><summary>${esc(m.t)}</summary>${trickBodyHTML(m)}</details>`).join("")}`:""}</details>`})()}
+  <details class="subdd"><summary><b>Semua subtes</b> &nbsp;Teknik saat ujian &nbsp;<span class="mut small">${umum.length} teknik</span>${prem?"":` <span class="locktag">PREMIUM</span>`}</summary>
+  <p class="mut small" style="margin:10px 0 2px">Teknik umum untuk dipakai saat simulasi dan ujian di semua subtes. Latih di Simulasi Penuh sampai jadi kebiasaan.${prem?"":" Semua teknik di seksi ini Premium — contoh gratis ada di seksi Gratis di atas."}</p>
   ${umum.map(x=>drop(x,"Teknik cepat \u2014 semua subtes")).join("")}</details>
-  <details class="subdd"><summary><b>Strategi Skor 450+</b> &nbsp;Target skor &amp; taktik ujian &nbsp;<span class="mut small">${STRATEGI450.length} kartu</span></summary>
+  <details class="subdd"><summary><b>Strategi Skor 450+</b> &nbsp;Target skor &amp; taktik ujian &nbsp;<span class="mut small">${STRATEGI450.length} kartu</span>${prem?"":` <span class="locktag">PREMIUM</span>`}</summary>
   <p class="mut small" style="margin:10px 0 2px">Delapan kartu strategi untuk mengejar target latihan 450 dari 550: matematika skornya, anggaran waktu 100 menit, taktik tiap subtes, dan jebakan yang harus dihindari. Target ini patokan latihan yang terukur — bukan janji hasil.</p>
   ${STRATEGI450.map(x=>prem?`<details class="topdd"><summary>${esc(x.t)}</summary>${strategiBodyHTML(x)}</details>`:lockedRowHTML(x.t,"Strategi Skor 450+")).join("")}
   </details>
@@ -1916,15 +1943,15 @@ function premiumPage(note){
   ${storedDisp?`<p style="margin:8px 0 0">Kode yang aktif di perangkat ini: <b style="font-family:ui-monospace,Menlo,monospace;letter-spacing:.08em">${esc(storedDisp)}</b></p>`:""}
   <p class="mut" style="margin:8px 0 0">Mau coba kode lain? Kolom kode tetap ada di bawah — masukkan kode baru di sana, tidak perlu menonaktifkan dulu.</p>`
   :`<p style="margin:10px 0 0">Perangkat ini <b>belum Premium</b>. Kalau kamu sudah punya kode dari admin, masuk dulu ke akunmu di bawah, lalu masukkan kode itu di kolom kode — tidak perlu membeli lagi.</p>`}
-  ${chk&&!prem?`<p class="mut" style="margin:8px 0 0"><span class="spinrow"><span class="spin" aria-hidden="true"></span> Sedang memeriksa status Premium akunmu\u2026</span></p>`:""}
+  ${chk&&!prem?`<p class="mut" style="margin:8px 0 0"><span class="spinrow"><span class="spin" aria-hidden="true"></span> Sedang memeriksa status Premium akunmu\u2026 Bila lama, periksa internetmu \u2014 latihan gratis tetap bisa dipakai sementara itu.</span></p>`:""}
   </div>
   <h2>Cara beli</h2>
   <div class="card"><p style="margin:0 0 8px"><b>Cara 1 — Beli via Lynk.id (baru)</b></p><ol style="margin:0;padding-left:22px;line-height:1.65">
   <li style="margin:0 0 8px">Tekan BELI VIA LYNK.ID di bawah.</li>
   <li style="margin:0 0 8px">Bayar Rp20.000 di Lynk.id.</li>
-  <li style="margin:0 0 8px">Ambil kode di halaman klaim <a href="https://siap-abdi-lynkid.jogja.workers.dev/" target="_blank" rel="noopener">https://siap-abdi-lynkid.jogja.workers.dev/</a> setelah pembayaran terkonfirmasi — masukkan nomor order + email checkout.</li>
-  <li style="margin:0 0 8px">Ketuk tombol <b>AKTIFKAN PREMIUM — 1 KLIK</b> di halaman klaim — aplikasi terbuka dan Premium langsung aktif, tanpa login dan tanpa menempel kode.</li>
-  <li style="margin:0">Premium langsung aktif — 1 kode = 1 pembeli, maksimal 2 akun. Bila tombol tidak berfungsi, masuk ke akunmu di halaman ini lalu tempel kode dan tekan AKTIFKAN.</li>
+  <li style="margin:0 0 8px">Ambil kode di halaman klaim <a href="https://siap-abdi-lynkid.jogja.workers.dev/" target="_blank" rel="noopener">https://siap-abdi-lynkid.jogja.workers.dev/</a> setelah pembayaran terkonfirmasi — masukkan nomor order + email checkout, lalu salin kode yang tampil.</li>
+  <li style="margin:0 0 8px">Salin kode dari halaman klaim, tempel di kolom kode di bawah (Langkah 3), lalu ketuk AKTIFKAN.</li>
+  <li style="margin:0">Premium aktif setelah kode diterima — 1 kode = 1 pembeli, maksimal 2 akun.</li>
   </ol><p style="margin:12px 0 8px"><b>Cara 2 — Beli via WhatsApp (cara lama)</b></p><ol style="margin:0;padding-left:22px;line-height:1.65">
   <li style="margin:0 0 8px">Tekan BELI VIA WHATSAPP — chat terbuka dan pesan sudah terisi.</li>
   <li style="margin:0 0 8px">Pembayaran via transfer Bank Mandiri. Detail pembayaran dikirim admin di chat WA.</li>
@@ -1934,13 +1961,13 @@ function premiumPage(note){
   </ol></div>
   ${acctCardHTML()}
   <h2>Langkah 2 — Beli Premium</h2>
-  <div class="card">${PROMO_AKTIF?`<span class="sticker">HARGA PELUNCURAN</span><div class="price-row" style="margin-top:12px"><span class="price-old">${HARGA_ASLI}</span><span class="price-wrap"><span class="price">${HARGA}</span><svg class="scribble-circle" viewBox="0 0 200 70" preserveAspectRatio="none" aria-hidden="true"><path d="M100 5 C 150 3, 196 12, 197 34 C 198 57, 140 67, 92 66 C 45 65, 4 56, 3 33 C 2 12, 60 4, 108 6" fill="none" stroke="#E8322A" stroke-width="3.5" stroke-linecap="round"/></svg></span><span class="savebadge">HEMAT 76% · Rp65.000</span></div>`:`<span class="sticker">HARGA PREMIUM</span><div class="price-row" style="margin-top:12px"><span class="price-wrap"><span class="price">${HARGA}</span><svg class="scribble-circle" viewBox="0 0 200 70" preserveAspectRatio="none" aria-hidden="true"><path d="M100 5 C 150 3, 196 12, 197 34 C 198 57, 140 67, 92 66 C 45 65, 4 56, 3 33 C 2 12, 60 4, 108 6" fill="none" stroke="#E8322A" stroke-width="3.5" stroke-linecap="round"/></svg></span></div>`}<p style="margin:8px 0 0"><b>${HARGA} membuka semua Premium di aplikasi ini.</b></p><p style="margin:8px 0 0"><b>Satu kode, empat jalur.</b> Satu kode Premium yang sama membuka <b>keempat jalur sekaligus</b> — CPNS lengkap (2.555 soal) plus soal contoh TNI, Polri, dan BUMN — masing-masing dengan pengalaman dan identitas latihannya sendiri. Tidak perlu kode terpisah per jalur.</p><p class="mut" style="margin:2px 0 0">Sekali bayar · tanpa langganan · tanpa kedaluwarsa</p>${PROMO_AKTIF?`<div class="promonote"><b>Promo sampai ${PROMO_SAMPAI}.</b> Setelah tanggal itu, harga Premium menjadi <b>${HARGA_ASLI}</b>.</div>`:""}
+  <div class="card">${PROMO_AKTIF?`<span class="sticker">HARGA PELUNCURAN</span><div class="price-row" style="margin-top:12px"><span class="price-old">${HARGA_ASLI}</span><span class="price">${HARGA}</span><span class="savebadge">HEMAT 76% · Rp65.000</span></div>`:`<span class="sticker">HARGA PREMIUM</span><div class="price-row" style="margin-top:12px"><span class="price">${HARGA}</span></div>`}<p style="margin:8px 0 0"><b>${HARGA} membuka semua Premium di aplikasi ini.</b></p><p style="margin:8px 0 0"><b>Satu kode, empat jalur.</b> Satu kode Premium yang sama membuka <b>keempat jalur sekaligus</b> — CPNS lengkap (2.555 soal) plus soal contoh TNI, Polri, dan BUMN — masing-masing dengan pengalaman dan identitas latihannya sendiri. Tidak perlu kode terpisah per jalur.</p><p class="mut" style="margin:2px 0 0">Sekali bayar · tanpa langganan · tanpa kedaluwarsa</p>${PROMO_AKTIF?`<div class="promonote"><b>Promo sampai ${PROMO_SAMPAI}.</b> Setelah tanggal itu, harga Premium menjadi <b>${HARGA_ASLI}</b>.</div>`:""}
   <details class="dd21" style="margin:12px 0 0"><summary class="ddh"><span class="grow"><b>Lihat semua yang didapat</b><span class="ddsub">Bank soal, latihan, simulasi, trik &amp; lainnya — ketuk untuk membuka</span></span><span class="ddchev" aria-hidden="true">▾</span></summary><div class="ddbody"><ul class="feat"><li>${ic("check")}<span>Bank penuh: 2.555 soal CPNS + 262 soal contoh TNI/Polri/BUMN (pilot). Soal CPNS terklasifikasi: TWK ${nQ("TWK")}, TIU ${nQ("TIU")}, TKP ${nQ("TKP")} (${TOPICS.length} topik)</span></li><li>${ic("check")}<span>Latihan acak, per subtes, dan per topik tanpa batas</span></li><li>${ic("check")}<span>Latihan per sesi per subtes (maksimal 50 soal per sesi, pilih lewat kartu sesi)</span></li><li>${ic("check")}<span>Simulasi CAT A–D 110 soal / 100 menit + Simulasi Mini tanpa batas</span></li><li>${ic("check")}<span>Pembahasan lengkap semua soal</span></li><li>${ic("check")}<span>${TRICKS.length+TRIK_MODEL.length+STRATEGI450.length} kartu Trik Cepat (${TRICKS.length} per topik + ${TRIK_MODEL.length} per model soal + ${STRATEGI450.length} Strategi Skor 450+) + ${nTeknik()} Teknik Cepat + Cara Menghafal &amp; rencana 14 hari</span></li></ul>
   <div class="disc" style="margin-bottom:0"><b>Jujur:</b> Soal Figural (gambar): pilot 45 soal tersedia di latihan; Simulasi Penuh (CAT) masih tanpa Figural. Yang kamu beli adalah 2.555 soal CPNS + 262 soal contoh TNI/Polri/BUMN (pilot) di atas. Ini alat latihan, bukan soal resmi BKN, dan tidak menjamin kelulusan.</div></div></details></div>
-  <div class="card"><a class="btn pri mega" id="lynkbuy" href="https://lynk.id/kappi" target="_blank" rel="noopener" style="background:linear-gradient(180deg,#15A08D 0%,#0F766E 55%,#0A5C54 100%);color:#fff">BELI VIA LYNK.ID — ${HARGA}</a>
-  <p class="mut small" style="text-align:center;margin:0">Bayar via Lynk.id, lalu ambil kode di halaman klaim dan ketuk tautan aktivasinya — Premium langsung aktif.</p>
-  <p style="margin:12px 0 0">Tombol ini untuk <b>membeli</b> lewat WhatsApp — kode aktivasi dikirim admin setelah kamu bayar.</p>
+  <div class="card"><a class="btn pri mega" id="lynkbuy" href="https://lynk.id/kappi/eqmjk10d6qr1" target="_blank" rel="noopener" style="background:linear-gradient(180deg,#15A08D 0%,#0F766E 55%,#0A5C54 100%);color:#fff">BELI VIA LYNK.ID — ${HARGA}</a>
+  <p class="mut small" style="text-align:center;margin:0">Bayar via Lynk.id, lalu ambil kode di halaman klaim — salin kodenya, tempel di kolom kode di bawah, lalu ketuk AKTIFKAN.</p>
   <button class="btn yel mega" id="wabuy">BELI VIA WHATSAPP — ${HARGA}</button>
+  <p class="mut small" style="text-align:center;margin:8px 0 0">Tombol ini untuk <b>membeli</b> lewat WhatsApp — kode aktivasi dikirim admin setelah kamu bayar.</p>
   <p class="mut small" style="text-align:center;margin:0">${PROMO_AKTIF?("Harga peluncuran "+HARGA+" (dari "+HARGA_ASLI+") · promo sampai "+PROMO_SAMPAI):("Harga Premium "+HARGA+" · sekali bayar, tanpa langganan")}</p>
   <div id="wamsg"></div></div>
   <h2>Gratis vs Premium</h2>
@@ -2246,9 +2273,12 @@ function finLat(){
   ${L.track?`<div class="disc"><b>Catatan track pilot:</b> ini hasil latihan contoh (PILOT) jalur ${esc(L.track)} dari soal contoh orisinal — bukan soal resmi dan bukan prediksi hasil seleksi. Materi dan bobot resmi seleksi ini tidak dipublikasikan panitia, jadi tidak ada patokan nilai lulus resmi yang ditampilkan untuk track ini.</div>`:`<div class="disc"><b>Yang penting dipahami:</b> di SKD asli, kamu dinyatakan lolos hanya bila lolos di <b>ketiga subtes sekaligus</b> — TWK, TIU, dan TKP semuanya harus mencapai nilai lulusnya masing-masing. Satu subtes saja di bawah nilai lulus sudah membuat tidak lolos, walaupun total nilaimu besar. Latihan ini jumlah soalnya lebih sedikit dari ujian asli, jadi patokan di atas dihitung sebanding dan sifatnya perkiraan untuk belajar — bukan penilaian resmi, dan skor latihan ini bukan prediksi nilai SKD sebenarnya.</div>`}
   <div class="disc">Aplikasi latihan mandiri — bukan aplikasi resmi BKN dan tidak menjamin kelulusan.</div>
   ${nRecap?`<div class="p45-sec review"><h3 class="p45-h">Review jawaban</h3><p class="p45-hint">Ketuk satu baris untuk membaca pembahasan.</p>${recap}</div>`:""}
-  <div class="p45-result-cta"><button class="p45-btn-navy p45-btn-block" id="lanjut">Lanjut Latihan</button><button class="p45-textlink" id="lihatsemua">Lihat pembahasan semua soal</button></div>
+  <div class="p45-result-cta"><button class="p45-btn-navy p45-btn-block" id="lanjut">Lanjut Latihan</button><button class="p45-textlink" id="lihatsemua">Lihat pembahasan semua soal</button><button class="p45-textlink" id="kehome">Kembali ke Beranda</button><button class="p45-textlink" id="ketrik">Lihat Trik</button><button class="p45-textlink" id="kepr">Lihat Premium</button></div>
   <div class="p45-sec">${premCardHTML()}</div>`;
   document.getElementById("lanjut").onclick=modePage;
+  document.getElementById("kehome").onclick=home;
+  document.getElementById("ketrik").onclick=trikPage;
+  document.getElementById("kepr").onclick=()=>premiumPage();
   document.getElementById("lihatsemua").onclick=()=>{app.querySelectorAll(".p45-rev").forEach(d=>{d.open=true});const r=document.querySelector(".p45-sec.review");if(r)r.scrollIntoView({behavior:"smooth",block:"start"})};
   const gp=document.getElementById("goprem");if(gp)gp.onclick=()=>premiumPage();
   clearLatihan();
@@ -2383,13 +2413,13 @@ function examFin(){
   ${trendBlockHTML()}
   <div class="disc">Hasil simulasi ini <b>bukan prediksi nilai SKD sebenarnya</b>. Aplikasi latihan mandiri — bukan aplikasi resmi BKN dan tidak menjamin kelulusan.</div>
   <div class="p45-sec review"><h3 class="p45-h">Pembahasan</h3><p class="p45-hint">Ketuk satu baris untuk membaca pembahasan.</p>${review}</div>
-  <div class="p45-result-cta"><button class="p45-btn-navy p45-btn-block" id="ag">Lanjut Latihan</button><button class="p45-textlink" id="ag2">Kembali ke beranda</button></div>
+  <div class="p45-result-cta"><button class="p45-btn-navy p45-btn-block" id="ag">Lanjut Latihan</button><button class="p45-textlink" id="ag2">Kembali ke beranda</button><button class="p45-textlink" id="ag3">Lihat Trik</button><button class="p45-textlink" id="ag4">Lihat Premium</button></div>
   <div class="p45-sec">${premCardHTML()}</div>`;
   /* Skeleton + spinner singkat selama nilai dihitung (momen tunggu di layar hasil CAT). */
   const lbl=C.label;
   app.innerHTML=`<h1>Menghitung nilai…</h1><div class="card" style="text-align:center"><span class="spin lg" role="status" aria-label="Menghitung nilai"></span><p style="margin:12px 0 0"><b>Sedang menghitung nilai ${esc(lbl)}…</b></p><p class="mut" style="margin:4px 0 0">Sebentar — jawabanmu sedang dijumlah per subtes.</p></div><div class="skel" aria-hidden="true"><div class="skl w40"></div><div class="skl w75"></div><div class="skl w55"></div><div class="skl w75"></div></div>`;
   C=null;scrollTop();
-  const renderResult=()=>{app.innerHTML=resultHTML;const ag=document.getElementById("ag");if(ag)ag.onclick=modePage;const ag2=document.getElementById("ag2");if(ag2)ag2.onclick=home;const gp=document.getElementById("goprem");if(gp)gp.onclick=()=>premiumPage();scrollTop()};
+  const renderResult=()=>{app.innerHTML=resultHTML;const ag=document.getElementById("ag");if(ag)ag.onclick=modePage;const ag2=document.getElementById("ag2");if(ag2)ag2.onclick=home;const ag3=document.getElementById("ag3");if(ag3)ag3.onclick=trikPage;const ag4=document.getElementById("ag4");if(ag4)ag4.onclick=()=>premiumPage();const gp=document.getElementById("goprem");if(gp)gp.onclick=()=>premiumPage();scrollTop()};
   if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)renderResult();
   else setTimeout(renderResult,650);
 }
@@ -3975,7 +4005,7 @@ Q.push(m("TIU","Semua anggota tim proyek yang sudah mengumpulkan tugas mendapat 
 Q.push(m("TIU","Jika tugas dikumpulkan sebelum tenggat, mahasiswa mendapat nilai tambahan. Budi mengumpulkan tugas sebelum tenggat. Kesimpulan yang pasti benar adalah ...",["Budi mendapat nilai tambahan sebagian","Budi tidak mendapat nilai tambahan","Tidak dapat ditarik kesimpulan","Nilai tugas Budi dibatalkan","Budi mendapat nilai tambahan"],4,"Tugas Budi dikumpulkan sebelum tenggat, dan tugas yang dikumpulkan sebelum tenggat mendapat nilai tambahan, maka Budi mendapat nilai tambahan.","Logika dan silogisme"));
 Q.push(m("TIU","Lima buku disusun berjajar di rak: Matematika, Fisika, Kimia, Biologi, dan Sejarah. Buku Sejarah berada di ujung kiri. Buku Fisika berada tepat di antara Matematika dan Kimia. Buku Biologi tidak bersebelahan dengan Sejarah. Buku apa yang berada di ujung kanan?",["Tidak dapat ditentukan","Kimia","Biologi","Matematika","Fisika"],2,"Sejarah di ujung kiri. Tiga buku Matematika, Fisika, dan Kimia harus berjajar berurutan dengan Fisika di tengah; susunan itu hanya mungkin menempati tiga tempat di tengah, sehingga Biologi menempati ujung kanan. Biologi di ujung kanan juga tidak bersebelahan dengan Sejarah, sesuai syarat.","Penalaran analitis"));
 Q.push(m("TIU","Lanjutkan deret: 2, 5, 10, 13, 26, 29, 58, ...",["56","60","58","61","64"],3,"Pola selang-seling: tambah 3, lalu kali 2. 2 + 3 = 5; 5 x 2 = 10; 10 + 3 = 13; 13 x 2 = 26; 26 + 3 = 29; 29 x 2 = 58; 58 + 3 = 61.","Deret angka"));
-Q.push(m("TIU","Lanjutkan deret huruf: A, C, F, J, O, ...",["U","V","P","T","R"],0,"Jarak antar huruf bertambah satu setiap langkah: A ke C melompat 2 huruf, C ke F melompat 3, F ke J melompat 4, J ke O melompat 5, maka langkah berikutnya melompat 6 dari O menjadi U.","Deret huruf"));
+Q.push(m("TIU","Lanjutkan deret huruf: A, C, F, J, O, ...",["U","V","P","T","R"],0,"Jarak antar huruf bertambah satu setiap langkah: A ke C melompat 2 huruf, C ke F melompat 3, F ke J melompat 4, J ke O melompat 5, maka langkah berikutnya melompat 6 dari O menjadi U.","Deret huruf & pola kata"));
 Q.push(m("TIU","Sepasang sepatu seharga Rp200.000 didiskon 25%, lalu harga setelah diskon dikenakan pajak 10%. Harga yang harus dibayar pembeli adalah ...",["Rp170.000","Rp155.000","Rp150.000","Rp160.000","Rp165.000"],4,"Harga setelah diskon: 200.000 x 75/100 = 150.000. Harga setelah pajak: 150.000 x 110/100 = 165.000.","Hitungan dan persen"));
 Q.push(m("TIU","Sebuah mobil menempuh jarak 240 km dalam 3 jam. Dengan kecepatan yang sama, jarak yang ditempuh mobil itu dalam 5 jam adalah ...",["480 km","400 km","360 km","420 km","320 km"],1,"Kecepatan mobil = 240 : 3 = 80 km per jam. Jarak dalam 5 jam = 80 x 5 = 400 km.","Perbandingan dan soal cerita"));
 Q.push(m("TIU","Perbandingan uang Andi dan Budi adalah 3 : 5. Jika jumlah uang mereka Rp160.000, uang Budi adalah ...",["Rp60.000","Rp80.000","Rp100.000","Rp120.000","Rp96.000"],2,"Jumlah bagian = 3 + 5 = 8. Uang Budi = 5/8 x 160.000 = 100.000.","Perbandingan dan soal cerita"));
